@@ -43,4 +43,8 @@ dependencies {
 
     // Bottom Navigation bar
     implementation 'com.google.android.material:material:1.1.0-alpha04'
+
+    // Navigation
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0-rc02'
+    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0-rc02"
 }
