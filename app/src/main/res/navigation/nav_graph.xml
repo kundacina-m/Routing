@@ -7,15 +7,15 @@
 
     <fragment
             android:id="@+id/topNewsFragment"
-            android:name="com.example.topnews.TopNewsFragment"
+            android:name="com.example.topnews.screens.topnews.TopNewsFragment"
             tools:layout="@layout/fragment_top_news" />
     <fragment
             android:id="@+id/categoriesFragment"
-            android:name="com.example.topnews.CategoriesFragment"
+            android:name="com.example.topnews.screens.categories.CategoriesFragment"
             tools:layout="@layout/fragment_categories" />
     <fragment
             android:id="@+id/readLaterFragment"
-            android:name="com.example.topnews.ReadLaterFragment"
+            android:name="com.example.topnews.screens.readlater.ReadLaterFragment"
             tools:layout="@layout/fragment_read_later" />
 
 </navigation>
