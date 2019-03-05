@@ -7,23 +7,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <ImageView
-            android:id="@+id/gridArticleImage"
+    <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_margin="25dp"
-    />
+            android:id="@+id/relativeLayoutId">
+
+        <ImageView
+                android:id="@+id/gridArticleImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+        />
+
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/btn_star_big_on"
+                tools:layout_editor_absoluteY="285dp"
+                tools:layout_editor_absoluteX="175dp"
+                android:id="@+id/btReadLater"
+                android:background="?android:selectableItemBackground"
+                android:layout_alignBottom="@+id/gridArticleImage"
+                android:layout_alignRight="@+id/gridArticleImage"/>
+
+    </RelativeLayout>
 
     <TextView
             android:id="@+id/gridArticleTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/gridArticleImage"
-            app:layout_constraintStart_toStartOf="@+id/gridArticleImage"
-            app:layout_constraintEnd_toEndOf="@+id/gridArticleImage"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayoutId"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayoutId"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayoutId"
             android:textSize="18sp"
             android:maxLines="2"
             android:minLines="1"
