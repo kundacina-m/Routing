@@ -31,9 +31,9 @@ class TopNewsFragment : Fragment(), TopNewsAdapter.OnItemClickListener {
 
     private fun setupLayoutManager() {
         val layoutManager = GridLayoutManager(context, 2)
-        topNewsRecyclerView.layoutManager = layoutManager
+        rwTopNews.layoutManager = layoutManager
 
-        topNewsRecyclerView.adapter = setupAdapter()
+        rwTopNews.adapter = setupAdapter()
     }
 
     private fun setupAdapter(): TopNewsAdapter {

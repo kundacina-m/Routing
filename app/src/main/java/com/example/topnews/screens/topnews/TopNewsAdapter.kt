@@ -46,8 +46,8 @@ class TopNewsAdapter(private val context: Context, private val listener: OnItemC
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var mTitle = itemView.findViewById<TextView>(R.id.gridArticleTitle)!!
-        var mImage = itemView.findViewById<ImageView>(R.id.gridArticleImage)!!
+        var mTitle = itemView.findViewById<TextView>(R.id.tvArticleTitle)!!
+        var mImage = itemView.findViewById<ImageView>(R.id.ivArticleImage)!!
         var mReadLater = itemView.findViewById<ImageButton>(R.id.btReadLater)!!
 
         fun bind(dataItem: dummyDataForTopNews, listener: OnItemClickListener){
