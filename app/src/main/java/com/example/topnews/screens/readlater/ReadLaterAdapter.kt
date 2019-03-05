@@ -12,7 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.screens.dummyDataForReadLater
 
-class ReadLaterAdapter(private val context: Context): RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
+class ReadLaterAdapter(private val context: Context,private val listener: OnItemClickListener): RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
 
     private var data = mutableListOf<dummyDataForReadLater>()
 
@@ -28,6 +28,7 @@ class ReadLaterAdapter(private val context: Context): RecyclerView.Adapter<ReadL
         holder.mPublishedAt.text = dataItem.publishedAt
         Glide.with(context).load(dataItem.image).apply(RequestOptions().override(400, 600)).into(holder.mImage)
 
+        holder.bind(dataItem,listener)
     }
 
     override fun getItemCount(): Int {
@@ -46,5 +47,17 @@ class ReadLaterAdapter(private val context: Context): RecyclerView.Adapter<ReadL
         var mPublishedAt = itemView.findViewById<TextView>(R.id.tvPublishTimeReadLater)!!
         var mImage = itemView.findViewById<ImageView>(R.id.ivImgReadLater)!!
 
+        fun bind(dataItem: dummyDataForReadLater,listener: OnItemClickListener){
+            itemView.setOnClickListener {
+                listener.onItemClick(dataItem)
+            }
+        }
+
+
     }
+
+    interface OnItemClickListener {
+        fun onItemClick(dataItem: dummyDataForReadLater)
+    }
+
 }
