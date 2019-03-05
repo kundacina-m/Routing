@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/topNewsFragment"
+            android:title="@string/topNews"
+            android:state_checked="true"
+            android:color="@color/colorPrimaryDark"/>
+
+    <item
+            android:id="@+id/categoriesFragment"
+            android:title="@string/categories"
+            android:state_checked="false"
+            android:color="@color/colorPrimary"/>
+
+    <item
+            android:id="@+id/readLaterFragment"
+            android:title="@string/readLater"
+            android:state_checked="false"
+            android:color="@color/colorPrimary"/>
+
+
+</menu>
