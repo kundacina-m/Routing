@@ -1,7 +1,6 @@
 package com.example.topnews.screens.topnews
 
 import android.content.Context
-import android.provider.Contacts
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,33 +8,31 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.screens.dummyDataForTopNews
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class TopNewsAdapter(private val context: Context) : RecyclerView.Adapter<TopNewsAdapter.ViewHolder>() {
 
-    private var data = arrayListOf<dummyDataForTopNews>()
+    private var data = mutableListOf<dummyDataForTopNews>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopNewsAdapter.ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_top_news,parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_top_news, parent, false))
     }
 
     override fun onBindViewHolder(holder: TopNewsAdapter.ViewHolder, position: Int) {
         val dataItem = data[position]
 
         holder.mTitle.text = dataItem.title
-        GlobalScope.launch {
-            Glide.with(context).load(dataItem.image).into(holder.mImage)
-        }
+        Glide.with(context).load(dataItem.image).apply(RequestOptions().override(400, 600)).into(holder.mImage)
+
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-    fun setData(list: ArrayList<dummyDataForTopNews>){
+    fun setData(list: MutableList<dummyDataForTopNews>) {
         data = list
     }
 
