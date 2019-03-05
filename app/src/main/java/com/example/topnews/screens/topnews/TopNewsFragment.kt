@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.topnews.R
 import com.example.topnews.screens.dummyDataForTopNews
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_top_news.*
 import androidx.recyclerview.widget.RecyclerView
 
 
-class TopNewsFragment : Fragment() {
+class TopNewsFragment : Fragment(), TopNewsAdapter.OnItemClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_top_news, container, false)
@@ -36,10 +37,14 @@ class TopNewsFragment : Fragment() {
     }
 
     private fun setupAdapter(): TopNewsAdapter {
-        val adapter = TopNewsAdapter(context!!)
+        val adapter = TopNewsAdapter(context!!,this)
         adapter.setData(fakeData.fakeData)
 
         return adapter
+    }
+
+    override fun onItemClick(dataItem: dummyDataForTopNews) {
+        Toast.makeText(context,"${dataItem.title} not star", Toast.LENGTH_LONG).show()
     }
 
 }
