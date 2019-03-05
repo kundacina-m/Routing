@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
     <ImageView
             android:id="@+id/ivImgReadLater"
@@ -12,7 +12,8 @@
             android:layout_height="150dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="25dp"/>
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="5dp"/>
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
             android:layout_marginStart="24dp"
             app:layout_constraintTop_toTopOf="@+id/ivImgReadLater"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="24dp"/>
+            android:layout_marginEnd="24dp" android:layout_marginTop="25dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:id="@+id/labelSource"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="55dp"
             app:layout_constraintBottom_toBottomOf="@+id/ivImgReadLater"
             app:layout_constraintStart_toStartOf="@+id/tvTitleReadLater"/>
     <TextView
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/labelPublishedAt"
             app:layout_constraintStart_toStartOf="@+id/labelSource"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/labelSource"/>
     <TextView
             android:layout_width="wrap_content"
