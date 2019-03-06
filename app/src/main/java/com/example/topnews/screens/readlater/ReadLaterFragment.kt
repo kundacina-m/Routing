@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.topnews.R
+import com.example.topnews.screens.FakeData
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
 
