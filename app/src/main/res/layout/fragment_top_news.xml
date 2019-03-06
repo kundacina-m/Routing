@@ -5,10 +5,12 @@
              android:layout_height="match_parent"
              tools:context=".screens.topnews.TopNewsFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rwTopNews"
+            android:numColumns="auto_fit"
+            android:gravity="center"
+            android:stretchMode="columnWidth"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/topNews"
-            android:gravity="center"/>
+            android:layout_height="match_parent"/>
 
 </FrameLayout>
