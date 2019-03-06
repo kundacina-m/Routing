@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.topnews.R
 import com.example.topnews.screens.FakeData
@@ -24,13 +26,16 @@ class ReadLaterFragment : Fragment() {
         setupRecyclerView()
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         readLaterRecyclerView.layoutManager = LinearLayoutManager(context)
         readLaterRecyclerView.adapter = setupReadLaterAdapter()
 
+        val divider = DividerItemDecoration(context,DividerItemDecoration.VERTICAL)
+        divider.setDrawable(getDrawable(context!!,R.drawable.divider)!!)
+        readLaterRecyclerView.addItemDecoration(divider)
     }
 
-    private fun setupReadLaterAdapter(): ReadLaterAdapter{
+    private fun setupReadLaterAdapter(): ReadLaterAdapter {
         val adapter = ReadLaterAdapter()
         adapter.setData(FakeData.fetchData())
         return adapter
