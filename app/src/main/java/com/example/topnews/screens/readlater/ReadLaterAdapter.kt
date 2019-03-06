@@ -1,20 +1,18 @@
 package com.example.topnews.screens.readlater
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
-import com.example.topnews.screens.dummyDataForReadLater
+import kotlinx.android.synthetic.main.item_read_later.view.*
 
-class ReadLaterAdapter(private val context: Context,private val listener: OnItemClickListener): RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
+class ReadLaterAdapter: RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
 
-    private var data = mutableListOf<dummyDataForReadLater>()
+    private var data = mutableListOf<Article>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_read_later, parent, false))
@@ -23,41 +21,40 @@ class ReadLaterAdapter(private val context: Context,private val listener: OnItem
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dataItem = data[position]
 
-        holder.mTitle.text = dataItem.title
-        holder.mSource.text = dataItem.source
-        holder.mPublishedAt.text = dataItem.publishedAt
-        Glide.with(context).load(dataItem.image).apply(RequestOptions().override(400, 600)).into(holder.mImage)
-
-        holder.bind(dataItem,listener)
+        holder.bind(dataItem)
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-    fun setData(dataList: MutableList<dummyDataForReadLater>){
+    fun setData(dataList: MutableList<Article>){
         data = dataList
     }
 
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        fun bind(dataItem: Article){
 
-        var mTitle = itemView.findViewById<TextView>(R.id.tvTitleReadLater)!!
-        var mSource = itemView.findViewById<TextView>(R.id.tvSourceLaterRead)!!
-        var mPublishedAt = itemView.findViewById<TextView>(R.id.tvPublishTimeReadLater)!!
-        var mImage = itemView.findViewById<ImageView>(R.id.ivImgReadLater)!!
+            setupViewWithData(dataItem)
+            setupClickListeners(dataItem)
+        }
 
-        fun bind(dataItem: dummyDataForReadLater,listener: OnItemClickListener){
+        private fun setupViewWithData(dataItem: Article){
+            itemView.tvTitleReadLater.text = dataItem.title
+            itemView.tvSourceLaterRead.text = dataItem.source
+            itemView.tvPublishTimeReadLater.text = dataItem.publishedAt
+            Glide.with(itemView.context).load(dataItem.imageUrl).apply(RequestOptions().override(400, 600)).into(itemView.ivImgReadLater)
+
+        }
+
+        private fun setupClickListeners(dataItem: Article){
             itemView.setOnClickListener {
-                listener.onItemClick(dataItem)
+                Toast.makeText(it.context,dataItem.title,Toast.LENGTH_LONG)
             }
         }
 
 
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(dataItem: dummyDataForReadLater)
     }
 
 }
