@@ -1,22 +1,19 @@
 package com.example.topnews.screens.topnews
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
-import com.example.topnews.screens.dummyDataForTopNews
+import com.example.topnews.screens.Article
+import kotlinx.android.synthetic.main.item_top_news.view.*
 
-class TopNewsAdapter(private val context: Context, private val listener: OnItemClickListener) : RecyclerView.Adapter<TopNewsAdapter.ViewHolder>() {
+class TopNewsAdapter : RecyclerView.Adapter<TopNewsAdapter.ViewHolder>() {
 
-    private var data = mutableListOf<dummyDataForTopNews>()
+    private var data = mutableListOf<Article>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopNewsAdapter.ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_top_news, parent, false))
@@ -24,14 +21,7 @@ class TopNewsAdapter(private val context: Context, private val listener: OnItemC
 
     override fun onBindViewHolder(holder: TopNewsAdapter.ViewHolder, position: Int) {
         val dataItem = data[position]
-
-        holder.mTitle.text = dataItem.title
-        Glide.with(context).load(dataItem.image).apply(RequestOptions().override(400, 600)).into(holder.mImage)
-        holder.mReadLater.setOnClickListener {
-            Toast.makeText(context,dataItem.title, Toast.LENGTH_LONG).show()
-        }
-
-        holder.bind(dataItem,listener)
+        holder.bind(dataItem)
 
     }
 
@@ -39,26 +29,33 @@ class TopNewsAdapter(private val context: Context, private val listener: OnItemC
         return data.size
     }
 
-    fun setData(list: MutableList<dummyDataForTopNews>) {
+    fun setData(list: MutableList<Article>) {
         data = list
     }
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var mTitle = itemView.findViewById<TextView>(R.id.tvArticleTitle)!!
-        var mImage = itemView.findViewById<ImageView>(R.id.ivArticleImage)!!
-        var mReadLater = itemView.findViewById<ImageButton>(R.id.btReadLater)!!
+        fun bind(dataItem: Article) {
 
-        fun bind(dataItem: dummyDataForTopNews, listener: OnItemClickListener){
+            itemView.tvArticleTitle.text = dataItem.title
+            Glide.with(itemView.context).load(dataItem.imageUrl).apply(RequestOptions().override(400, 600))
+                .into(itemView.ivArticleImage)
+            setUpClickListener(dataItem)
+        }
+
+        private fun setUpClickListener(dataItem: Article) {
+            itemView.btReadLater.setOnClickListener {
+                Toast.makeText(itemView.context, dataItem.title, Toast.LENGTH_LONG).show()
+            }
+
             itemView.setOnClickListener {
-                listener.onItemClick(dataItem)
+                it.setOnClickListener {
+                    Toast.makeText(it.context, "${dataItem.title} not star", Toast.LENGTH_LONG).show()
+                }
             }
         }
 
     }
 
-    interface OnItemClickListener {
-        fun onItemClick(dataItem: dummyDataForTopNews)
-    }
 }
