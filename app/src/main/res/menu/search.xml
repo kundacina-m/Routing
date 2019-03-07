@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
             android:id="@+id/search"
-            android:title="Search"
+            android:title="@string/search"
             android:icon="@android:drawable/ic_menu_search"
             android:textColor="@color/colorWhite"
             app:showAsAction="ifRoom|collapseActionView"

@@ -68,8 +68,9 @@ class FrameActivity : AppCompatActivity() {
     private fun setUpKeyNotPressedTimer(): CountDownTimer {
         return object : CountDownTimer(waitingTimeForKeyDown.toLong(), 500) {
             override fun onFinish() {
-                val fragment = supportFragmentManager.findFragmentById(R.id.searchFragment) as SearchFragment
-                fragment.myMethod()
+                val searchFragment = supportFragmentManager.findFragmentById(R.id.searchFragmentLayout) as? SearchFragment
+                if (searchFragment != null)
+                searchFragment!!.updateAdapter()
             }
 
             override fun onTick(millisUntilFinished: Long) {
