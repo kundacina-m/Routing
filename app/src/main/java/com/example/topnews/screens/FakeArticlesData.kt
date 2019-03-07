@@ -6,6 +6,10 @@ object FakeData {
         return data
     }
 
+    fun fetchSearchedData(num: Int): MutableList<Article>{
+        return data.subList(0,num)
+    }
+
     private val data = mutableListOf<Article>(
         Article(
             hashMapOf<String, String>(

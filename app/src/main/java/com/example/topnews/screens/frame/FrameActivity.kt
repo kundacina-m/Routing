@@ -3,10 +3,12 @@ package com.example.topnews.screens.frame
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.Menu
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.topnews.R
 import com.example.topnews.screens.search.SearchFragment
@@ -16,6 +18,7 @@ class FrameActivity : AppCompatActivity() {
 
     private lateinit var navCtrl: NavController
     private val waitingTimeForKeyDown = 1000
+    private var numOfSearchedArticles: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +47,18 @@ class FrameActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                numOfSearchedArticles = newText!!.length
                 restartCountdownTimer(cntrForKeyUp)
-                doOnTextChanged(newText!!)
+                doOnTextChanged(newText)
                 return false
             }
 
         })
 
+    }
+
+    private fun updateSearchList(){
+        ((nav_host_fragment as NavHostFragment).childFragmentManager.primaryNavigationFragment as? SearchFragment)?.updateAdapter(numOfSearchedArticles)
     }
 
     private fun doOnTextChanged(newText: String) {
@@ -68,9 +76,7 @@ class FrameActivity : AppCompatActivity() {
     private fun setUpKeyNotPressedTimer(): CountDownTimer {
         return object : CountDownTimer(waitingTimeForKeyDown.toLong(), 500) {
             override fun onFinish() {
-                val searchFragment = supportFragmentManager.findFragmentById(R.id.searchFragmentLayout) as? SearchFragment
-                if (searchFragment != null)
-                searchFragment!!.updateAdapter()
+                updateSearchList()
             }
 
             override fun onTick(millisUntilFinished: Long) {
