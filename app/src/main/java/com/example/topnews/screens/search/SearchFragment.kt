@@ -14,4 +14,8 @@ class SearchFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
+    fun myMethod(){
+        // VAZNO!!! https://developer.android.com/training/basics/fragments/communicating.html
+    }
+
 }

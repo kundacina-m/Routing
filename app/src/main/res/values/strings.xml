@@ -5,4 +5,7 @@
     <string name="readLater">Read Later</string>
     <string name="search">Search</string>
 
+    <string name="source">Source:</string>
+    <string name="publishedAt">Published at:</string>
+
 </resources>

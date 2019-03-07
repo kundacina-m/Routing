@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.example.topnews.R
+import com.example.topnews.screens.search.SearchFragment
 import kotlinx.android.synthetic.main.activity_frame.*
 
 class FrameActivity : AppCompatActivity() {
@@ -67,6 +68,8 @@ class FrameActivity : AppCompatActivity() {
     private fun setUpKeyNotPressedTimer(): CountDownTimer {
         return object : CountDownTimer(waitingTimeForKeyDown.toLong(), 500) {
             override fun onFinish() {
+                val fragment = supportFragmentManager.findFragmentById(R.id.searchFragment) as SearchFragment
+                fragment.myMethod()
             }
 
             override fun onTick(millisUntilFinished: Long) {
