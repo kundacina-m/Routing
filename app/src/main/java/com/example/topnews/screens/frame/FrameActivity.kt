@@ -20,6 +20,13 @@ class FrameActivity : AppCompatActivity() {
     private val waitingTimeForKeyDown = 1000
     private var numOfSearchedArticles: Int = 0
 
+    private var searchTimer=  object :SearchTimer(waitingTimeForKeyDown.toLong(), 500) {
+        override fun onFinish() {
+            updateSearchList()
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_frame)
@@ -34,13 +41,13 @@ class FrameActivity : AppCompatActivity() {
         val searchItem = menu!!.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
 
-        setSearchViewListener(searchView, setUpKeyNotPressedTimer())
+        setSearchViewListener(searchView)
 
         return super.onCreateOptionsMenu(menu)
 
     }
 
-    private fun setSearchViewListener(searchView: SearchView, cntrForKeyUp: CountDownTimer) {
+    private fun setSearchViewListener(searchView: SearchView) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -48,7 +55,7 @@ class FrameActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 numOfSearchedArticles = newText!!.length
-                restartCountdownTimer(cntrForKeyUp)
+                restartCountdownTimer(searchTimer)
                 doOnTextChanged(newText)
                 return false
             }
@@ -73,18 +80,12 @@ class FrameActivity : AppCompatActivity() {
         cntrForKeyUP.start()
     }
 
-    private fun setUpKeyNotPressedTimer(): CountDownTimer {
-        return object : CountDownTimer(waitingTimeForKeyDown.toLong(), 500) {
-            override fun onFinish() {
-                updateSearchList()
-            }
 
-            override fun onTick(millisUntilFinished: Long) {
-            }
-        }
-    }
 
     private fun setupBottomNavBar() {
         bottom_navigation.setupWithNavController(navCtrl)
     }
+
+
+
 }
