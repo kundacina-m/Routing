@@ -8,18 +8,53 @@
     <fragment
             android:id="@+id/topNewsFragment"
             android:name="com.example.topnews.screens.topnews.TopNewsFragment"
-            tools:layout="@layout/fragment_top_news" />
+            tools:layout="@layout/fragment_top_news">
+        <action
+                android:id="@+id/action_topNewsFragment_to_articleDetailsFragment"
+                app:destination="@+id/articleDetailsFragment"
+            />
+    </fragment>
+
     <fragment
             android:id="@+id/categoriesFragment"
             android:name="com.example.topnews.screens.categories.CategoriesFragment"
-            tools:layout="@layout/fragment_categories" />
+            tools:layout="@layout/fragment_categories">
+        <action
+                android:id="@+id/action_categoriesFragment_to_articleDetailsFragment"
+                app:destination="@+id/articleDetailsFragment"
+        />
+    </fragment>
+
     <fragment
             android:id="@+id/readLaterFragment"
             android:name="com.example.topnews.screens.readlater.ReadLaterFragment"
-            tools:layout="@layout/fragment_read_later" />
+            tools:layout="@layout/fragment_read_later">
+        <action
+                android:id="@+id/action_readLaterFragment_to_articleDetailsFragment"
+                app:destination="@+id/articleDetailsFragment"
+        />
+    </fragment>
+
     <fragment android:id="@+id/searchFragment"
               android:name="com.example.topnews.screens.search.SearchFragment"
               android:label="fragment_search"
-              tools:layout="@layout/fragment_search"/>
+              tools:layout="@layout/fragment_search">
+        <action
+                android:id="@+id/action_searchFragment_to_articleDetailsFragment"
+                app:destination="@+id/articleDetailsFragment"
+        />
+    </fragment>
+
+    <fragment android:id="@+id/articleDetailsFragment" android:name="com.example.topnews.ArticleDetailsFragment"
+              android:label="fragment_article_details" tools:layout="@layout/fragment_article_details">
+        <argument android:name="urlImg" app:argType="string"/>
+        <argument android:name="source" app:argType="string"/>
+        <argument android:name="title" app:argType="string"/>
+        <argument android:name="description" app:argType="string"/>
+        <argument android:name="content" app:argType="string"/>
+        <argument android:name="publishedAt" app:argType="string"/>
+        <argument android:name="author" app:argType="string"/>
+        <argument android:name="urlWeb" app:argType="string"/>
+    </fragment>
 
 </navigation>
