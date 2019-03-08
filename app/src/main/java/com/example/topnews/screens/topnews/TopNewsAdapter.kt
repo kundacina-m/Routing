@@ -50,12 +50,11 @@ class TopNewsAdapter : RecyclerView.Adapter<TopNewsAdapter.ViewHolder>() {
 
         fun setUpClickListener(dataItem: Article, listener: OnArticleClickListener) {
             itemView.btReadLater.setOnClickListener {
-                listener.articleClicked(dataItem)
             }
 
             itemView.setOnClickListener {
                 it.setOnClickListener {
-                    Toast.makeText(it.context, "${dataItem.title} not star", Toast.LENGTH_LONG).show()
+                    listener.articleClicked(dataItem)
                 }
             }
         }

@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -19,8 +22,9 @@ class FrameActivity : AppCompatActivity() {
     private lateinit var navCtrl: NavController
     private val waitingTimeForKeyDown = 1000
     private var numOfSearchedArticles: Int = 0
+    private lateinit var menu: Menu
 
-    private var searchTimer=  object :SearchTimer(waitingTimeForKeyDown.toLong(), 500) {
+    private var searchTimer = object : SearchTimer(waitingTimeForKeyDown.toLong(), 500) {
         override fun onFinish() {
             updateSearchList()
         }
@@ -37,11 +41,13 @@ class FrameActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search, menu)
+        this.menu = menu!!
 
-        val searchItem = menu!!.findItem(R.id.search)
+        val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem.actionView as SearchView
 
         setSearchViewListener(searchView)
+        setupDestinationChangedLister()
 
         return super.onCreateOptionsMenu(menu)
 
@@ -64,8 +70,10 @@ class FrameActivity : AppCompatActivity() {
 
     }
 
-    private fun updateSearchList(){
-        ((nav_host_fragment as NavHostFragment).childFragmentManager.primaryNavigationFragment as? SearchFragment)?.updateAdapter(numOfSearchedArticles)
+    private fun updateSearchList() {
+        ((nav_host_fragment as NavHostFragment).childFragmentManager.primaryNavigationFragment as? SearchFragment)?.updateAdapter(
+            numOfSearchedArticles
+        )
     }
 
     private fun doOnTextChanged(newText: String) {
@@ -81,11 +89,28 @@ class FrameActivity : AppCompatActivity() {
     }
 
 
-
     private fun setupBottomNavBar() {
         bottom_navigation.setupWithNavController(navCtrl)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item!!.itemId == android.R.id.home) {
+            navCtrl.navigateUp()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
-
+    private fun setupDestinationChangedLister() {
+        navCtrl.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.articleDetailsFragment) {
+                bottom_navigation.visibility = View.GONE
+                menu.findItem(R.id.search).isVisible = false
+                supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+            } else {
+                bottom_navigation.visibility = View.VISIBLE
+                supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+                menu.findItem(R.id.search).isVisible = true
+            }
+        }
+    }
 }

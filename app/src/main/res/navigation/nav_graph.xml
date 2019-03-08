@@ -12,7 +12,7 @@
         <action
                 android:id="@+id/action_topNewsFragment_to_articleDetailsFragment"
                 app:destination="@+id/articleDetailsFragment"
-            />
+        />
     </fragment>
 
     <fragment
@@ -45,8 +45,9 @@
         />
     </fragment>
 
-    <fragment android:id="@+id/articleDetailsFragment" android:name="com.example.topnews.ArticleDetailsFragment"
+    <fragment android:id="@+id/articleDetailsFragment" android:name="com.example.topnews.screens.articledetails.ArticleDetailsFragment"
               android:label="fragment_article_details" tools:layout="@layout/fragment_article_details">
+
         <argument android:name="urlImg" app:argType="string"/>
         <argument android:name="source" app:argType="string"/>
         <argument android:name="title" app:argType="string"/>

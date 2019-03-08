@@ -3,14 +3,12 @@ package com.example.topnews.screens.search
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.screens.Article
 import com.example.topnews.screens.OnArticleClickListener
-import kotlinx.android.synthetic.main.item_read_later.view.*
 import kotlinx.android.synthetic.main.item_search_result.view.*
 
 class SearchAdapter: RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
