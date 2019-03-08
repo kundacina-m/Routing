@@ -9,11 +9,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.screens.Article
+import com.example.topnews.screens.OnArticleClickListener
 import kotlinx.android.synthetic.main.item_read_later.view.*
 
 class ReadLaterAdapter: RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
 
     private var data = mutableListOf<Article>()
+    private var callback : OnArticleClickListener? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_read_later, parent, false))
@@ -23,6 +26,8 @@ class ReadLaterAdapter: RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
         val dataItem = data[position]
 
         holder.bind(dataItem)
+        holder.setupClickListener(dataItem,callback!!)
+
     }
 
     override fun getItemCount(): Int {
@@ -33,12 +38,15 @@ class ReadLaterAdapter: RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
         data = dataList
     }
 
+    fun setListener(listener: OnArticleClickListener){
+        callback = listener
+    }
+
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(dataItem: Article){
 
             setupViewWithData(dataItem)
-            setupClickListeners(dataItem)
         }
 
         private fun setupViewWithData(dataItem: Article){
@@ -49,9 +57,9 @@ class ReadLaterAdapter: RecyclerView.Adapter<ReadLaterAdapter.ViewHolder>() {
 
         }
 
-        private fun setupClickListeners(dataItem: Article){
+        fun setupClickListener(dataItem: Article,listener: OnArticleClickListener){
             itemView.setOnClickListener {
-                Toast.makeText(it.context,dataItem.title,Toast.LENGTH_LONG).show()
+                listener.articleClicked(dataItem)
             }
         }
 
