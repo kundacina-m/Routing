@@ -1,8 +1,9 @@
-package com.example.topnews.screens
+package com.example.topnews.screens.Utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.topnews.screens.OnRVItemClickListener
 
 class WrappedAdapter<T>(private val itemViewLayout: Int, private val listener: OnRVItemClickListener<T>? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

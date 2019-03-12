@@ -1,4 +1,4 @@
-package com.example.topnews.screens
+package com.example.topnews.screens.Utils
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

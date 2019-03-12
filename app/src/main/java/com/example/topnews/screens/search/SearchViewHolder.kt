@@ -6,7 +6,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.screens.Article
 import com.example.topnews.screens.OnRVItemClickListener
-import com.example.topnews.screens.WrappedAdapter
+import com.example.topnews.screens.Utils.WrappedAdapter
 import kotlinx.android.synthetic.main.item_search_result.view.*
 
 class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
