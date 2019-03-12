@@ -61,6 +61,15 @@ class TopNewsFragment : Fragment(), OnRVItemClickListener<Article> {
     }
 
     override fun itemClicked(dataItem: Article) {
+        navigateToArticleDetails(setupBundleForNavigation(dataItem))
+    }
+
+    private fun navigateToArticleDetails(bundle: Bundle){
+        Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+            .navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle)
+    }
+
+    private fun setupBundleForNavigation(dataItem: Article): Bundle{
         val bundle = Bundle()
 
         bundle.putString(ARG_IMG_URL_BUNDLE, dataItem.imageUrl)
@@ -71,8 +80,6 @@ class TopNewsFragment : Fragment(), OnRVItemClickListener<Article> {
         bundle.putString(ARG_PUBLISHED_AT_BUNDLE, dataItem.publishedAt)
         bundle.putString(ARG_AUTHOR_BUNDLE, dataItem.author)
         bundle.putString(ARG_URL_WEB_BUNDLE, dataItem.urlToArticle)
-
-        Navigation.findNavController(activity!!, R.id.nav_host_fragment)
-            .navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle)
+        return bundle
     }
 }
