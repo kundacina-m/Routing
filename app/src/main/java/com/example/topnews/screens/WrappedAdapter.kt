@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 class WrappedAdapter<T>(private val itemViewLayout: Int, private val listener: OnRVItemClickListener<T>? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var data = mutableListOf<T>()
+    private var data = listOf<T>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolderFactory.getRightViewHolder(
@@ -31,7 +31,7 @@ class WrappedAdapter<T>(private val itemViewLayout: Int, private val listener: O
     }
 
 
-    fun setData(dataList: MutableList<T>) {
+    fun setData(dataList: List<T>) {
         data = dataList
         notifyDataSetChanged()
     }

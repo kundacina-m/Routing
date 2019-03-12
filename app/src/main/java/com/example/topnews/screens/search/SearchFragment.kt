@@ -6,18 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.topnews.R
-import com.example.topnews.screens.Article
-import com.example.topnews.screens.FakeData
-import com.example.topnews.screens.OnRVItemClickListener
-import com.example.topnews.screens.WrappedAdapter
+import com.example.topnews.screens.*
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment(), OnRVItemClickListener<Article> {
 
-    private lateinit var adapter: WrappedAdapter<Article>
+    private lateinit var adapterSearch: WrappedAdapter<Article>
+    private lateinit var viewModel: ArticleViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
@@ -26,22 +26,28 @@ class SearchFragment : Fragment(), OnRVItemClickListener<Article> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupAdapter()
         setupRecyclerView()
+        setViewModel()
+    }
+
+    private fun setViewModel() {
+        viewModel = ViewModelProviders.of(this).get(ArticleViewModel::class.java)
+
     }
 
     private fun setupRecyclerView() {
         rvSearchResults.layoutManager = LinearLayoutManager(context)
-        setupAdapter()
-        rvSearchResults.adapter = adapter
+        rvSearchResults.adapter = adapterSearch
 
     }
 
     private fun setupAdapter() {
-        adapter = WrappedAdapter(R.layout.item_search_result, this)
+        adapterSearch = WrappedAdapter(R.layout.item_search_result, this)
     }
 
     fun updateAdapter(num: Int) {
-        adapter.setData(FakeData.fetchSearchedData(num))
+        adapterSearch.setData(viewModel.getNumOfArticles(num).value!!)
     }
 
     override fun itemClicked(dataItem: Article) {
