@@ -14,15 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.topnews.R
 import com.example.topnews.screens.*
-import com.example.topnews.screens.Constants.ARG_AUTHOR_BUNDLE
-import com.example.topnews.screens.Constants.ARG_CONTENT_BUNDLE
-import com.example.topnews.screens.Constants.ARG_DESCRIPTION_BUNDLE
-import com.example.topnews.screens.Constants.ARG_IMG_URL_BUNDLE
-import com.example.topnews.screens.Constants.ARG_PUBLISHED_AT_BUNDLE
-import com.example.topnews.screens.Constants.ARG_SOURCE_BUNDLE
-import com.example.topnews.screens.Constants.ARG_TITLE_BUNDLE
-import com.example.topnews.screens.Constants.ARG_URL_WEB_BUNDLE
-import com.example.topnews.screens.Constants.MAP_SOURCE_KEY_NAME
+import com.example.topnews.screens.Utils.BundleHolder
 import com.example.topnews.screens.Utils.WrappedAdapter
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
@@ -68,25 +60,11 @@ class ReadLaterFragment : Fragment(), OnRVItemClickListener<Article> {
     }
 
     override fun itemClicked(dataItem: Article) {
-        navigateToArticleDetails(setupBundleForNavigation(dataItem))
+        navigateToArticleDetails(BundleHolder.getBundleForDetails(dataItem))
     }
 
     private fun navigateToArticleDetails(bundle: Bundle){
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)
             .navigate(R.id.action_readLaterFragment_to_articleDetailsFragment, bundle)
-    }
-
-    private fun setupBundleForNavigation(dataItem: Article): Bundle{
-        val bundle = Bundle()
-
-        bundle.putString(ARG_IMG_URL_BUNDLE, dataItem.imageUrl)
-        bundle.putString(ARG_SOURCE_BUNDLE, dataItem.source[MAP_SOURCE_KEY_NAME])
-        bundle.putString(ARG_TITLE_BUNDLE, dataItem.title)
-        bundle.putString(ARG_DESCRIPTION_BUNDLE, dataItem.description)
-        bundle.putString(ARG_CONTENT_BUNDLE, dataItem.content)
-        bundle.putString(ARG_PUBLISHED_AT_BUNDLE, dataItem.publishedAt)
-        bundle.putString(ARG_AUTHOR_BUNDLE, dataItem.author)
-        bundle.putString(ARG_URL_WEB_BUNDLE, dataItem.urlToArticle)
-        return bundle
     }
 }
