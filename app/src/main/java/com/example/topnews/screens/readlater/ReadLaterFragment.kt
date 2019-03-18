@@ -2,69 +2,54 @@ package com.example.topnews.screens.readlater
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.topnews.R
 import com.example.topnews.screens.*
-import com.example.topnews.screens.Utils.BundleHolder
-import com.example.topnews.screens.Utils.WrappedAdapter
+import com.example.topnews.screens.utils.BundleHolder
+import base.BaseAdapter
+import base.BaseFragment
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
 
-class ReadLaterFragment : Fragment(), OnRVItemClickListener<Article> {
+class ReadLaterFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemClickListener<Article> {
 
-    private lateinit var viewModel: ArticleViewModel
-    private lateinit var adapterReadLater: WrappedAdapter<Article>
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_read_later, container, false)
+    private val adapterReadLater: ReadLaterAdapter by lazy {
+        ReadLaterAdapter().apply {
+            listener = this@ReadLaterFragment::onItemClick
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun getLayoutId(): Int = R.layout.fragment_read_later
+    override fun getClassTypeVM(): Class<ArticleViewModel> = ArticleViewModel::class.java
 
-        setupReadLaterAdapter()
+    override fun initView() {
         setupRecyclerView()
-        setViewModel()
-
+        observeForData()
     }
 
-    private fun setViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ArticleViewModel::class.java)
-
+    private fun observeForData() =
         viewModel.getArticles().observe(this, Observer { listArticles ->
-            listArticles?.let { adapterReadLater.setData(it) }
+            listArticles?.let { adapterReadLater.setData(listArticles) }
         })
-    }
 
-    private fun setupRecyclerView() {
-        readLaterRecyclerView.layoutManager = LinearLayoutManager(context)
-        readLaterRecyclerView.adapter = adapterReadLater
+    private fun setupRecyclerView() =
+        readLaterRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = adapterReadLater
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+                setDrawable(getDrawable(context!!, R.drawable.divider)!!)
+            })
+        }
 
-        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(getDrawable(context!!, R.drawable.divider)!!)
-        readLaterRecyclerView.addItemDecoration(divider)
-    }
-
-    private fun setupReadLaterAdapter() {
-        adapterReadLater = WrappedAdapter(R.layout.item_read_later, this)
-
-    }
-
-    override fun itemClicked(dataItem: Article) {
+    override fun onItemClick(dataItem: Article) =
         navigateToArticleDetails(BundleHolder.getBundleForDetails(dataItem))
-    }
 
-    private fun navigateToArticleDetails(bundle: Bundle){
+
+    private fun navigateToArticleDetails(bundle: Bundle) =
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)
             .navigate(R.id.action_readLaterFragment_to_articleDetailsFragment, bundle)
-    }
 }
