@@ -102,14 +102,20 @@ class FrameActivity : AppCompatActivity() {
 
     private fun setupDestinationChangedLister() {
         navCtrl.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.articleDetailsFragment) {
-                bottom_navigation.visibility = View.GONE
-                menu.findItem(R.id.search).isVisible = false
-                supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            } else {
-                bottom_navigation.visibility = View.VISIBLE
-                supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-                menu.findItem(R.id.search).isVisible = true
+            when (destination.id) {
+                R.id.articleDetailsFragment -> {
+                    bottom_navigation.visibility = View.GONE
+                    menu.findItem(R.id.search).isVisible = false
+                    supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+                }
+                R.id.searchFragment -> {
+                    bottom_navigation.visibility = View.GONE
+                }
+                else -> {
+                    bottom_navigation.visibility = View.VISIBLE
+                    supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+                    menu.findItem(R.id.search).isVisible = true
+                }
             }
         }
     }
