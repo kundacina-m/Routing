@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.topnews.R
 import com.example.topnews.screens.*
-import com.example.topnews.screens.utils.BundleHolder
 import base.BaseAdapter
 import base.BaseFragment
+import com.example.topnews.screens.Constants.PARCEL_FOR_ARTICLE_DETAILS
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
 
@@ -19,7 +19,7 @@ class ReadLaterFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemCl
 
     private val adapterReadLater: ReadLaterAdapter by lazy {
         ReadLaterAdapter().apply {
-            listener = this@ReadLaterFragment::onItemClick
+            oneClickListener = this@ReadLaterFragment::onItemClick
         }
     }
 
@@ -46,7 +46,7 @@ class ReadLaterFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemCl
         }
 
     override fun onItemClick(dataItem: Article) =
-        navigateToArticleDetails(BundleHolder.getBundleForDetails(dataItem))
+        navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
 
 
     private fun navigateToArticleDetails(bundle: Bundle) =

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.screens.*
-import com.example.topnews.screens.utils.BundleHolder
 import base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -15,7 +14,7 @@ class SearchFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemClick
 
     private val adapterSearch: SearchAdapter by lazy {
         SearchAdapter().apply {
-            listener = this@SearchFragment::onItemClick
+            oneClickListener = this@SearchFragment::onItemClick
         }
     }
 
@@ -34,9 +33,8 @@ class SearchFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemClick
 
     fun updateAdapter(num: Int) = adapterSearch.setData(viewModel.getNumOfArticles(num).value!!)
 
-    override fun onItemClick(dataItem: Article) {
-        navigateToArticleDetails(BundleHolder.getBundleForDetails(dataItem))
-    }
+    override fun onItemClick(dataItem: Article) =
+        navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
 
     private fun navigateToArticleDetails(bundle: Bundle) =
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)

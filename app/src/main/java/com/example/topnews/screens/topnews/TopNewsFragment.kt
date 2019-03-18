@@ -6,9 +6,9 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.topnews.R
 import com.example.topnews.screens.*
-import com.example.topnews.screens.utils.BundleHolder
 import base.BaseAdapter
 import base.BaseFragment
+import com.example.topnews.screens.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import kotlinx.android.synthetic.main.fragment_top_news.*
 
 
@@ -16,7 +16,7 @@ class TopNewsFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemClic
 
     private val adapterTopNews: TopNewsAdapter by lazy {
         TopNewsAdapter().apply {
-            listener = this@TopNewsFragment::onItemClick
+            oneClickListener = this@TopNewsFragment::onItemClick
         }
     }
 
@@ -39,7 +39,8 @@ class TopNewsFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemClic
             adapter = adapterTopNews
         }
 
-    override fun onItemClick(dataItem: Article) = navigateToArticleDetails(BundleHolder.getBundleForDetails(dataItem))
+    override fun onItemClick(dataItem: Article) =
+        navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
 
     private fun navigateToArticleDetails(bundle: Bundle) =
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)

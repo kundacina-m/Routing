@@ -1,9 +1,5 @@
 package base
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
@@ -11,24 +7,10 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
 
     private var data: List<T> = emptyList()
 
-    var listener: ((T) -> Unit?)? = null
-
-    @LayoutRes
-    abstract fun getItemViewId(): Int
-
-    abstract fun getViewHolder(view: View, viewType: Int): RecyclerView.ViewHolder
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        getViewHolder(LayoutInflater.from(parent.context).inflate(getItemViewId(), parent, false), getItemViewId())
+    var oneClickListener: ((T) -> Unit?)? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolderAdapterBinder<T>).bind(data[position])
-
-        listener?.let {
-            holder.itemView.setOnClickListener {
-                listener?.invoke(getItemOnPosition(position))
-            }
-        }
     }
 
     override fun getItemCount(): Int = data.size
