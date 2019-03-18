@@ -1,18 +1,20 @@
 package com.example.topnews.screens.topnews
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.topnews.R
+import com.example.topnews.screens.Article
 import com.example.topnews.screens.FakeData
+import com.example.topnews.screens.OnArticleClickListener
 import kotlinx.android.synthetic.main.fragment_top_news.*
 
 
-class TopNewsFragment : Fragment() {
+class TopNewsFragment : Fragment(), OnArticleClickListener{
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_top_news, container, false)
@@ -34,9 +36,24 @@ class TopNewsFragment : Fragment() {
 
     private fun setupAdapter(): TopNewsAdapter {
         val adapter = TopNewsAdapter()
+        adapter.setListener(this)
         adapter.setData(FakeData.fetchData())
 
         return adapter
     }
 
+    override fun articleClicked(dataItem: Article) {
+        val bundle = Bundle()
+
+        bundle.putString("urlImg",dataItem.imageUrl)
+        bundle.putString("source",dataItem.source.get("name"))
+        bundle.putString("title",dataItem.title)
+        bundle.putString("description",dataItem.description)
+        bundle.putString("content",dataItem.content)
+        bundle.putString("publishedAt",dataItem.publishedAt)
+        bundle.putString("author",dataItem.author)
+        bundle.putString("urlWeb",dataItem.urlToArticle)
+
+        Navigation.findNavController(activity!!,R.id.nav_host_fragment).navigate(R.id.action_topNewsFragment_to_articleDetailsFragment,bundle)
+    }
 }
