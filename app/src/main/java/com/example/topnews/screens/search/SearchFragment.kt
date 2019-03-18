@@ -6,20 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.topnews.R
 import com.example.topnews.screens.Article
 import com.example.topnews.screens.FakeData
-import com.example.topnews.screens.OnArticleClickListener
+import com.example.topnews.screens.OnRVItemClickListener
+import com.example.topnews.screens.WrappedAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment : Fragment() ,OnArticleClickListener{
+class SearchFragment : Fragment(), OnRVItemClickListener<Article> {
 
-    private lateinit var adapter: SearchAdapter
+    private lateinit var adapter: WrappedAdapter<Article>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
@@ -37,26 +37,26 @@ class SearchFragment : Fragment() ,OnArticleClickListener{
     }
 
     private fun setupAdapter() {
-        adapter = SearchAdapter()
-        adapter.setListener(this)
+        adapter = WrappedAdapter(R.layout.item_search_result, this)
     }
 
-    fun updateAdapter(num: Int){
+    fun updateAdapter(num: Int) {
         adapter.setData(FakeData.fetchSearchedData(num))
-        adapter.notifyDataSetChanged()
     }
 
-    override fun articleClicked(dataItem: Article) {
+    override fun itemClicked(dataItem: Article) {
         val bundle = Bundle()
 
-        bundle.putString("urlImg",dataItem.imageUrl)
-        bundle.putString("source",dataItem.source.get("name"))
-        bundle.putString("title",dataItem.title)
-        bundle.putString("description",dataItem.description)
-        bundle.putString("content",dataItem.content)
-        bundle.putString("publishedAt",dataItem.publishedAt)
-        bundle.putString("author",dataItem.author)
-        bundle.putString("urlWeb",dataItem.urlToArticle)
+        bundle.putString("urlImg", dataItem.imageUrl)
+        bundle.putString("source", dataItem.source.get("name"))
+        bundle.putString("title", dataItem.title)
+        bundle.putString("description", dataItem.description)
+        bundle.putString("content", dataItem.content)
+        bundle.putString("publishedAt", dataItem.publishedAt)
+        bundle.putString("author", dataItem.author)
+        bundle.putString("urlWeb", dataItem.urlToArticle)
 
-        Navigation.findNavController(activity!!,R.id.nav_host_fragment).navigate(R.id.action_searchFragment_to_articleDetailsFragment,bundle)    }
+        Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+            .navigate(R.id.action_searchFragment_to_articleDetailsFragment, bundle)
+    }
 }
