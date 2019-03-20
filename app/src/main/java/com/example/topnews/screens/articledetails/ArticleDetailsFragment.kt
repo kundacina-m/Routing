@@ -12,11 +12,16 @@ import com.example.topnews.screens.Article
 import com.example.topnews.screens.Constants.MAP_SOURCE_KEY_NAME
 import com.example.topnews.screens.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import kotlinx.android.synthetic.main.fragment_article_details.*
+import sqlite.ArticlesDBHelper
 
 class ArticleDetailsFragment : Fragment() {
 
     private val dataItem by lazy {
         arguments?.getParcelable(PARCEL_FOR_ARTICLE_DETAILS) as Article
+    }
+
+    private val articlesDBHelper by lazy {
+        ArticlesDBHelper(activity!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -26,6 +31,9 @@ class ArticleDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fillViewWithData()
+
+        articlesDBHelper.insertArticle(dataItem)
+
     }
 
     private fun fillViewWithData(){
@@ -35,9 +43,9 @@ class ArticleDetailsFragment : Fragment() {
         tvContent.text = dataItem.content
         tvPublishedAt.text = dataItem.publishedAt
         tvAuthor.text = dataItem.author
-        linkToWeb.text = dataItem.urlToArticle
+        linkToWeb.text = dataItem.url
 
-        Glide.with(activity!!).load(dataItem.imageUrl)
+        Glide.with(activity!!).load(dataItem.urlToImage)
             .into(ivArticleImage)
     }
 

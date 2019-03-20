@@ -31,10 +31,12 @@ class ReadLaterFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemCl
         observeForData()
     }
 
-    private fun observeForData() =
-        viewModel.getArticles().observe(this, Observer { listArticles ->
-            listArticles?.let { adapterReadLater.setData(listArticles) }
-        })
+    private fun observeForData() {
+        viewModel.apply {
+            getNetworkResults().observe(this@ReadLaterFragment, Observer { adapterReadLater.setData(it) })
+            getArticlesFromDB(activity!!)
+        }
+    }
 
     private fun setupRecyclerView() =
         readLaterRecyclerView.apply {
@@ -47,7 +49,6 @@ class ReadLaterFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemCl
 
     override fun onItemClick(dataItem: Article) =
         navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
-
 
     private fun navigateToArticleDetails(bundle: Bundle) =
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)

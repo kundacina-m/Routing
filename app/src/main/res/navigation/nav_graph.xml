@@ -45,7 +45,8 @@
         />
     </fragment>
 
-    <fragment android:id="@+id/articleDetailsFragment" android:name="com.example.topnews.screens.articledetails.ArticleDetailsFragment"
+    <fragment android:id="@+id/articleDetailsFragment"
+              android:name="com.example.topnews.screens.articledetails.ArticleDetailsFragment"
               android:label="fragment_article_details" tools:layout="@layout/fragment_article_details">
 
         <argument android:name="urlImg" app:argType="string"/>
@@ -57,5 +58,11 @@
         <argument android:name="author" app:argType="string"/>
         <argument android:name="urlWeb" app:argType="string"/>
     </fragment>
+
+    <fragment
+            android:id="@+id/articlesCategoryFragment"
+            android:name="com.example.topnews.screens.articlescategory.ArticlesCategoryFragment"
+            android:label="fragment_articles_category"
+            tools:layout="@layout/fragment_articles_category"/>
 
 </navigation>
