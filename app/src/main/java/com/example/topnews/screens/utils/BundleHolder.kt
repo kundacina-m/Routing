@@ -1,4 +1,4 @@
-package com.example.topnews.screens.Utils
+package com.example.topnews.screens.utils
 
 import android.os.Bundle
 import com.example.topnews.screens.Article

@@ -1,25 +1,24 @@
 package com.example.topnews.screens.frame
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import base.BaseActivity
 import com.example.topnews.R
 import com.example.topnews.screens.search.SearchFragment
 import kotlinx.android.synthetic.main.activity_frame.*
 
-class FrameActivity : AppCompatActivity() {
+class FrameActivity : BaseActivity() {
 
-    private lateinit var navCtrl: NavController
+    private val navCtrl: NavController by lazy {
+        Navigation.findNavController(this, R.id.nav_host_fragment)
+    }
     private val waitingTimeForKeyDown = 1000
     private var numOfSearchedArticles: Int = 0
     private lateinit var menu: Menu
@@ -30,12 +29,9 @@ class FrameActivity : AppCompatActivity() {
         }
     }
 
+    override fun getViewLayout(): Int = R.layout.activity_frame
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_frame)
-
-        navCtrl = Navigation.findNavController(this, R.id.nav_host_fragment)
+    override fun initView() {
         setupBottomNavBar()
     }
 
@@ -53,7 +49,7 @@ class FrameActivity : AppCompatActivity() {
 
     }
 
-    private fun setSearchViewListener(searchView: SearchView) {
+    private fun setSearchViewListener(searchView: SearchView) =
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -68,13 +64,10 @@ class FrameActivity : AppCompatActivity() {
 
         })
 
-    }
-
-    private fun updateSearchList() {
+    private fun updateSearchList() =
         ((nav_host_fragment as NavHostFragment).childFragmentManager.primaryNavigationFragment as? SearchFragment)?.updateAdapter(
             numOfSearchedArticles
         )
-    }
 
     private fun doOnTextChanged(newText: String) {
         if (navCtrl.currentDestination!!.id != R.id.searchFragment)
@@ -83,15 +76,13 @@ class FrameActivity : AppCompatActivity() {
             navCtrl.navigateUp()
     }
 
-    private fun restartCountdownTimer(cntrForKeyUP: CountDownTimer) {
-        cntrForKeyUP.cancel()
-        cntrForKeyUP.start()
+    private fun restartCountdownTimer(cntrForKeyUP: CountDownTimer) = cntrForKeyUP.apply {
+        cancel()
+        start()
     }
 
 
-    private fun setupBottomNavBar() {
-        bottom_navigation.setupWithNavController(navCtrl)
-    }
+    private fun setupBottomNavBar() = bottom_navigation.setupWithNavController(navCtrl)
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item!!.itemId == android.R.id.home) {
@@ -100,7 +91,7 @@ class FrameActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupDestinationChangedLister() {
+    private fun setupDestinationChangedLister() =
         navCtrl.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.articleDetailsFragment -> {
@@ -118,5 +109,4 @@ class FrameActivity : AppCompatActivity() {
                 }
             }
         }
-    }
 }

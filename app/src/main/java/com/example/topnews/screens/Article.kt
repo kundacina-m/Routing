@@ -1,5 +1,6 @@
 package com.example.topnews.screens
 
+
 data class Article(
     val source: HashMap<String, String>,
     val author: String,
