@@ -1,5 +1,9 @@
 package com.example.topnews.screens
 
+import com.example.topnews.screens.categories.RV
+import com.example.topnews.screens.categories.Section
+import com.example.topnews.screens.categories.SectionItem
+
 object FakeData {
 
     fun fetchData(): MutableList<Article> {
@@ -9,6 +13,22 @@ object FakeData {
     fun fetchSearchedData(num: Int): MutableList<Article> {
         return data.subList(0, num)
     }
+
+    fun fetchRV(): MutableList<RV> {
+        return list
+    }
+
+    private val list = mutableListOf<RV>(
+        Section("Sport"),
+        SectionItem("Kosarka", 1),
+        SectionItem("Odbojka", 2),
+        SectionItem("Rukomet", 3),
+        SectionItem("Vaterpolo", 4),
+        Section("Novine"),
+        SectionItem("BBC", 5),
+        SectionItem("CNN", 6),
+        SectionItem("RT", 7)
+    )
 
     private val data = mutableListOf<Article>(
         Article(
