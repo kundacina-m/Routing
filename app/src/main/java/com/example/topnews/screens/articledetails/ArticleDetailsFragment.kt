@@ -2,26 +2,28 @@ package com.example.topnews.screens.articledetails
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.topnews.R
 import com.example.topnews.screens.Article
-import com.example.topnews.screens.Constants.MAP_SOURCE_KEY_NAME
-import com.example.topnews.screens.Constants.PARCEL_FOR_ARTICLE_DETAILS
+import com.example.topnews.utils.Constants.MAP_SOURCE_KEY_NAME
+import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
+import com.example.topnews.db.ArticleDaoImpl
 import kotlinx.android.synthetic.main.fragment_article_details.*
-import sqlite.ArticlesDBHelper
 
 class ArticleDetailsFragment : Fragment() {
 
-    private val dataItem by lazy {
-        arguments?.getParcelable(PARCEL_FOR_ARTICLE_DETAILS) as Article
+    private val articlesDAO by lazy {
+        ArticleDaoImpl()
     }
 
-    private val articlesDBHelper by lazy {
-        ArticlesDBHelper(activity!!)
+    private val dataItem by lazy {
+        arguments?.getParcelable(PARCEL_FOR_ARTICLE_DETAILS) as Article
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -31,9 +33,9 @@ class ArticleDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fillViewWithData()
-
-        articlesDBHelper.insertArticle(dataItem)
-
+        btReadLater.setOnClickListener {
+            addArticleToFavourites(dataItem)
+        }
     }
 
     private fun fillViewWithData(){
@@ -48,5 +50,16 @@ class ArticleDetailsFragment : Fragment() {
         Glide.with(activity!!).load(dataItem.urlToImage)
             .into(ivArticleImage)
     }
+
+     private fun addArticleToFavourites(article: Article) {
+        if (articlesDAO.insertItem(article))
+            Toast.makeText(activity,"Article successfully added to favourites!", Toast.LENGTH_LONG).show()
+        else
+            Toast.makeText(activity,"Article successfully removed from favourites!", Toast.LENGTH_LONG).show()
+
+        Log.d("BAZA", articlesDAO.readAll().toString())
+    }
+
+
 
 }

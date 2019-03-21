@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import com.example.topnews.R
-import com.example.topnews.screens.FakeData
 import kotlinx.android.synthetic.main.fragment_categories.*
+
+private val categories = listOf("Business","Entertainment","General","Health","Science","Sports","Technology")
 
 class CategoriesFragment : Fragment(), BaseAdapter.OnItemClickListener<String> {
 
     private val adapterCategories: CategoriesAdapter by lazy {
         CategoriesAdapter().apply {
-            setData(FakeData.fetchCategories())
+            setData(categories)
             oneClickListener = this@CategoriesFragment::onItemClick
         }
     }
@@ -29,7 +30,6 @@ class CategoriesFragment : Fragment(), BaseAdapter.OnItemClickListener<String> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
     }
 
@@ -46,4 +46,5 @@ class CategoriesFragment : Fragment(), BaseAdapter.OnItemClickListener<String> {
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)
             .navigate(R.id.articlesCategoryFragment, Bundle().apply { putString("Category", dataItem) })
     }
+
 }

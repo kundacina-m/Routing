@@ -11,19 +11,38 @@
             android:layout_height="wrap_content"
             tools:context=".screens.articledetails.ArticleDetailsFragment">
 
-        <ImageView
-                android:id="@+id/ivArticleImage"
-                android:layout_width="0dp"
+        <RelativeLayout
+                android:id="@+id/rlLayout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                    android:id="@+id/ivArticleImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@android:drawable/btn_star_big_on"
+                    tools:layout_editor_absoluteY="285dp"
+                    tools:layout_editor_absoluteX="175dp"
+                    android:id="@+id/btReadLater"
+                    android:background="?android:selectableItemBackground"
+                    android:layout_alignBottom="@+id/ivArticleImage"
+                    android:layout_alignRight="@+id/ivArticleImage"/>
+
+        </RelativeLayout>
+
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvSource"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/ivArticleImage"
+                app:layout_constraintTop_toBottomOf="@+id/rlLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"

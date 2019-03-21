@@ -6,11 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.screens.Article
-import kotlinx.android.synthetic.main.item_top_news.view.*
 
 class TopNewsAdapter : BaseAdapter<Article>() {
-
-    var onStarClickListener: ((Article) -> Unit?)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         TopNewsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_top_news, parent, false))
@@ -21,13 +18,5 @@ class TopNewsAdapter : BaseAdapter<Article>() {
         holder.itemView.setOnClickListener {
             oneClickListener?.invoke(getItemOnPosition(position))
         }
-
-        holder.itemView.btReadLater.setOnClickListener {
-            onStarClickListener?.invoke(getItemOnPosition(position))
-        }
-    }
-
-    interface onFavouriteClickListener{
-        fun onStarClick(article: Article)
     }
 }

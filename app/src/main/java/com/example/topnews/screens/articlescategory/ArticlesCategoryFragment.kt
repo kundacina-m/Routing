@@ -8,12 +8,9 @@ import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.screens.Article
-import com.example.topnews.screens.ArticleViewModel
 import kotlinx.android.synthetic.main.fragment_articles_category.*
-import kotlinx.android.synthetic.main.fragment_read_later.*
 
-
-class ArticlesCategoryFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), BaseAdapter.OnItemClickListener<Article> {
 
     private val adapterArticlesCategory by lazy {
         ArticlesCategoryAdapter().apply {
@@ -26,7 +23,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticleViewModel>(), BaseAdapter.O
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_articles_category
-    override fun getClassTypeVM(): Class<ArticleViewModel> = ArticleViewModel::class.java
+    override fun getClassTypeVM(): Class<ArticlesCategoryViewModel> = ArticlesCategoryViewModel::class.java
 
     override fun initView() {
         setupRecyclerView()

@@ -5,7 +5,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.screens.Article
 import base.BaseViewHolder
-import com.example.topnews.screens.Constants
+import com.example.topnews.utils.Constants
 import kotlinx.android.synthetic.main.item_read_later.view.*
 
 class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {

@@ -7,6 +7,7 @@
 
     <fragment
             android:id="@+id/topNewsFragment"
+            android:label="Top news"
             android:name="com.example.topnews.screens.topnews.TopNewsFragment"
             tools:layout="@layout/fragment_top_news">
         <action
@@ -17,6 +18,7 @@
 
     <fragment
             android:id="@+id/categoriesFragment"
+            android:label="Categories"
             android:name="com.example.topnews.screens.categories.CategoriesFragment"
             tools:layout="@layout/fragment_categories">
         <action
@@ -27,6 +29,7 @@
 
     <fragment
             android:id="@+id/readLaterFragment"
+            android:label="Favourites"
             android:name="com.example.topnews.screens.readlater.ReadLaterFragment"
             tools:layout="@layout/fragment_read_later">
         <action
@@ -37,7 +40,6 @@
 
     <fragment android:id="@+id/searchFragment"
               android:name="com.example.topnews.screens.search.SearchFragment"
-              android:label="fragment_search"
               tools:layout="@layout/fragment_search">
         <action
                 android:id="@+id/action_searchFragment_to_articleDetailsFragment"
@@ -47,7 +49,7 @@
 
     <fragment android:id="@+id/articleDetailsFragment"
               android:name="com.example.topnews.screens.articledetails.ArticleDetailsFragment"
-              android:label="fragment_article_details" tools:layout="@layout/fragment_article_details">
+              tools:layout="@layout/fragment_article_details">
 
         <argument android:name="urlImg" app:argType="string"/>
         <argument android:name="source" app:argType="string"/>
@@ -62,7 +64,6 @@
     <fragment
             android:id="@+id/articlesCategoryFragment"
             android:name="com.example.topnews.screens.articlescategory.ArticlesCategoryFragment"
-            android:label="fragment_articles_category"
             tools:layout="@layout/fragment_articles_category"/>
 
 </navigation>
