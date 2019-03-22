@@ -9,9 +9,8 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
 
     var oneClickListener: ((T) -> Unit?)? = null
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         (holder as ViewHolderAdapterBinder<T>).bind(data[position])
-    }
 
     override fun getItemCount(): Int = data.size
 
@@ -29,7 +28,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     private fun notifyChanged(old: List<T>, new: List<T>) = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            old[oldItemPosition]!! === new[newItemPosition]
+            old[oldItemPosition].hashCode() == new[newItemPosition].hashCode()
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
             old[oldItemPosition] == new[newItemPosition]

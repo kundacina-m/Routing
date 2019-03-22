@@ -4,19 +4,23 @@
             android:id="@+id/topNewsFragment"
             android:title="@string/topNews"
             android:state_checked="true"
-            android:color="@color/colorPrimaryDark"/>
+            android:color="@color/colorPrimaryDark"
+            android:icon="@android:drawable/ic_dialog_dialer"/>
 
     <item
             android:id="@+id/categoriesFragment"
             android:title="@string/categories"
             android:state_checked="false"
-            android:color="@color/colorPrimary"/>
+            android:color="@color/colorPrimary"
+            android:icon="@android:drawable/ic_menu_agenda"
+            />
 
     <item
             android:id="@+id/readLaterFragment"
             android:title="@string/readLater"
             android:state_checked="false"
-            android:color="@color/colorPrimary"/>
-
+            android:color="@color/colorPrimary"
+            android:icon="@android:drawable/ic_menu_save"
+    />
 
 </menu>

@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
@@ -20,7 +21,7 @@ class FrameActivity : BaseActivity() {
         Navigation.findNavController(this, R.id.nav_host_fragment)
     }
     private val waitingTimeForKeyDown = 1000
-    private var numOfSearchedArticles: Int = 0
+    private var searchKeyword: String = ""
     private lateinit var menu: Menu
 
     private var searchTimer = object : SearchTimer(waitingTimeForKeyDown.toLong(), 500) {
@@ -40,33 +41,50 @@ class FrameActivity : BaseActivity() {
         this.menu = menu!!
 
         val searchItem = menu.findItem(R.id.search)
-        val searchView = searchItem.actionView as SearchView
 
-        setSearchViewListener(searchView)
         setupDestinationChangedLister()
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, object : MenuItemCompat.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean = true
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                navCtrl.navigateUp()
+                return true
+            }
+
+        })
+
+        val searchView = searchItem.actionView as SearchView
+        setSearchViewListener(searchView)
 
         return super.onCreateOptionsMenu(menu)
 
     }
 
     private fun setSearchViewListener(searchView: SearchView) =
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
+        searchView.apply {
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                numOfSearchedArticles = newText!!.length
-                restartCountdownTimer(searchTimer)
-                doOnTextChanged(newText)
-                return false
-            }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return if (!newText?.isEmpty()!!) {
+                        searchKeyword = newText!!
+                        restartCountdownTimer(searchTimer)
+                        doOnTextChanged(newText)
+                        false
+                    } else true
+                }
 
-        })
+            })
+            setOnSearchClickListener {
+                navCtrl.navigate(R.id.searchFragment)
+            }
+        }
 
     private fun updateSearchList() =
-        ((nav_host_fragment as NavHostFragment).childFragmentManager.primaryNavigationFragment as? SearchFragment)?.updateAdapter(
-            numOfSearchedArticles
+        ((nav_host_fragment as NavHostFragment).childFragmentManager.primaryNavigationFragment as? SearchFragment)?.fetchData(
+            searchKeyword
         )
 
     private fun doOnTextChanged(newText: String) {
@@ -81,23 +99,21 @@ class FrameActivity : BaseActivity() {
         start()
     }
 
-
-    private fun setupBottomNavBar() = bottom_navigation.setupWithNavController(navCtrl)
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item!!.itemId == android.R.id.home) {
-            navCtrl.navigateUp()
-        }
-        return super.onOptionsItemSelected(item)
+    private fun setupBottomNavBar() {
+        bottom_navigation.setupWithNavController(navCtrl)
+        bottom_navigation.setOnNavigationItemReselectedListener { }
     }
 
     private fun setupDestinationChangedLister() =
         navCtrl.addOnDestinationChangedListener { _, destination, _ ->
+            supportActionBar?.title = destination.label
+
             when (destination.id) {
                 R.id.articleDetailsFragment -> {
                     bottom_navigation.visibility = View.GONE
                     menu.findItem(R.id.search).isVisible = false
                     supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
                 }
                 R.id.searchFragment -> {
                     bottom_navigation.visibility = View.GONE
@@ -109,4 +125,8 @@ class FrameActivity : BaseActivity() {
                 }
             }
         }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navCtrl.navigateUp()
+    }
 }

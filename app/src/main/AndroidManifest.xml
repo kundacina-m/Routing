@@ -3,8 +3,10 @@
           xmlns:tools="http://schemas.android.com/tools" package="com.example.topnews">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
+            android:name="com.example.topnews.utils.App"
             android:hardwareAccelerated="true"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
