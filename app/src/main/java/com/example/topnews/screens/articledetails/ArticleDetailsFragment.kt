@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_article_details.*
 
 class ArticleDetailsFragment : Fragment() {
 
-    private val articlesDAO by lazy {
+    private val articleDAO by lazy {
         ArticleDaoImpl()
     }
 
@@ -26,7 +26,7 @@ class ArticleDetailsFragment : Fragment() {
         arguments?.getParcelable(PARCEL_FOR_ARTICLE_DETAILS) as Article
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_article_details, container, false)
     }
 
@@ -38,7 +38,7 @@ class ArticleDetailsFragment : Fragment() {
         }
     }
 
-    private fun fillViewWithData(){
+    private fun fillViewWithData() {
         tvSource.text = dataItem.source.get(key = MAP_SOURCE_KEY_NAME)
         tvTitle.text = dataItem.title
         tvDescription.text = dataItem.description
@@ -51,15 +51,13 @@ class ArticleDetailsFragment : Fragment() {
             .into(ivArticleImage)
     }
 
-     private fun addArticleToFavourites(article: Article) {
-        if (articlesDAO.insertItem(article))
-            Toast.makeText(activity,"Article successfully added to favourites!", Toast.LENGTH_LONG).show()
-        else
-            Toast.makeText(activity,"Article successfully removed from favourites!", Toast.LENGTH_LONG).show()
+    private fun addArticleToFavourites(article: Article) {
+        articleDAO.insertItem(article).executeAsync {
+            if (it)
+                Toast.makeText(activity, "Article successfully added to favourites!", Toast.LENGTH_LONG).show()
+            else
+                Toast.makeText(activity, "Article successfully removed from favourites!", Toast.LENGTH_LONG).show()
+        }
 
-        Log.d("BAZA", articlesDAO.readAll().toString())
     }
-
-
-
 }

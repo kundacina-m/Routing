@@ -9,11 +9,9 @@ const val pageSize = 6
 
 class ReadLaterViewModel : ViewModel() {
 
-    private val articlesDao by lazy {
+    private val articleDao by lazy {
         ArticleDaoImpl()
     }
-
-    private fun getArticles(from: Int,to:Int) = articlesDao.getArticlesFromTo(from,to)
 
     private var pages: Int = 0
     var endOfDB = false
@@ -27,14 +25,14 @@ class ReadLaterViewModel : ViewModel() {
             array.addAll(articles.value?.asIterable()!!)
         }
 
+        articleDao.getArticlesFromTo(pages * pageSize, (pages + 1) * pageSize).executeAsync {
+            endOfDB = it.size < pageSize
+            array.addAll(it)
 
+            articles.postValue(array)
+            pages++
+        }
 
-        val dbList = getArticles(pages * pageSize, pageSize + (pages * pageSize)).toList()
-        endOfDB = dbList.size < pageSize
-        array.addAll(dbList)
-
-        articles.value = array
-
-        pages++
     }
+
 }

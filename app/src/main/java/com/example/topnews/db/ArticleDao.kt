@@ -4,5 +4,5 @@ import com.example.topnews.screens.Article
 
 interface ArticleDao : BaseDao<Article> {
 
-    fun getArticlesFromTo(from: Int, to: Int): ArrayList<Article>
+    fun getArticlesFromTo(from: Int, to: Int): Execute<ArrayList<Article>>
 }
