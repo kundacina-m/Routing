@@ -2,7 +2,8 @@ package com.example.topnews.screens.readlater
 
 
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,27 +16,40 @@ import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
 
-class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+
+class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<Article>,
+    ReadLaterAdapter.PopUpMenu {
 
     private var loading = false
+    private lateinit var menu: Menu
 
-    private val adapterReadLater: ReadLaterAdapter by lazy {
+    private val adapterReadLater by lazy {
         ReadLaterAdapter().apply {
             oneClickListener = this@ReadLaterFragment::onItemClick
+            handleMenu = this@ReadLaterFragment::showMenu
         }
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_read_later
     override fun getClassTypeVM(): Class<ReadLaterViewModel> = ReadLaterViewModel::class.java
 
-    override fun initView() {
-        setupRecyclerView()
-        fetchData()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setObservers()
+        setHasOptionsMenu(true)
+    }
+
+    override fun initView() {
+        setupRecyclerView()
+        fetchData()
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
+        setMenuClickListeners()
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun setObservers() {
@@ -43,6 +57,20 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
             adapterReadLater.setData(it)
             loading = false
         })
+    }
+
+    private fun setMenuClickListeners() {
+        menu.findItem(R.id.selectAll).setOnMenuItemClickListener {
+            adapterReadLater.checkAll()
+            true
+        }
+
+        menu.findItem(R.id.removeSelected).setOnMenuItemClickListener {
+            viewModel.removeItems(adapterReadLater.getChecked())
+            adapterReadLater.checkedArticles = arrayListOf()
+            adapterReadLater.updateDataSize()
+            true
+        }
     }
 
     private fun fetchData() = viewModel.getArticlesFromDB()
@@ -58,8 +86,6 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
                         val totalItemCount = layoutManager?.itemCount
                         val pastVisibleItem = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
-                        Log.d("visibleItem", pastVisibleItem.toString())
-                        Log.d("currentItems", totalItemCount.toString())
                         if (totalItemCount != null) {
                             if ((totalItemCount <= pastVisibleItem + 4) && !loading) {
                                 loading = true
@@ -70,6 +96,13 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
                 }
             })
         }
+
+    override fun showMenu(visibility: Boolean) {
+        menu.findItem(R.id.selectAll).isVisible = visibility
+        menu.findItem(R.id.removeSelected).isVisible = visibility
+        menu.findItem(R.id.search).isVisible = visibility.not()
+
+    }
 
     override fun onItemClick(dataItem: Article) =
         navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })

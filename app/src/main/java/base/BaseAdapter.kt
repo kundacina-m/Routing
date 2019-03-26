@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var data: List<T> = emptyList()
+    var dataSize: Int = 0
 
     var oneClickListener: ((T) -> Unit?)? = null
+
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         (holder as ViewHolderAdapterBinder<T>).bind(data[position])
@@ -17,6 +19,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     fun setData(dataList: List<T>) {
         notifyChanged(data, dataList)
         data = dataList
+        dataSize = data.size
     }
 
     fun getData(): List<T> = data
@@ -45,4 +48,5 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     interface OnItemClickListener<in T> {
         fun onItemClick(dataItem: T)
     }
+
 }

@@ -35,4 +35,16 @@ class ReadLaterViewModel : ViewModel() {
 
     }
 
+    fun removeItems(data: ArrayList<Article>) {
+
+        for (article in data)
+            articleDao.removeItem(article).executeAsync {
+
+            }
+
+        val array = ArrayList<Article>()
+        array.addAll(articles.value?.asIterable()!!)
+        articles.postValue(array - data)
+    }
+
 }

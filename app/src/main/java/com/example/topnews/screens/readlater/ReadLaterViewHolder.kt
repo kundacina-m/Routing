@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.item_read_later.view.*
 
 class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 
+    var onChecked: ((Article,Boolean)-> Unit?)? = null
+
     override fun bind(dataItem: Article) {
         itemView.apply {
             tvTitleReadLater.text = dataItem.title
@@ -18,5 +20,17 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
         }
         Glide.with(itemView.context).load(dataItem.urlToImage).apply(RequestOptions().override(400, 600))
             .into(itemView.ivImgReadLater)
+
+        setCheckListener(dataItem)
+    }
+
+    private fun setCheckListener(article: Article){
+        itemView.cbToSelect.setOnCheckedChangeListener { _,isChecked ->
+            onChecked?.invoke(article,isChecked)
+        }
+    }
+
+    interface ArticleCheckbox{
+        fun checked(article:Article, check: Boolean)
     }
 }
