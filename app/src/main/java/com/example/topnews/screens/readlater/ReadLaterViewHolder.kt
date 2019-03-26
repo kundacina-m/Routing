@@ -6,13 +6,30 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.screens.Article
 import base.BaseViewHolder
 import com.example.topnews.utils.Constants
+import com.example.topnews.utils.ObservableData
 import kotlinx.android.synthetic.main.item_read_later.view.*
+import java.util.*
 
-class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 
-    var onChecked: ((Article,Boolean)-> Unit?)? = null
+class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), ReadLaterObserver {
+
+    lateinit var article: Article
+
+    override fun updateView(o: Observable, observedData: ObservableData) {
+
+        observedData.apply {
+
+            checkAll?.let { itemView.cbToSelect.isChecked = it }
+            article?.let { itemView.cbToSelect.isChecked = it == this@ReadLaterViewHolder.article }
+            showCheckbox?.let { itemView.cbToSelect.visibility = if (it) View.VISIBLE else View.GONE }
+        }
+    }
+
+    var onChecked: ((Article, Boolean) -> Unit?)? = null
+
 
     override fun bind(dataItem: Article) {
+        article = dataItem
         itemView.apply {
             tvTitleReadLater.text = dataItem.title
             tvSourceLaterRead.text = dataItem.source.getValue(Constants.MAP_SOURCE_KEY_NAME)
@@ -24,13 +41,13 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
         setCheckListener(dataItem)
     }
 
-    private fun setCheckListener(article: Article){
-        itemView.cbToSelect.setOnCheckedChangeListener { _,isChecked ->
-            onChecked?.invoke(article,isChecked)
+    private fun setCheckListener(article: Article) {
+        itemView.cbToSelect.setOnCheckedChangeListener { _, isChecked ->
+            onChecked?.invoke(article, isChecked)
         }
     }
 
-    interface ArticleCheckbox{
-        fun checked(article:Article, check: Boolean)
+    interface ArticleCheckbox {
+        fun onChecked(article: Article, check: Boolean)
     }
 }

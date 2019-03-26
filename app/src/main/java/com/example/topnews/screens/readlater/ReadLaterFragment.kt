@@ -12,6 +12,7 @@ import com.example.topnews.R
 import com.example.topnews.screens.*
 import base.BaseAdapter
 import base.BaseFragment
+import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
@@ -38,6 +39,8 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
         super.onCreate(savedInstanceState)
         setObservers()
         setHasOptionsMenu(true)
+
+        (activity!! as FrameActivity).voidSelection = { this@ReadLaterFragment.inSelectionMode() }
     }
 
     override fun initView() {
@@ -61,14 +64,13 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 
     private fun setMenuClickListeners() {
         menu.findItem(R.id.selectAll).setOnMenuItemClickListener {
-            adapterReadLater.checkAll()
+            adapterReadLater.checkAll = true
             true
         }
 
         menu.findItem(R.id.removeSelected).setOnMenuItemClickListener {
-            viewModel.removeItems(adapterReadLater.getChecked())
+            viewModel.removeItems(adapterReadLater.checkedArticles)
             adapterReadLater.checkedArticles = arrayListOf()
-            adapterReadLater.updateDataSize()
             true
         }
     }
@@ -104,10 +106,20 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 
     }
 
+    private fun inSelectionMode(): Boolean {
+        return if (!adapterReadLater.selectionInProgress) { false } else {
+            adapterReadLater.apply {
+                checkAll = false
+                selectionInProgress = false
+            } ; true
+        }
+    }
+
     override fun onItemClick(dataItem: Article) =
         navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
 
     private fun navigateToArticleDetails(bundle: Bundle) =
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)
             .navigate(R.id.action_readLaterFragment_to_articleDetailsFragment, bundle)
+
 }

@@ -1,28 +1,27 @@
 package com.example.topnews.screens.readlater
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.screens.Article
-import kotlinx.android.synthetic.main.item_read_later.view.*
 import kotlin.properties.Delegates
 
 class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleCheckbox {
 
+    var observable = ReadLaterObservable()
+    var checkedArticles: ArrayList<Article> = arrayListOf()
     var handleMenu: ((Boolean) -> Unit?)? = null
 
-    var checkedArticles: ArrayList<Article> by Delegates.observable(arrayListOf()) { property, oldValue, newValue ->
-        handleMenu?.invoke(false)
-        if (!holders.isEmpty()) {
-            holders.forEach {
-                it.itemView.cbToSelect.visibility = View.GONE
-            }
-        }
+    var selectionInProgress: Boolean by Delegates.observable(false) { _, _, newValue ->
+        handleMenu?.invoke(newValue)
+        observable.notifyAll(null, null, newValue)
     }
-    private var holders: ArrayList<ReadLaterViewHolder> = arrayListOf()
+
+    var checkAll: Boolean by Delegates.observable(false) { _, _, newValue ->
+        observable.notifyAll(null, newValue)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         ReadLaterViewHolder(
@@ -31,65 +30,36 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
                 parent,
                 false
             )
-        ).apply {
-            onChecked = this@ReadLaterAdapter::checked
-        }
+        ).apply { onChecked = this@ReadLaterAdapter::onChecked }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        checkedArticles = arrayListOf()
 
-        holder.itemView.setOnClickListener {
-            oneClickListener?.invoke(getItemOnPosition(position))
+        observable.addObserver(holder as ReadLaterViewHolder)
+
+        holder.itemView.apply {
+            setOnClickListener {
+                selectionInProgress = false
+                oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition)) }
+            setOnLongClickListener { setupLongClickListenerAction(holder.adapterPosition);true }
         }
+    }
 
-        holder.itemView.setOnLongClickListener {
-            holder.itemView.cbToSelect.isChecked = true
-            handleMenu?.invoke(true)
-            holders.forEach {
-                it.itemView.cbToSelect.visibility = View.VISIBLE
-            }
-            true
+    private fun setupLongClickListenerAction(position: Int) {
+        if (!selectionInProgress) {
+            selectionInProgress = true
+            observable.notifyAll(getItemOnPosition(position), null, selectionInProgress)
         }
-
-        holders.add(holder as ReadLaterViewHolder)
-        dataSize = getData().size
     }
 
-    fun checkAll() {
-        val isThatAll = checkedArticles.size == dataSize
-        holders.forEach {
-            it.itemView.cbToSelect.isChecked = !isThatAll
+    override fun onChecked(article: Article, check: Boolean) {
+        when {
+            check -> { if (!checkedArticles.contains(article)) checkedArticles.add(article) }
+            !check -> { checkedArticles.remove(article) }
         }
-
     }
-
-    fun getChecked(): ArrayList<Article> {
-        return checkedArticles
-    }
-
-    fun updateDataSize(){
-        dataSize = getData().size
-    }
-
 
     interface PopUpMenu {
         fun showMenu(visibility: Boolean)
     }
-
-    override fun checked(article: Article, check: Boolean) {
-        when {
-            check -> {
-                if (!checkedArticles.contains(article))
-                    checkedArticles.add(article)
-            }
-            !check -> {
-                checkedArticles.remove(article)
-                if (checkedArticles.isEmpty()) {
-                    checkedArticles = arrayListOf()
-                }
-            }
-        }
-    }
-
 }

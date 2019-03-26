@@ -24,6 +24,9 @@ class FrameActivity : BaseActivity() {
     private var searchKeyword: String = ""
     private lateinit var menu: Menu
 
+    var voidSelection: ((Unit)-> Boolean?)? = null
+
+
     private var searchTimer = object : SearchTimer(waitingTimeForKeyDown.toLong(), 500) {
         override fun onFinish() {
             updateSearchList()
@@ -129,4 +132,14 @@ class FrameActivity : BaseActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navCtrl.navigateUp()
     }
+
+    override fun onBackPressed() {
+        if (navCtrl.currentDestination?.id == R.id.readLaterFragment){
+            if (!voidSelection?.invoke(Unit)!!) {
+                navCtrl.navigateUp()
+            }
+        }
+        else navCtrl.navigateUp()
+    }
+
 }

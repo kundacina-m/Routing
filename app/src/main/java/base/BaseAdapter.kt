@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var data: List<T> = emptyList()
-    var dataSize: Int = 0
+    private var dataSize: Int = 0
 
     var oneClickListener: ((T) -> Unit?)? = null
 
@@ -27,6 +27,8 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     fun getItemOnPosition(position: Int): T = data[position]
 
     fun getItemsFromTo(from: Int, to: Int): List<T> = data.subList(from, to)
+
+    fun getDataSize(): Int = dataSize
 
     private fun notifyChanged(old: List<T>, new: List<T>) = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
