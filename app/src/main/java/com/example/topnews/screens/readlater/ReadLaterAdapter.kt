@@ -40,7 +40,8 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
         holder.itemView.apply {
             setOnClickListener {
                 selectionInProgress = false
-                oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition)) }
+                oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition))
+            }
             setOnLongClickListener { setupLongClickListenerAction(holder.adapterPosition);true }
         }
     }
@@ -54,8 +55,12 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
 
     override fun onChecked(article: Article, check: Boolean) {
         when {
-            check -> { if (!checkedArticles.contains(article)) checkedArticles.add(article) }
-            !check -> { checkedArticles.remove(article) }
+            check -> {
+                if (!checkedArticles.contains(article)) checkedArticles.add(article)
+            }
+            !check -> {
+                checkedArticles.remove(article)
+            }
         }
     }
 
