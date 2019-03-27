@@ -3,6 +3,7 @@ package com.example.topnews.screens.readlater
 import com.example.topnews.screens.Article
 import com.example.topnews.utils.ObservableData
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ReadLaterObservable : Observable() {
     private var lastCheckAllPar: Boolean? = null
@@ -11,13 +12,14 @@ class ReadLaterObservable : Observable() {
     override fun addObserver(o: Observer) {
         super.addObserver(o)
         o.update(this, ObservableData(null, lastCheckAllPar, lastShowCheckboxPar))
+
     }
 
-    fun notifyAll(article: Article? = null, checkAll: Boolean? = null, showCheckbox: Boolean? = lastShowCheckboxPar) {
+    fun notifyAll(articles: ArrayList<Article>? = null, checkAll: Boolean? = null, showCheckbox: Boolean? = lastShowCheckboxPar) {
         checkAll.let { lastCheckAllPar = checkAll }
         showCheckbox.let { lastShowCheckboxPar = showCheckbox }
         setChanged()
-        notifyObservers(ObservableData(article, checkAll, showCheckbox))
+        notifyObservers(ObservableData(articles, checkAll, showCheckbox))
     }
 }
 

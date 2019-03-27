@@ -110,7 +110,7 @@ class FrameActivity : BaseActivity() {
     private fun setupDestinationChangedLister() =
         navCtrl.addOnDestinationChangedListener { _, destination, _ ->
             supportActionBar?.title = destination.label
-
+            
             when (destination.id) {
                 R.id.articleDetailsFragment -> {
                     bottom_navigation.visibility = View.GONE

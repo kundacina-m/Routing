@@ -20,7 +20,7 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), R
         observedData.apply {
 
             checkAll?.let { itemView.cbToSelect.isChecked = it }
-            article?.let { itemView.cbToSelect.isChecked = it == this@ReadLaterViewHolder.article }
+            articles?.let { itemView.cbToSelect.isChecked = it.contains(article) }
             showCheckbox?.let { itemView.cbToSelect.visibility = if (it) View.VISIBLE else View.GONE }
         }
     }

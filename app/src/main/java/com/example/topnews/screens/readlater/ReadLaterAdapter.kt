@@ -10,18 +10,22 @@ import kotlin.properties.Delegates
 
 class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleCheckbox {
 
-    var observable = ReadLaterObservable()
+    private var observable = ReadLaterObservable()
     var checkedArticles: ArrayList<Article> = arrayListOf()
-    var handleMenu: ((Boolean) -> Unit?)? = null
+    var handleMenu: ((Boolean, Boolean) -> Unit?)? = null
 
     var selectionInProgress: Boolean by Delegates.observable(false) { _, _, newValue ->
-        handleMenu?.invoke(newValue)
-        observable.notifyAll(null, null, newValue)
+        handleMenu?.invoke(newValue,newValue)
+        observable.notifyAll(checkedArticles, null, newValue)
     }
 
     var checkAll: Boolean by Delegates.observable(false) { _, _, newValue ->
-        observable.notifyAll(null, newValue)
+        observable.notifyAll(checkedArticles, newValue)
+        if (checkAll) uncheckedArticles = arrayListOf()
     }
+
+    var uncheckedArticles: ArrayList<Article> = arrayListOf()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         ReadLaterViewHolder(
@@ -49,7 +53,7 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
     private fun setupLongClickListenerAction(position: Int) {
         if (!selectionInProgress) {
             selectionInProgress = true
-            observable.notifyAll(getItemOnPosition(position), null, selectionInProgress)
+            observable.notifyAll(arrayListOf(getItemOnPosition(position)), null, selectionInProgress)
         }
     }
 
@@ -57,14 +61,17 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
         when {
             check -> {
                 if (!checkedArticles.contains(article)) checkedArticles.add(article)
+                uncheckedArticles.remove(article)
             }
             !check -> {
+                handleMenu?.invoke(checkedArticles.isNotEmpty(),true)
                 checkedArticles.remove(article)
+                if (!uncheckedArticles.contains(article)) uncheckedArticles.add(article)
             }
         }
     }
 
     interface PopUpMenu {
-        fun showMenu(visibility: Boolean)
+        fun showMenu(visibilityRemove: Boolean, visibilitySelectAll: Boolean)
     }
 }

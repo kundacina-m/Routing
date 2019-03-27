@@ -23,6 +23,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 
     private var loading = false
     private lateinit var menu: Menu
+    private var removingFlag = false
 
     private val adapterReadLater by lazy {
         ReadLaterAdapter().apply {
@@ -65,12 +66,19 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
     private fun setMenuClickListeners() {
         menu.findItem(R.id.selectAll).setOnMenuItemClickListener {
             adapterReadLater.checkAll = true
+            showMenu(adapterReadLater.checkedArticles.isNotEmpty(),false)
             true
         }
 
         menu.findItem(R.id.removeSelected).setOnMenuItemClickListener {
-            viewModel.removeItems(adapterReadLater.checkedArticles)
+            if (adapterReadLater.checkAll) {
+                viewModel.removeWhenAllSelected(adapterReadLater.uncheckedArticles)
+            } else {
+                viewModel.removeSelected(adapterReadLater.checkedArticles)
+            }
+            adapterReadLater.uncheckedArticles = arrayListOf()
             adapterReadLater.checkedArticles = arrayListOf()
+            showMenu(false,true)
             true
         }
     }
@@ -99,19 +107,21 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
             })
         }
 
-    override fun showMenu(visibility: Boolean) {
-        menu.findItem(R.id.selectAll).isVisible = visibility
-        menu.findItem(R.id.removeSelected).isVisible = visibility
-        menu.findItem(R.id.search).isVisible = visibility.not()
+    override fun showMenu(visibilityRemove: Boolean, visibilitySelectAll: Boolean) {
+        menu.findItem(R.id.selectAll).isVisible = visibilitySelectAll
+        menu.findItem(R.id.removeSelected).isVisible = visibilityRemove
+        menu.findItem(R.id.search).isVisible = !(visibilityRemove.or(visibilitySelectAll))
 
     }
 
     private fun inSelectionMode(): Boolean {
-        return if (!adapterReadLater.selectionInProgress) { false } else {
+        return if (!adapterReadLater.selectionInProgress) {
+            false
+        } else {
             adapterReadLater.apply {
                 checkAll = false
                 selectionInProgress = false
-            } ; true
+            }; true
         }
     }
 
