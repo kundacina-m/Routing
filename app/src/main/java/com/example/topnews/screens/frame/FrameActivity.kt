@@ -1,5 +1,6 @@
 package com.example.topnews.screens.frame
 
+import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Menu
 import android.view.MenuItem
@@ -12,7 +13,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import base.BaseActivity
 import com.example.topnews.R
+import com.example.topnews.screens.Article
 import com.example.topnews.screens.search.SearchFragment
+import com.example.topnews.utils.Constants
 import kotlinx.android.synthetic.main.activity_frame.*
 
 class FrameActivity : BaseActivity() {
@@ -37,6 +40,13 @@ class FrameActivity : BaseActivity() {
 
     override fun initView() {
         setupBottomNavBar()
+        val intent = intent
+        val article = intent?.extras?.getParcelable<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS)
+
+        article?.let {
+            navCtrl.navigate(R.id.articleDetailsFragment, Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS,article) })
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

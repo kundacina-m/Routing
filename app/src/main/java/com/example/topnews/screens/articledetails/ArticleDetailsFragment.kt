@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.topnews.R
+import com.example.topnews.ReadLaterWidget
 import com.example.topnews.screens.Article
 import com.example.topnews.utils.Constants.MAP_SOURCE_KEY_NAME
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
@@ -36,6 +37,8 @@ class ArticleDetailsFragment : Fragment() {
         btReadLater.setOnClickListener {
             addArticleToFavourites(dataItem)
         }
+
+
     }
 
     private fun fillViewWithData() {
@@ -57,6 +60,7 @@ class ArticleDetailsFragment : Fragment() {
                 Toast.makeText(activity, "Article successfully added to favourites!", Toast.LENGTH_LONG).show()
             else
                 Toast.makeText(activity, "Article successfully removed from favourites!", Toast.LENGTH_LONG).show()
+            ReadLaterWidget.readLaterProvider.sendRefreshBroadcast(context!!)
         }
 
     }

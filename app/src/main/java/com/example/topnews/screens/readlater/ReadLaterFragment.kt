@@ -12,6 +12,7 @@ import com.example.topnews.R
 import com.example.topnews.screens.*
 import base.BaseAdapter
 import base.BaseFragment
+import com.example.topnews.ReadLaterWidget
 import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 
@@ -23,7 +24,6 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 
     private var loading = false
     private lateinit var menu: Menu
-    private var removingFlag = false
 
     private val adapterReadLater by lazy {
         ReadLaterAdapter().apply {
@@ -79,6 +79,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
             adapterReadLater.uncheckedArticles = arrayListOf()
             adapterReadLater.checkedArticles = arrayListOf()
             showMenu(false,true)
+            ReadLaterWidget.readLaterProvider.sendRefreshBroadcast(context!!)
             true
         }
     }
