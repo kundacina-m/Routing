@@ -8,9 +8,14 @@ import android.content.Intent
 import android.content.ComponentName
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
+import android.os.Bundle
 import com.example.topnews.screens.Article
 import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.utils.Constants
+
+
+
+
 
 
 
@@ -31,22 +36,34 @@ class ReadLaterWidget : AppWidgetProvider() {
                 R.layout.read_later_widget
             )
 
-            val click = Intent(context, FrameActivity::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, click, 0)
-            views.setOnClickPendingIntent(R.id.tvTitleWidget, pendingIntent)
-
+            // Start factory
             val intent = Intent(context, WidgetRemoteViewService::class.java)
             views.setRemoteAdapter(R.id.listViewWidget, intent)
 
 
-            val clickIntentTemplate = Intent(context, FrameActivity::class.java)
-            val clickPendingIntentTemplate = TaskStackBuilder.create(context)
-                .addNextIntentWithParentStack(clickIntentTemplate)
-                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-            views.setPendingIntentTemplate(R.id.listViewWidget, clickPendingIntentTemplate)
+            val builder = TaskStackBuilder.create(context)
+                .addNextIntent(Intent(context, FrameActivity::class.java))
+            views.setPendingIntentTemplate(
+                R.id.listViewWidget,
+                builder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)
+            )
 
+
+
+
+//            val toastIntent = Intent(context, ReadLaterWidget::class.java)
+//            toastIntent.action = "SHOW_DETAILS"
+//            toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+//            val toastPendingIntent = PendingIntent.getBroadcast(
+//                context, 0, toastIntent,
+//                PendingIntent.FLAG_UPDATE_CURRENT
+//            )
+//            views.setPendingIntentTemplate(R.id.listViewWidget, toastPendingIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
+
         }
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+
 
     }
 
@@ -76,7 +93,11 @@ class ReadLaterWidget : AppWidgetProvider() {
         }
 
         if (action == "SHOW_DETAILS"){
-            updateAppWidget(context!!, AppWidgetManager.getInstance(context),resultCode)
+            val inte = Intent(context,FrameActivity::class.java)
+            val article = intent.getParcelableExtra<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS)
+            inte.putExtra(Constants.PARCEL_FOR_ARTICLE_DETAILS,intent.getParcelableExtra<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS))
+            context?.startActivity(inte)
+
         }
 
         super.onReceive(context, intent)

@@ -13,6 +13,9 @@ import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.sqlite.DBContract
 import com.example.topnews.sqlite.DBHelper
 import com.example.topnews.utils.Constants
+import android.os.Bundle
+
+
 
 
 class MyWidgetRemoteViewsFactory(private val mContext: Context, intent: Intent) :
@@ -73,13 +76,11 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context, intent: Intent) 
             mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_CONTENT))
         )
 
-        val intent = Intent(mContext, FrameActivity::class.java)
-        intent.action = "SHOW_DETAILS"
-        intent.putExtra(Constants.PARCEL_FOR_ARTICLE_DETAILS, articleArticle)
-
-        val pendingIntent = PendingIntent.getActivity(mContext,0,intent,0)
-
-        rv.setOnClickPendingIntent(R.id.tvTitleWidget, pendingIntent)
+        val extras = Bundle()
+        extras.putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS,articleArticle)
+        val fillInIntent = Intent()
+        fillInIntent.putExtras(extras)
+        rv.setOnClickFillInIntent(R.id.tvTitleWidget, fillInIntent)
 
         return rv
     }
