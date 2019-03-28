@@ -8,16 +8,7 @@ import android.content.Intent
 import android.content.ComponentName
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
-import android.os.Bundle
-import com.example.topnews.screens.Article
 import com.example.topnews.screens.frame.FrameActivity
-import com.example.topnews.utils.Constants
-
-
-
-
-
-
 
 
 /**
@@ -29,7 +20,7 @@ class ReadLaterWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         // There may be multiple widgets active, so update all of them
 
-        readLaterProvider.widgetIds = appWidgetIds
+        WidgetRefresher.widgetIds = appWidgetIds
         for (appWidgetId in appWidgetIds) {
             val views = RemoteViews(
                 context.packageName,
@@ -40,7 +31,7 @@ class ReadLaterWidget : AppWidgetProvider() {
             val intent = Intent(context, WidgetRemoteViewService::class.java)
             views.setRemoteAdapter(R.id.listViewWidget, intent)
 
-
+            // Take fillInIntents and GO
             val builder = TaskStackBuilder.create(context)
                 .addNextIntent(Intent(context, FrameActivity::class.java))
             views.setPendingIntentTemplate(
@@ -48,17 +39,6 @@ class ReadLaterWidget : AppWidgetProvider() {
                 builder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)
             )
 
-
-
-
-//            val toastIntent = Intent(context, ReadLaterWidget::class.java)
-//            toastIntent.action = "SHOW_DETAILS"
-//            toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-//            val toastPendingIntent = PendingIntent.getBroadcast(
-//                context, 0, toastIntent,
-//                PendingIntent.FLAG_UPDATE_CURRENT
-//            )
-//            views.setPendingIntentTemplate(R.id.listViewWidget, toastPendingIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
         }
@@ -92,14 +72,6 @@ class ReadLaterWidget : AppWidgetProvider() {
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.listViewWidget)
         }
 
-        if (action == "SHOW_DETAILS"){
-            val inte = Intent(context,FrameActivity::class.java)
-            val article = intent.getParcelableExtra<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS)
-            inte.putExtra(Constants.PARCEL_FOR_ARTICLE_DETAILS,intent.getParcelableExtra<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS))
-            context?.startActivity(inte)
-
-        }
-
         super.onReceive(context, intent)
     }
 
@@ -119,11 +91,9 @@ class ReadLaterWidget : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
 
-
-
     }
 
-    object readLaterProvider {
+    object WidgetRefresher {
 
         lateinit var widgetIds: IntArray
 

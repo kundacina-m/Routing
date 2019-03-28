@@ -1,6 +1,5 @@
 package com.example.topnews
 
-import android.app.PendingIntent
 import android.widget.RemoteViews
 import android.content.Context
 import android.widget.AdapterView
@@ -9,7 +8,6 @@ import android.database.Cursor
 import android.os.Binder
 import android.widget.RemoteViewsService
 import com.example.topnews.screens.Article
-import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.sqlite.DBContract
 import com.example.topnews.sqlite.DBHelper
 import com.example.topnews.utils.Constants
@@ -59,28 +57,8 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context, intent: Intent) 
             return null
         }
 
-        val rv = RemoteViews(mContext.packageName, R.layout.list_widget_item)
-        rv.setTextViewText(
-            R.id.tvTitleWidget,
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_TITLE))
-        )
-
-        val articleArticle = Article(
-            hashMapOf(Constants.MAP_SOURCE_KEY_NAME to mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_SOURCE))),
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_AUTHOR)),
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_TITLE)),
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_DESCRIPTION)),
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_URL)),
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_URL_TO_IMAGE)),
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_PUBLISHED_AT)),
-            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_CONTENT))
-        )
-
-        val extras = Bundle()
-        extras.putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS,articleArticle)
-        val fillInIntent = Intent()
-        fillInIntent.putExtras(extras)
-        rv.setOnClickFillInIntent(R.id.tvTitleWidget, fillInIntent)
+        val rv = setUpView()
+        rv.setOnClickFillInIntent(R.id.tvTitleWidget, createIntentWithBundle())
 
         return rv
     }
@@ -102,6 +80,36 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context, intent: Intent) 
 
     override fun hasStableIds(): Boolean {
         return false
+    }
+
+    private fun setUpView(): RemoteViews {
+        val rv = RemoteViews(mContext.packageName, R.layout.list_widget_item)
+        rv.setTextViewText(
+            R.id.tvTitleWidget,
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_TITLE))
+        )
+        return rv
+    }
+
+    private fun createIntentWithBundle(): Intent {
+        val extras = Bundle()
+        extras.putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS,getArticleObj())
+        val fillInIntent = Intent()
+        fillInIntent.putExtras(extras)
+        return fillInIntent
+    }
+
+    private fun getArticleObj(): Article{
+        return Article(
+            hashMapOf(Constants.MAP_SOURCE_KEY_NAME to mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_SOURCE))),
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_AUTHOR)),
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_TITLE)),
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_DESCRIPTION)),
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_URL)),
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_URL_TO_IMAGE)),
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_PUBLISHED_AT)),
+            mCursor!!.getString(mCursor!!.getColumnIndex(DBContract.ArticleEntry.COLUMN_CONTENT))
+        )
     }
 
 }

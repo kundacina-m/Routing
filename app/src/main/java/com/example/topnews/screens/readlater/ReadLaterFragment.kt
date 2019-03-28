@@ -79,7 +79,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
             adapterReadLater.uncheckedArticles = arrayListOf()
             adapterReadLater.checkedArticles = arrayListOf()
             showMenu(false,true)
-            ReadLaterWidget.readLaterProvider.sendRefreshBroadcast(context!!)
+            ReadLaterWidget.WidgetRefresher.sendRefreshBroadcast(context!!)
             true
         }
     }

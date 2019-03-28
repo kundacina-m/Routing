@@ -40,12 +40,7 @@ class FrameActivity : BaseActivity() {
 
     override fun initView() {
         setupBottomNavBar()
-        val intent = intent
-        val article = intent?.extras?.getParcelable<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS)
-
-        article?.let {
-            navCtrl.navigate(R.id.articleDetailsFragment, Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS,article) })
-        }
+        checkIfStartedFromWidget()
 
     }
 
@@ -71,6 +66,15 @@ class FrameActivity : BaseActivity() {
 
         return super.onCreateOptionsMenu(menu)
 
+    }
+
+    private fun checkIfStartedFromWidget(){
+        val intent = intent
+        val article = intent?.extras?.getParcelable<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS)
+
+        article?.let {
+            navCtrl.navigate(R.id.articleDetailsFragment, Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS,article) })
+        }
     }
 
     private fun setSearchViewListener(searchView: SearchView) =
