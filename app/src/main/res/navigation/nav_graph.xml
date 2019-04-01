@@ -12,8 +12,9 @@
             tools:layout="@layout/fragment_top_news">
         <action
                 android:id="@+id/action_topNewsFragment_to_articleDetailsFragment"
-                app:destination="@+id/articleDetailsFragment"
-        />
+                app:destination="@id/articleDetailsFragment"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -23,8 +24,9 @@
             tools:layout="@layout/fragment_categories">
         <action
                 android:id="@+id/action_categoriesFragment_to_articleDetailsFragment"
-                app:destination="@+id/articleDetailsFragment"
-        />
+                app:destination="@id/articleDetailsFragment"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -34,8 +36,9 @@
             tools:layout="@layout/fragment_read_later">
         <action
                 android:id="@+id/action_readLaterFragment_to_articleDetailsFragment"
-                app:destination="@+id/articleDetailsFragment"
-        />
+                app:destination="@id/articleDetailsFragment"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
 
     <fragment android:id="@+id/searchFragment"
@@ -43,8 +46,9 @@
               tools:layout="@layout/fragment_search">
         <action
                 android:id="@+id/action_searchFragment_to_articleDetailsFragment"
-                app:destination="@+id/articleDetailsFragment"
-        />
+                app:destination="@id/articleDetailsFragment"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
 
     <fragment android:id="@+id/articleDetailsFragment"

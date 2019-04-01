@@ -14,7 +14,7 @@
             android:textColor="@color/colorWhite"
             app:showAsAction="always"
             android:visible="false"
-        />
+    />
     <item
             android:id="@+id/removeSelected"
             android:title="Remove"

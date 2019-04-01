@@ -12,11 +12,12 @@ import com.example.topnews.R
 import com.example.topnews.screens.*
 import base.BaseAdapter
 import base.BaseFragment
-import com.example.topnews.ReadLaterWidget
+import com.example.topnews.widget.ReadLaterWidget
 import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
+import kotlinx.android.synthetic.main.toolbar_default.*
 
 
 class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<Article>,
@@ -45,13 +46,20 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
     }
 
     override fun initView() {
+        actionBarSetup()
         setupRecyclerView()
         fetchData()
 
     }
 
+    private fun actionBarSetup(){
+        setActionBar(toolbar_top)
+        actionBar?.title = getString(R.string.readLater)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
+        inflater.inflate(R.menu.readlater_menu, menu)
         setMenuClickListeners()
         super.onCreateOptionsMenu(menu, inflater)
     }

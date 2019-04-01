@@ -1,4 +1,4 @@
-package com.example.topnews
+package com.example.topnews.widget
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.ComponentName
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
+import com.example.topnews.R
 import com.example.topnews.screens.frame.FrameActivity
 
 
@@ -82,7 +83,8 @@ class ReadLaterWidget : AppWidgetProvider() {
             appWidgetId: Int
         ) {
 
-            val widgetText = ReadLaterWidgetConfigureActivity.loadTitlePref(context, appWidgetId)
+            val widgetText =
+                ReadLaterWidgetConfigureActivity.loadTitlePref(context, appWidgetId)
             // Construct the RemoteViews object
             val views = RemoteViews(context.packageName, R.layout.read_later_widget)
             views.setTextViewText(R.id.appwidget_text, widgetText)

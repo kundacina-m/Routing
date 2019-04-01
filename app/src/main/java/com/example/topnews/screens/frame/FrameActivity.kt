@@ -45,24 +45,24 @@ class FrameActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search, menu)
-        this.menu = menu!!
-
-        val searchItem = menu.findItem(R.id.search)
-
-        setupDestinationChangedLister()
-
-        MenuItemCompat.setOnActionExpandListener(searchItem, object : MenuItemCompat.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean = true
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                navCtrl.navigateUp()
-                return true
-            }
-
-        })
-
-        val searchView = searchItem.actionView as SearchView
-        setSearchViewListener(searchView)
+      //  menuInflater.inflate(R.menu.search, menu)
+//        this.menu = menu!!
+//
+//        val searchItem = menu.findItem(R.id.search)
+//
+//        setupDestinationChangedLister()
+//
+//        MenuItemCompat.setOnActionExpandListener(searchItem, object : MenuItemCompat.OnActionExpandListener {
+//            override fun onMenuItemActionExpand(item: MenuItem?): Boolean = true
+//            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+//                navCtrl.navigateUp()
+//                return true
+//            }
+//
+//        })
+//
+//        val searchView = searchItem.actionView as SearchView
+//        setSearchViewListener(searchView)
 
         return super.onCreateOptionsMenu(menu)
 
@@ -86,7 +86,7 @@ class FrameActivity : BaseActivity() {
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     return if (!newText?.isEmpty()!!) {
-                        searchKeyword = newText!!
+                        searchKeyword = newText
                         restartCountdownTimer(searchTimer)
                         doOnTextChanged(newText)
                         false
@@ -120,28 +120,6 @@ class FrameActivity : BaseActivity() {
         bottom_navigation.setupWithNavController(navCtrl)
         bottom_navigation.setOnNavigationItemReselectedListener { }
     }
-
-    private fun setupDestinationChangedLister() =
-        navCtrl.addOnDestinationChangedListener { _, destination, _ ->
-            supportActionBar?.title = destination.label
-            
-            when (destination.id) {
-                R.id.articleDetailsFragment -> {
-                    bottom_navigation.visibility = View.GONE
-                    menu.findItem(R.id.search).isVisible = false
-                    supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-                }
-                R.id.searchFragment -> {
-                    bottom_navigation.visibility = View.GONE
-                }
-                else -> {
-                    bottom_navigation.visibility = View.VISIBLE
-                    supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-                    menu.findItem(R.id.search).isVisible = true
-                }
-            }
-        }
 
     override fun onSupportNavigateUp(): Boolean {
         return navCtrl.navigateUp()

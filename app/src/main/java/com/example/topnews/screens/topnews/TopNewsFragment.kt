@@ -1,22 +1,39 @@
 package com.example.topnews.screens.topnews
 
+import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.transition.TransitionInflater
 import com.example.topnews.R
 import com.example.topnews.screens.*
 import base.BaseAdapter
 import base.BaseFragment
+import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
+import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import kotlinx.android.synthetic.main.fragment_top_news.*
+import kotlinx.android.synthetic.main.toolbar_default.*
 
 
-class TopNewsFragment : BaseFragment<TopNewsViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClickTransition {
 
     private val adapterTopNews: TopNewsAdapter by lazy {
         TopNewsAdapter().apply {
-            oneClickListener = this@TopNewsFragment::onItemClick
+            //            oneClickListener = this@TopNewsFragment::onItemClick
+            onClickWithTransition = this@TopNewsFragment::onItemClickWithImgTransition
         }
     }
 
@@ -26,11 +43,29 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), BaseAdapter.OnItemClic
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setObservers()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        }
+        sharedElementReturnTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
     override fun initView() {
+        actionBarSetup()
         setupRecyclerView()
         fetchData()
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.default_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun actionBarSetup() {
+        setActionBar(toolbar_top)
+        actionBar?.title = getString(R.string.topNews)
     }
 
     private fun setObservers() = viewModel.getNetworkResults().observe(this, Observer { adapterTopNews.setData(it) })
@@ -43,11 +78,18 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), BaseAdapter.OnItemClic
             adapter = adapterTopNews
         }
 
-    override fun onItemClick(dataItem: Article) =
-        navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
+    override fun onItemClickWithImgTransition(dataItem: Article, img: ImageView, title: TextView) {
+        val extras = FragmentNavigator.Extras.Builder()
+            .addSharedElement(img, ViewCompat.getTransitionName(img)!!)
+            .addSharedElement(title, ViewCompat.getTransitionName(title)!!)
+            .build()
 
-    private fun navigateToArticleDetails(bundle: Bundle) =
+        navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem)
+        putBoolean(TRANSITION_ENABLED, true)}, extras)
+    }
+
+    private fun navigateToArticleDetails(bundle: Bundle, extras: FragmentNavigator.Extras) =
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)
-            .navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle)
+            .navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle, null, extras)
 
 }
