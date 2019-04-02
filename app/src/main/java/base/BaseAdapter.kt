@@ -9,6 +9,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
 
     var oneClickListener: ((T) -> Unit?)? = null
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         (holder as ViewHolderAdapterBinder<T>).bind(data[position])
 
@@ -45,4 +46,5 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     interface OnItemClickListener<in T> {
         fun onItemClick(dataItem: T)
     }
+
 }

@@ -15,6 +15,7 @@ class ReadLaterViewModel : ViewModel() {
 
     private var pages: Int = 0
     var endOfDB = false
+
     private var articles = MutableLiveData<List<Article>>()
     fun getFavouritesFromDB() = articles
 
@@ -33,6 +34,30 @@ class ReadLaterViewModel : ViewModel() {
             pages++
         }
 
+    }
+
+    fun removeWhenAllSelected(data: ArrayList<Article>) {
+        val listToDelete = arrayListOf<Article>()
+        articleDao.getAllItems().executeAsync {
+            val array = arrayListOf<Article>()
+            array.addAll(it)
+            for (element in array) {
+                if (!data.contains(element)) {
+                    listToDelete.add(element)
+                }
+            }
+            removeSelected(listToDelete)
+        }
+    }
+
+
+    fun removeSelected(data: ArrayList<Article>) {
+        for (article in data)
+            articleDao.removeItem(article).executeAsync {
+                val array = ArrayList<Article>()
+                array.addAll(articles.value?.asIterable()!!)
+                articles.postValue(array - data)
+            }
     }
 
 }

@@ -2,7 +2,8 @@ package com.example.topnews.screens.readlater
 
 
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,31 +12,48 @@ import com.example.topnews.R
 import com.example.topnews.screens.*
 import base.BaseAdapter
 import base.BaseFragment
+import com.example.topnews.screens.frame.FrameActivity
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 
 import kotlinx.android.synthetic.main.fragment_read_later.*
 
-class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+
+class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<Article>,
+    ReadLaterAdapter.PopUpMenu {
 
     private var loading = false
+    private lateinit var menu: Menu
+    private var removingFlag = false
 
-    private val adapterReadLater: ReadLaterAdapter by lazy {
+    private val adapterReadLater by lazy {
         ReadLaterAdapter().apply {
             oneClickListener = this@ReadLaterFragment::onItemClick
+            handleMenu = this@ReadLaterFragment::showMenu
         }
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_read_later
     override fun getClassTypeVM(): Class<ReadLaterViewModel> = ReadLaterViewModel::class.java
 
-    override fun initView() {
-        setupRecyclerView()
-        fetchData()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setObservers()
+        setHasOptionsMenu(true)
+
+        (activity!! as FrameActivity).voidSelection = { this@ReadLaterFragment.inSelectionMode() }
+    }
+
+    override fun initView() {
+        setupRecyclerView()
+        fetchData()
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
+        setMenuClickListeners()
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun setObservers() {
@@ -43,6 +61,26 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
             adapterReadLater.setData(it)
             loading = false
         })
+    }
+
+    private fun setMenuClickListeners() {
+        menu.findItem(R.id.selectAll).setOnMenuItemClickListener {
+            adapterReadLater.checkAll = true
+            showMenu(adapterReadLater.checkedArticles.isNotEmpty(),false)
+            true
+        }
+
+        menu.findItem(R.id.removeSelected).setOnMenuItemClickListener {
+            if (adapterReadLater.checkAll) {
+                viewModel.removeWhenAllSelected(adapterReadLater.uncheckedArticles)
+            } else {
+                viewModel.removeSelected(adapterReadLater.checkedArticles)
+            }
+            adapterReadLater.uncheckedArticles = arrayListOf()
+            adapterReadLater.checkedArticles = arrayListOf()
+            showMenu(false,true)
+            true
+        }
     }
 
     private fun fetchData() = viewModel.getArticlesFromDB()
@@ -58,8 +96,6 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
                         val totalItemCount = layoutManager?.itemCount
                         val pastVisibleItem = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
-                        Log.d("visibleItem", pastVisibleItem.toString())
-                        Log.d("currentItems", totalItemCount.toString())
                         if (totalItemCount != null) {
                             if ((totalItemCount <= pastVisibleItem + 4) && !loading) {
                                 loading = true
@@ -71,10 +107,29 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
             })
         }
 
+    override fun showMenu(visibilityRemove: Boolean, visibilitySelectAll: Boolean) {
+        menu.findItem(R.id.selectAll).isVisible = visibilitySelectAll
+        menu.findItem(R.id.removeSelected).isVisible = visibilityRemove
+        menu.findItem(R.id.search).isVisible = !(visibilityRemove.or(visibilitySelectAll))
+
+    }
+
+    private fun inSelectionMode(): Boolean {
+        return if (!adapterReadLater.selectionInProgress) {
+            false
+        } else {
+            adapterReadLater.apply {
+                checkAll = false
+                selectionInProgress = false
+            }; true
+        }
+    }
+
     override fun onItemClick(dataItem: Article) =
         navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
 
     private fun navigateToArticleDetails(bundle: Bundle) =
         Navigation.findNavController(activity!!, R.id.nav_host_fragment)
             .navigate(R.id.action_readLaterFragment_to_articleDetailsFragment, bundle)
+
 }

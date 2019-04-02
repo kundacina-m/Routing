@@ -17,7 +17,7 @@ class ArticleDaoImpl : ArticleDao {
 
     private var database: DBHelper = App.injectDB()
 
-    private fun addItem(item: Article): Boolean {
+    protected fun addItem(item: Article): Boolean {
         var db = database.readableDatabase
         if (checkIfRowAlreadyExists(db, item)) return false
 
@@ -27,11 +27,11 @@ class ArticleDaoImpl : ArticleDao {
         return true
     }
 
-    private fun deleteItem(item: Article): Boolean {
+    protected fun deleteItem(item: Article): Boolean {
         val db = database.writableDatabase
 
         try {
-            db.execSQL("delete from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.hashCode())
+            db.execSQL("delete from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.publishedAt.hashCode())
         } catch (e: SQLException) {
             db.close(); return false
         }
@@ -39,11 +39,11 @@ class ArticleDaoImpl : ArticleDao {
         db.close(); return true
     }
 
-    private fun changeItem(item: Article): Boolean {
+    protected fun changeItem(item: Article): Boolean {
         return false
     }
 
-    private fun readAll(): ArrayList<Article> {
+    protected fun readAll(): ArrayList<Article> {
         val articles by lazy { ArrayList<Article>() }
         val db = database.readableDatabase
         val cursor = db.rawQuery("select * from " + DBContract.ArticleEntry.TABLE_NAME, null)
@@ -59,7 +59,7 @@ class ArticleDaoImpl : ArticleDao {
         return articles
     }
 
-    private fun getArticlesInRange(from: Int, to: Int): ArrayList<Article> {
+    protected fun getArticlesInRange(from: Int, to: Int): ArrayList<Article> {
         val articles by lazy { ArrayList<Article>() }
         val db = database.readableDatabase
         val cursor = db.rawQuery(
@@ -83,7 +83,7 @@ class ArticleDaoImpl : ArticleDao {
     private fun checkIfRowAlreadyExists(db: SQLiteDatabase, item: Article): Boolean {
 
         val cursor = db.rawQuery(
-            "select * from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.hashCode()
+            "select * from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.publishedAt.hashCode()
             , null
         )
         if (cursor.count > 0) {
@@ -96,13 +96,14 @@ class ArticleDaoImpl : ArticleDao {
     private fun getRowValues(article: Article?): ContentValues {
         val content = article?.content ?: ARTICLE_NO_CONTENT
         val author = article?.author ?: ARTICLE_NO_AUTHOR
+        val desc = article?.description ?: "No description"
 
         val values = ContentValues()
-        values.put(DBContract.ArticleEntry.COLUMN_ID, article.hashCode())
+        values.put(DBContract.ArticleEntry.COLUMN_ID,article?.publishedAt.hashCode())
         values.put(DBContract.ArticleEntry.COLUMN_SOURCE, article?.source?.getValue(Constants.MAP_SOURCE_KEY_NAME))
         values.put(DBContract.ArticleEntry.COLUMN_AUTHOR, author)
         values.put(DBContract.ArticleEntry.COLUMN_TITLE, article?.title)
-        values.put(DBContract.ArticleEntry.COLUMN_DESCRIPTION, article?.description)
+        values.put(DBContract.ArticleEntry.COLUMN_DESCRIPTION, desc)
         values.put(DBContract.ArticleEntry.COLUMN_URL, article?.url)
         values.put(DBContract.ArticleEntry.COLUMN_URL_TO_IMAGE, article?.urlToImage)
         values.put(DBContract.ArticleEntry.COLUMN_PUBLISHED_AT, article?.publishedAt)
@@ -133,7 +134,7 @@ class ArticleDaoImpl : ArticleDao {
     }
 
     override fun removeItem(item: Article): Execute<Boolean> {
-        return Execute(::deleteItem)
+        return Execute(::deleteItem, item)
     }
 
     override fun updateItem(item: Article): Execute<Boolean> {
