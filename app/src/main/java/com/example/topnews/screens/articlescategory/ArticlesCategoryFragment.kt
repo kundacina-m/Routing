@@ -1,8 +1,6 @@
 package com.example.topnews.screens.articlescategory
 
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import base.BaseFragment
@@ -41,9 +39,6 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), Base
         rvArticlesFromCategory.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterArticlesCategory
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                setDrawable(AppCompatResources.getDrawable(context!!, R.drawable.divider)!!)
-            })
         }
 
     override fun onItemClick(dataItem: Article) {}

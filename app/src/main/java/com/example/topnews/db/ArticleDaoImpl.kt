@@ -18,10 +18,9 @@ class ArticleDaoImpl : ArticleDao {
     private var database: DBHelper = App.injectDB()
 
     protected fun addItem(item: Article): Boolean {
-        var db = database.readableDatabase
-        if (checkIfRowAlreadyExists(db, item)) return false
+        if (checkIfRowAlreadyExists(item)) return false
 
-        db = database.writableDatabase
+        val db = database.writableDatabase
         db.insert(DBContract.ArticleEntry.TABLE_NAME, null, getRowValues(item))
 
         return true
@@ -80,7 +79,8 @@ class ArticleDaoImpl : ArticleDao {
 
     }
 
-    private fun checkIfRowAlreadyExists(db: SQLiteDatabase, item: Article): Boolean {
+    protected fun checkIfRowAlreadyExists(item: Article): Boolean {
+        val db = database.readableDatabase
 
         val cursor = db.rawQuery(
             "select * from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.publishedAt.hashCode()
@@ -143,6 +143,10 @@ class ArticleDaoImpl : ArticleDao {
 
     override fun getArticlesFromTo(from: Int, to: Int): Execute<ArrayList<Article>> {
         return Execute(::getArticlesInRange, from, to)
+    }
+
+    override fun checkIfArticleExists(article: Article): Execute<Boolean> {
+        return Execute(::checkIfRowAlreadyExists, article)
     }
 
 

@@ -2,9 +2,14 @@ package com.example.topnews.screens.search
 
 
 import android.os.Bundle
-import android.util.Log
+import android.os.CountDownTimer
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,10 +17,25 @@ import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.screens.*
 import base.BaseFragment
+import com.example.topnews.screens.frame.SearchTimer
 import kotlinx.android.synthetic.main.fragment_search.*
 import com.example.topnews.utils.Constants
+import kotlinx.android.synthetic.main.toolbar_default.*
 
 class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+
+    private val navCtrl: NavController by lazy {
+        Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+    }
+
+    private val waitingTimeForKeyDown = 1000
+    private var searchKeyword: String = ""
+
+    private var searchTimer = object : SearchTimer(waitingTimeForKeyDown.toLong(), 500) {
+        override fun onFinish() {
+            updateSearchList()
+        }
+    }
 
     private var loading = false
 
@@ -28,8 +48,14 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
     override fun getLayoutId() = R.layout.fragment_search
     override fun getClassTypeVM(): Class<SearchViewModel> = SearchViewModel::class.java
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu, menu)
+        setupSearchMenuItem(menu.findItem(R.id.search))
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId){
+        when (item.itemId) {
             android.R.id.home -> Navigation.findNavController(activity!!, R.id.nav_host_fragment).navigateUp()
         }
         return super.onOptionsItemSelected(item)
@@ -37,11 +63,70 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 
     override fun initView() {
         setupRecyclerView()
+        setupActionBar()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setObservers()
+    }
+
+    private fun setupActionBar() {
+        setActionBar(toolbar_top)
+        actionBar?.title = ""
+    }
+
+    private fun setupSearchMenuItem(searchItem: MenuItem) {
+        searchItem.expandActionView()
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, object : MenuItemCompat.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean = true
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                navCtrl.navigateUp()
+                return true
+            }
+
+        })
+
+        val searchView = searchItem.actionView as SearchView
+        setSearchViewListener(searchView)
+    }
+
+    private fun setSearchViewListener(searchView: SearchView) =
+        searchView.apply {
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return if (!newText?.isEmpty()!!) {
+                        searchKeyword = newText
+                        restartCountdownTimer(searchTimer)
+                        doOnTextChanged(newText)
+                        false
+                    } else true
+                }
+
+            })
+            setOnSearchClickListener {
+                navCtrl.navigate(R.id.searchFragment)
+            }
+        }
+
+    private fun updateSearchList() =
+        fetchData(searchKeyword)
+
+    private fun doOnTextChanged(newText: String) {
+        if (navCtrl.currentDestination!!.id != R.id.searchFragment)
+            navCtrl.navigate(R.id.searchFragment)
+        if (newText.isEmpty())
+            navCtrl.navigateUp()
+    }
+
+    private fun restartCountdownTimer(cntrForKeyUP: CountDownTimer) = cntrForKeyUP.apply {
+        cancel()
+        start()
     }
 
     private fun setupRecyclerView() =
@@ -55,9 +140,6 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
                         val totalItemCount = layoutManager?.itemCount
                         val pastVisibleItem = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
-                        Log.d("visibleItem", pastVisibleItem.toString())
-                        Log.d("currentItems", totalItemCount.toString())
-                        Log.d("totalResults", viewModel.totalResults.toString())
                         if (totalItemCount != null && totalItemCount < viewModel.totalResults) {
                             if ((totalItemCount <= pastVisibleItem + 5) && !loading) {
                                 loading = true

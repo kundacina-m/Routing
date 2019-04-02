@@ -7,14 +7,14 @@
             android:icon="@android:drawable/ic_menu_search"
             android:textColor="@color/colorWhite"
             app:showAsAction="ifRoom|collapseActionView"
-            app:actionViewClass="androidx.appcompat.widget.SearchView" />
+    />
     <item
             android:id="@+id/selectAll"
             android:title="Select All"
             android:textColor="@color/colorWhite"
             app:showAsAction="always"
             android:visible="false"
-        />
+    />
     <item
             android:id="@+id/removeSelected"
             android:title="Remove"

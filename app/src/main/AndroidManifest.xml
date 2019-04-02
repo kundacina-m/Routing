@@ -18,12 +18,10 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
-        <service android:name=".WidgetRemoteViewService"
+        <service android:name=".widget.WidgetRemoteViewService"
                  android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-
-
-        <receiver android:name=".ReadLaterWidget">
+        <receiver android:name=".widget.ReadLaterWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
                 <action android:name="com.example.topnews.app.ACTION_DATA_UPDATED" />
@@ -36,7 +34,7 @@
 
 
 
-        <activity android:name=".ReadLaterWidgetConfigureActivity">
+        <activity android:name=".widget.ReadLaterWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>

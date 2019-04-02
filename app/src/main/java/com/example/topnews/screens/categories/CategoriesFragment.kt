@@ -1,21 +1,25 @@
 package com.example.topnews.screens.categories
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
+import base.BaseFragment
 import com.example.topnews.R
+import com.example.topnews.screens.readlater.ReadLaterViewModel
 import kotlinx.android.synthetic.main.fragment_categories.*
+import kotlinx.android.synthetic.main.toolbar_default.*
 
 private val categories = listOf("Business","Entertainment","General","Health","Science","Sports","Technology")
 
-class CategoriesFragment : Fragment(), BaseAdapter.OnItemClickListener<String> {
+class CategoriesFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<String> {
+
+    override fun getLayoutId(): Int = R.layout.fragment_categories
+    override fun getClassTypeVM(): Class<ReadLaterViewModel> = ReadLaterViewModel::class.java
 
     private val adapterCategories: CategoriesAdapter by lazy {
         CategoriesAdapter().apply {
@@ -24,22 +28,27 @@ class CategoriesFragment : Fragment(), BaseAdapter.OnItemClickListener<String> {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_categories, container, false)
+    override fun initView() {
+        toolbarSetup()
+        setupRecyclerView()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.default_menu, menu)
+        handleSearchMenu(menu.findItem(R.id.search))
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun toolbarSetup(){
+        setActionBar(toolbar_top)
+        actionBar?.title = getString(R.string.categories)
     }
 
     private fun setupRecyclerView() =
         rvCategories.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterCategories
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                setDrawable(AppCompatResources.getDrawable(context!!, R.drawable.divider)!!)
-            })
         }
 
     override fun onItemClick(dataItem: String) {

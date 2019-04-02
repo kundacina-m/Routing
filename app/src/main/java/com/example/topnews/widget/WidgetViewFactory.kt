@@ -1,4 +1,4 @@
-package com.example.topnews
+package com.example.topnews.widget
 
 import android.widget.RemoteViews
 import android.content.Context
@@ -12,11 +12,10 @@ import com.example.topnews.sqlite.DBContract
 import com.example.topnews.sqlite.DBHelper
 import com.example.topnews.utils.Constants
 import android.os.Bundle
+import com.example.topnews.R
 
 
-
-
-class MyWidgetRemoteViewsFactory(private val mContext: Context, intent: Intent) :
+class MyWidgetRemoteViewsFactory(private val mContext: Context) :
     RemoteViewsService.RemoteViewsFactory {
     private var mCursor: Cursor? = null
 
