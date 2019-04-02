@@ -21,7 +21,7 @@
 
             <ImageButton
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" app:srcCompat="@android:drawable/btn_star_big_on"
+                    android:layout_height="wrap_content" app:srcCompat="@android:drawable/btn_star_big_off"
                     android:background="@color/colorWhite"
                     android:id="@+id/btReadLater" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="16dp"

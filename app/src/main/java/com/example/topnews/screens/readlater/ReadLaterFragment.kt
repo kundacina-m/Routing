@@ -60,6 +60,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.readlater_menu, menu)
+        handleSearchMenu(menu.findItem(R.id.search))
         setMenuClickListeners()
         super.onCreateOptionsMenu(menu, inflater)
     }

@@ -22,9 +22,11 @@ import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_frame.*
 import kotlinx.android.synthetic.main.fragment_article_details.*
 import android.content.Intent
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import kotlin.properties.Delegates
 
 
 class ArticleDetailsFragment : Fragment() {
@@ -37,6 +39,16 @@ class ArticleDetailsFragment : Fragment() {
 
     private val dataItem by lazy {
         arguments?.getParcelable(PARCEL_FOR_ARTICLE_DETAILS) as Article
+    }
+
+    private var articleInDB by Delegates.observable(false) { _, _, isInDb ->
+        if (isInDb) {
+            btReadLater.setImageDrawable(getDrawable(activity!!, android.R.drawable.btn_star_big_on))
+            menu.findItem(R.id.addToFavourites).icon = getDrawable(activity!!, android.R.drawable.btn_star_big_on)
+        } else {
+            btReadLater.setImageDrawable(getDrawable(activity!!, android.R.drawable.btn_star_big_off))
+            menu.findItem(R.id.addToFavourites).icon = getDrawable(activity!!, android.R.drawable.btn_star_big_off)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +66,8 @@ class ArticleDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        articleDAO.checkIfArticleExists(dataItem).executeAsync { articleInDB = it }
+
         activity?.bottom_navigation?.visibility = View.GONE
         actionBarSetup()
         setTransitionElements()
@@ -66,6 +80,7 @@ class ArticleDetailsFragment : Fragment() {
 
         btReadLater.setOnClickListener {
             addArticleToFavourites(dataItem)
+            articleInDB = !articleInDB
         }
 
     }

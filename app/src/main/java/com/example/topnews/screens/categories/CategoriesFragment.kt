@@ -36,6 +36,7 @@ class CategoriesFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnIte
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.default_menu, menu)
+        handleSearchMenu(menu.findItem(R.id.search))
         super.onCreateOptionsMenu(menu, inflater)
     }
 

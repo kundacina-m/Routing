@@ -32,7 +32,6 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 
     private val adapterTopNews: TopNewsAdapter by lazy {
         TopNewsAdapter().apply {
-            //            oneClickListener = this@TopNewsFragment::onItemClick
             onClickWithTransition = this@TopNewsFragment::onItemClickWithImgTransition
         }
     }
@@ -58,8 +57,8 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
         inflater.inflate(R.menu.default_menu, menu)
+        handleSearchMenu(menu.findItem(R.id.search))
         super.onCreateOptionsMenu(menu, inflater)
     }
 

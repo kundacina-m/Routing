@@ -2,16 +2,17 @@ package base
 
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import com.example.topnews.R
+import kotlinx.android.synthetic.main.activity_frame.*
 
 abstract class BaseFragment<VM : ViewModel> : Fragment() {
 
@@ -44,6 +45,13 @@ abstract class BaseFragment<VM : ViewModel> : Fragment() {
         val supportActionBar = (activity as AppCompatActivity).supportActionBar
         supportActionBar?.setDisplayHomeAsUpEnabled(up)
         actionBar = supportActionBar
+    }
+
+    protected fun handleSearchMenu(menuItem: MenuItem){
+        menuItem.setOnMenuItemClickListener {
+            Navigation.findNavController(activity!!,R.id.nav_host_fragment).navigate(R.id.action_global_searchFragment)
+            true
+        }
     }
 
 }
