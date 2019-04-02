@@ -3,6 +3,7 @@ package com.example.topnews.utils
 import android.app.Application
 import android.content.Context
 import com.example.topnews.networking.ArticleApi
+import com.example.topnews.repository.ArticleRepository
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,12 +12,12 @@ import com.example.topnews.sqlite.DBHelper
 class App: Application() {
     companion object {
         private lateinit var articleApi: ArticleApi
-        private lateinit var appContext: Context
         private lateinit var database: DBHelper
+        private lateinit var repository : ArticleRepository
 
         fun injectDB() = database
         fun injectApi() = articleApi
-        fun injectContext() = appContext
+        fun injectRepository() = repository
     }
 
     private lateinit var retrofit : Retrofit
@@ -24,7 +25,7 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        appContext = applicationContext
+        val appContext = applicationContext
 
         retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
@@ -35,6 +36,8 @@ class App: Application() {
         articleApi = retrofit.create(ArticleApi::class.java)
 
         database = DBHelper(appContext)
+
+        repository = ArticleRepository()
 
     }
 }

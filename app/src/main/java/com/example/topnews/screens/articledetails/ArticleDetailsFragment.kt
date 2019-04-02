@@ -23,19 +23,20 @@ import kotlinx.android.synthetic.main.activity_frame.*
 import kotlinx.android.synthetic.main.fragment_article_details.*
 import android.content.Intent
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import base.BaseFragment
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.example.topnews.utils.App
 import kotlin.properties.Delegates
 
 
-class ArticleDetailsFragment : Fragment() {
+class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
+
+    override fun getLayoutId(): Int = R.layout.fragment_article_details
+    override fun getClassTypeVM(): Class<ArticleDetailsViewModel> = ArticleDetailsViewModel::class.java
 
     private lateinit var menu: Menu
-
-    private val articleDAO by lazy {
-        ArticleDaoImpl()
-    }
 
     private val dataItem by lazy {
         arguments?.getParcelable(PARCEL_FOR_ARTICLE_DETAILS) as Article
@@ -58,15 +59,10 @@ class ArticleDetailsFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_article_details, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        articleDAO.checkIfArticleExists(dataItem).executeAsync { articleInDB = it }
+    override fun initView() {
+        viewModel.checkIfArticleExistsInDB(dataItem) {
+            articleInDB = it
+        }
 
         activity?.bottom_navigation?.visibility = View.GONE
         actionBarSetup()
@@ -79,8 +75,8 @@ class ArticleDetailsFragment : Fragment() {
         setCollapsedImgListener()
 
         btReadLater.setOnClickListener {
-            addArticleToFavourites(dataItem)
-            articleInDB = !articleInDB
+            if (articleInDB) removeArticleFromFavourites(dataItem)
+            else addArticleToFavourites(dataItem)
         }
 
     }
@@ -98,12 +94,9 @@ class ArticleDetailsFragment : Fragment() {
         super.onDestroyView()
     }
 
-
     private fun actionBarSetup() {
-        (activity as AppCompatActivity).setSupportActionBar(article_app_bar)
-        val supportActionBar = (activity as AppCompatActivity).supportActionBar
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = ""
+        setActionBar(article_app_bar, true)
+        actionBar?.title = ""
     }
 
     private fun setTransitionElements() {
@@ -161,15 +154,27 @@ class ArticleDetailsFragment : Fragment() {
     }
 
     private fun addArticleToFavourites(article: Article) {
-        articleDAO.insertItem(article).executeAsync {
-            if (it)
-                Toast.makeText(activity, "Article successfully added to favourites!", Toast.LENGTH_LONG).show()
-            else
-                Toast.makeText(activity, "Article successfully removed from favourites!", Toast.LENGTH_LONG).show()
-            ReadLaterWidget.WidgetRefresher.sendRefreshBroadcast(context!!)
-        }
+        viewModel.insertArticleInDb(article) {
+            if (it) {
+                ReadLaterWidget.WidgetRefresher.sendRefreshBroadcast(context!!)
+                Toast.makeText(activity, "Article successfully added to favourites!", Toast.LENGTH_SHORT).show()
+                articleInDB = !articleInDB
 
+            }
+        }
     }
+
+    private fun removeArticleFromFavourites(article: Article) {
+        viewModel.removeArticleFromDb(article) {
+            if (it) {
+                ReadLaterWidget.WidgetRefresher.sendRefreshBroadcast(context!!)
+                Toast.makeText(activity, "Article successfully removed from favourites!", Toast.LENGTH_SHORT).show()
+                articleInDB = !articleInDB
+
+            }
+        }
+    }
+
 
     private fun setOnTransitionEnterEndListener() {
         setEnterSharedElementCallback(object : SharedElementCallback() {

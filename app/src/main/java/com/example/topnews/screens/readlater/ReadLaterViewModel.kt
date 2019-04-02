@@ -3,15 +3,13 @@ package com.example.topnews.screens.readlater
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.topnews.screens.Article
-import com.example.topnews.db.ArticleDaoImpl
+import com.example.topnews.utils.App
 
 const val pageSize = 6
 
 class ReadLaterViewModel : ViewModel() {
 
-    private val articleDao by lazy {
-        ArticleDaoImpl()
-    }
+    private val repository = App.injectRepository()
 
     private var pages: Int = 0
     var endOfDB = false
@@ -20,28 +18,25 @@ class ReadLaterViewModel : ViewModel() {
     fun getFavouritesFromDB() = articles
 
     fun getArticlesFromDB() {
+        val previousArticles = arrayListOf<Article>()
+        articles.value?.let { previousArticles.addAll(articles.value!!) }
 
-        val array = ArrayList<Article>()
-        articles.value?.let {
-            array.addAll(articles.value?.asIterable()!!)
-        }
-
-        articleDao.getArticlesFromTo(pages * pageSize, (pages + 1) * pageSize).executeAsync {
-            endOfDB = it.size < pageSize
-            array.addAll(it)
-
-            articles.postValue(array)
+        repository.getArticlesPagination(
+            previousArticles,
+            pages * pageSize,
+            (pages + 1) * pageSize
+        ) {
+            endOfDB = it.size < (pages + 1) * pageSize
+            articles.postValue(it)
             pages++
         }
-
     }
+
 
     fun removeWhenAllSelected(data: ArrayList<Article>) {
         val listToDelete = arrayListOf<Article>()
-        articleDao.getAllItems().executeAsync {
-            val array = arrayListOf<Article>()
-            array.addAll(it)
-            for (element in array) {
+        repository.getAllLocal {
+            for (element in it) {
                 if (!data.contains(element)) {
                     listToDelete.add(element)
                 }
@@ -53,10 +48,12 @@ class ReadLaterViewModel : ViewModel() {
 
     fun removeSelected(data: ArrayList<Article>) {
         for (article in data)
-            articleDao.removeItem(article).executeAsync {
-                val array = ArrayList<Article>()
-                array.addAll(articles.value?.asIterable()!!)
-                articles.postValue(array - data)
+            repository.removeLocal(article) {
+                if (it) {
+                    val array = ArrayList<Article>()
+                    array.addAll(articles.value?.asIterable()!!)
+                    articles.postValue(array - data)
+                }
             }
     }
 

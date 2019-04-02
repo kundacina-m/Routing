@@ -3,9 +3,7 @@ package com.example.topnews.screens.categories
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import base.BaseFragment

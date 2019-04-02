@@ -35,7 +35,7 @@ class ArticleDaoImpl : ArticleDao {
             db.close(); return false
         }
 
-        db.close(); return true
+        return true
     }
 
     protected fun changeItem(item: Article): Boolean {
@@ -87,10 +87,11 @@ class ArticleDaoImpl : ArticleDao {
             , null
         )
         if (cursor.count > 0) {
-            deleteItem(item)
-            cursor.close(); return true
+            cursor.close()
+            return true
         }
-        cursor.close(); return false
+        cursor.close()
+        return false
     }
 
     private fun getRowValues(article: Article?): ContentValues {
@@ -99,7 +100,7 @@ class ArticleDaoImpl : ArticleDao {
         val desc = article?.description ?: "No description"
 
         val values = ContentValues()
-        values.put(DBContract.ArticleEntry.COLUMN_ID,article?.publishedAt.hashCode())
+        values.put(DBContract.ArticleEntry.COLUMN_ID, article?.publishedAt.hashCode())
         values.put(DBContract.ArticleEntry.COLUMN_SOURCE, article?.source?.getValue(Constants.MAP_SOURCE_KEY_NAME))
         values.put(DBContract.ArticleEntry.COLUMN_AUTHOR, author)
         values.put(DBContract.ArticleEntry.COLUMN_TITLE, article?.title)
