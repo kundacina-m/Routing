@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-            android:id="@+id/topNewsFragment"
-            android:title="@string/topNews"
-            android:state_checked="true"
-            android:color="@color/colorPrimaryDark"
-            android:icon="@android:drawable/ic_dialog_dialer"/>
+	<item
+		android:id="@+id/topNewsFragment"
+		android:color="@color/colorPrimaryDark"
+		android:icon="@android:drawable/ic_dialog_dialer"
+		android:state_checked="true"
+		android:title="@string/topNews"/>
 
-    <item
-            android:id="@+id/categoriesFragment"
-            android:title="@string/categories"
-            android:state_checked="false"
-            android:color="@color/colorPrimary"
-            android:icon="@android:drawable/ic_menu_agenda"
-            />
+	<item
+		android:id="@+id/categoriesFragment"
+		android:color="@color/colorPrimary"
+		android:icon="@android:drawable/ic_menu_agenda"
+		android:state_checked="false"
+		android:title="@string/categories"/>
 
-    <item
-            android:id="@+id/readLaterFragment"
-            android:title="@string/readLater"
-            android:state_checked="false"
-            android:color="@color/colorPrimary"
-            android:icon="@android:drawable/ic_menu_save"
-    />
+	<item
+		android:id="@+id/readLaterFragment"
+		android:color="@color/colorPrimary"
+		android:icon="@android:drawable/ic_menu_save"
+		android:state_checked="false"
+		android:title="@string/readLater"/>
 
 </menu>

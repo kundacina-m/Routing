@@ -9,52 +9,50 @@ const val pageSize = 6
 
 class ReadLaterViewModel : ViewModel() {
 
-    private val repository = App.injectRepository()
+	private val repository = App.injectRepository()
 
-    private var pages: Int = 0
-    var endOfDB = false
+	private var pages: Int = 0
+	var endOfDB = false
 
-    private var articles = MutableLiveData<List<Article>>()
-    fun getFavouritesFromDB() = articles
+	private var articles = MutableLiveData<List<Article>>()
+	fun getFavouritesFromDB() = articles
 
-    fun getArticlesFromDB() {
-        val previousArticles = arrayListOf<Article>()
-        articles.value?.let { previousArticles.addAll(articles.value!!) }
+	fun getArticlesFromDB() {
+		val previousArticles = arrayListOf<Article>()
+		articles.value?.let { previousArticles.addAll(articles.value!!) }
 
-        repository.getArticlesPagination(
-            previousArticles,
-            pages * pageSize,
-            (pages + 1) * pageSize
-        ) {
-            endOfDB = it.size < (pages + 1) * pageSize
-            articles.postValue(it)
-            pages++
-        }
-    }
+		repository.getArticlesPagination(
+			previousArticles,
+			pages * pageSize,
+			(pages + 1) * pageSize
+		) {
+			endOfDB = it.size < (pages + 1) * pageSize
+			articles.postValue(it)
+			pages++
+		}
+	}
 
+	fun removeWhenAllSelected(data: ArrayList<Article>) {
+		val listToDelete = arrayListOf<Article>()
+		repository.getAllLocal {
+			for (element in it) {
+				if (!data.contains(element)) {
+					listToDelete.add(element)
+				}
+			}
+			removeSelected(listToDelete)
+		}
+	}
 
-    fun removeWhenAllSelected(data: ArrayList<Article>) {
-        val listToDelete = arrayListOf<Article>()
-        repository.getAllLocal {
-            for (element in it) {
-                if (!data.contains(element)) {
-                    listToDelete.add(element)
-                }
-            }
-            removeSelected(listToDelete)
-        }
-    }
-
-
-    fun removeSelected(data: ArrayList<Article>) {
-        for (article in data)
-            repository.removeLocal(article) {
-                if (it) {
-                    val array = ArrayList<Article>()
-                    array.addAll(articles.value?.asIterable()!!)
-                    articles.postValue(array - data)
-                }
-            }
-    }
+	fun removeSelected(data: ArrayList<Article>) {
+		for (article in data)
+			repository.removeLocal(article) {
+				if (it) {
+					val array = ArrayList<Article>()
+					array.addAll(articles.value?.asIterable()!!)
+					articles.postValue(array - data)
+				}
+			}
+	}
 
 }

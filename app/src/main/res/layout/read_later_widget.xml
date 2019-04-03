@@ -1,26 +1,22 @@
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/colorWhite">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/colorWhite"
+	android:orientation="vertical">
 
 
-    <TextView
-            android:background="@color/colorPrimary"
-            android:id="@+id/twWidget"
-            android:textSize="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/readLater"
-    />
+	<TextView
+		android:id="@+id/twWidget"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorPrimary"
+		android:gravity="center"
+		android:text="@string/readLater"
+		android:textSize="30dp"/>
 
-    <ListView
-            android:id="@+id/listViewWidget"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
+	<ListView
+		android:id="@+id/listViewWidget"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
 
 </LinearLayout>

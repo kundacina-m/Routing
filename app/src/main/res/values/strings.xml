@@ -1,14 +1,14 @@
 <resources>
-    <string name="appName">TopNews</string>
-    <string name="topNews">Top News</string>
-    <string name="categories">Categories</string>
-    <string name="readLater">Read Later</string>
-    <string name="search">Search</string>
+	<string name="appName">TopNews</string>
+	<string name="topNews">Top News</string>
+	<string name="categories">Categories</string>
+	<string name="readLater">Read Later</string>
+	<string name="search">Search</string>
 
-    <string name="source">Source:</string>
-    <string name="publishedAt">Published at:</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
+	<string name="source">Source:</string>
+	<string name="publishedAt">Published at:</string>
+	<string name="appwidget_text">EXAMPLE</string>
+	<string name="configure">Configure</string>
+	<string name="add_widget">Add widget</string>
 
 </resources>

@@ -2,11 +2,11 @@ package com.example.topnews.screens.categories
 
 import android.view.View
 import base.BaseViewHolder
-import kotlinx.android.synthetic.main.item_section.view.*
+import kotlinx.android.synthetic.main.item_section.view.tvSection
 
-class CategoriesViewHolder(itemView: View): BaseViewHolder<String>(itemView) {
+class CategoriesViewHolder(itemView: View) : BaseViewHolder<String>(itemView) {
 
-    override fun bind(dataItem: String) {
-        itemView.tvSection.text = dataItem
-    }
+	override fun bind(dataItem: String) {
+		itemView.tvSection.text = dataItem
+	}
 }

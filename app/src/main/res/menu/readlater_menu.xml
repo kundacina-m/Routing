@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-            android:id="@+id/search"
-            android:title="@string/search"
-            android:icon="@android:drawable/ic_menu_search"
-            android:textColor="@color/colorWhite"
-            app:showAsAction="ifRoom|collapseActionView"
-    />
-    <item
-            android:id="@+id/selectAll"
-            android:title="Select All"
-            android:textColor="@color/colorWhite"
-            app:showAsAction="always"
-            android:visible="false"
-    />
-    <item
-            android:id="@+id/removeSelected"
-            android:title="Remove"
-            android:textColor="@color/colorWhite"
-            app:showAsAction="always"
-            android:visible="false"
-    />
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+	<item
+		android:id="@+id/search"
+		android:icon="@android:drawable/ic_menu_search"
+		android:textColor="@color/colorWhite"
+		android:title="@string/search"
+		app:showAsAction="ifRoom|collapseActionView"/>
+	<item
+		android:id="@+id/selectAll"
+		android:textColor="@color/colorWhite"
+		android:title="Select All"
+		android:visible="false"
+		app:showAsAction="always"/>
+	<item
+		android:id="@+id/removeSelected"
+		android:textColor="@color/colorWhite"
+		android:title="Remove"
+		android:visible="false"
+		app:showAsAction="always"/>
 </menu>
