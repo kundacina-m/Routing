@@ -3,21 +3,21 @@
 	<item
 		android:id="@+id/topNewsFragment"
 		android:color="@color/colorPrimaryDark"
-		android:icon="@android:drawable/ic_dialog_dialer"
+		android:icon="@drawable/ic_bottom_topnews"
 		android:state_checked="true"
 		android:title="@string/topNews"/>
 
 	<item
 		android:id="@+id/categoriesFragment"
 		android:color="@color/colorPrimary"
-		android:icon="@android:drawable/ic_menu_agenda"
+		android:icon="@drawable/ic_bottom_categories"
 		android:state_checked="false"
 		android:title="@string/categories"/>
 
 	<item
 		android:id="@+id/readLaterFragment"
 		android:color="@color/colorPrimary"
-		android:icon="@android:drawable/ic_menu_save"
+		android:icon="@drawable/ic_bottom_readlater"
 		android:state_checked="false"
 		android:title="@string/readLater"/>
 

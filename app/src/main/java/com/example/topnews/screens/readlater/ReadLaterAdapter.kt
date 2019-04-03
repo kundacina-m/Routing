@@ -7,7 +7,7 @@ import base.BaseAdapter
 import com.example.topnews.ImageDialog
 import com.example.topnews.R
 import com.example.topnews.screens.Article
-import kotlinx.android.synthetic.main.item_read_later.view.ivImgReadLater
+import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlin.properties.Delegates
 
 class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleCheckbox {
@@ -31,7 +31,7 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
 		ReadLaterViewHolder(
 			LayoutInflater.from(parent.context).inflate(
-				R.layout.item_read_later,
+				R.layout.item_vertical_article,
 				parent,
 				false
 			)
@@ -42,14 +42,18 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
 
 		observable.addObserver(holder as ReadLaterViewHolder)
 
+		val item = getItemOnPosition(holder.adapterPosition)
 		holder.itemView.apply {
 			setOnClickListener {
 				selectionInProgress = false
-				oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition))
+				oneClickListener?.invoke(item)
 			}
 			setOnLongClickListener { setupLongClickListenerAction(holder.adapterPosition);true }
-			ivImgReadLater.setOnClickListener {
-				ImageDialog.Builder(context).withImg(getItemOnPosition(holder.adapterPosition).urlToImage).show()
+			ivImg.setOnClickListener {
+				ImageDialog.build(context) {
+					urlToImg = item.urlToImage
+					themeId = R.style.AppTheme_Dialog_NoClick
+				}.show()
 			}
 		}
 	}

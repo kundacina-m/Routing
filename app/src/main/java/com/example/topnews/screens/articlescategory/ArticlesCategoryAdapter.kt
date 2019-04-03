@@ -10,5 +10,5 @@ import com.example.topnews.screens.readlater.ReadLaterViewHolder
 
 class ArticlesCategoryAdapter : BaseAdapter<Article>() {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-		ReadLaterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_read_later, parent, false))
+		ReadLaterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_vertical_article, parent, false))
 }

@@ -1,6 +1,7 @@
 package com.example.topnews.utils
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.topnews.networking.ArticleApi
 import com.example.topnews.repository.ArticleRepository
 import com.example.topnews.sqlite.DBHelper
@@ -23,6 +24,9 @@ class App : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
+
+		AppCompatDelegate.setDefaultNightMode(
+			AppCompatDelegate.MODE_NIGHT_YES)
 
 		val appContext = applicationContext
 

@@ -13,7 +13,7 @@
 		android:layout_marginEnd="16dp"
 		android:scaleType="fitXY"
 		android:src="@drawable/star"
-		app:backgroundTint="@android:color/holo_blue_bright"
+		app:backgroundTint="@color/colorPrimaryDark"
 		app:borderWidth="0dp"
 		app:layout_anchor="@id/appbar"
 		app:layout_anchorGravity="bottom|right|end"/>
@@ -21,7 +21,7 @@
 	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorWhite"
+		android:background="@color/colorBackground"
 		android:clipToPadding="false"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 

@@ -6,16 +6,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.example.topnews.ImageDialog
 import com.example.topnews.R
 import com.example.topnews.screens.Article
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.ObservableData
-import kotlinx.android.synthetic.main.item_read_later.view.cbToSelect
-import kotlinx.android.synthetic.main.item_read_later.view.ivImgReadLater
-import kotlinx.android.synthetic.main.item_read_later.view.tvPublishTimeReadLater
-import kotlinx.android.synthetic.main.item_read_later.view.tvSourceLaterRead
-import kotlinx.android.synthetic.main.item_read_later.view.tvTitleReadLater
+import kotlinx.android.synthetic.main.item_vertical_article.view.cbToSelect
+import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvTitle
 import java.util.Observable
 
 class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), ReadLaterObserver {
@@ -37,9 +36,9 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), R
 	override fun bind(dataItem: Article) {
 		article = dataItem
 		itemView.apply {
-			tvTitleReadLater.text = dataItem.title
-			tvSourceLaterRead.text = dataItem.source.getValue(Constants.MAP_SOURCE_KEY_NAME)
-			tvPublishTimeReadLater.text = dataItem.publishedAt
+			tvTitle.text = dataItem.title
+			tvSource.text = dataItem.source.getValue(Constants.MAP_SOURCE_KEY_NAME)
+			tvPublishTime.text = dataItem.publishedAt
 		}
 
 		val options = RequestOptions()
@@ -50,7 +49,7 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), R
 			.priority(Priority.HIGH)
 
 		Glide.with(itemView.context).load(dataItem.urlToImage).apply(options)
-			.into(itemView.ivImgReadLater)
+			.into(itemView.ivImg)
 
 		setCheckListener(dataItem)
 	}

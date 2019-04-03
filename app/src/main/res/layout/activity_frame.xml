@@ -24,8 +24,8 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom"
 		android:background="@color/colorPrimary"
-		app:itemIconTint="@color/colorBlack"
-		app:itemTextColor="@color/colorWhite"
+		app:itemIconTint="@color/colorFrameTextIcons"
+		app:itemTextColor="@color/colorFrameTextIcons"
 		app:menu="@menu/nav_bottom_menu"/>
 
 </LinearLayout>

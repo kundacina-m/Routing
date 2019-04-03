@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
-import com.example.topnews.screens.readlater.ReadLaterViewModel
+
 import kotlinx.android.synthetic.main.fragment_categories.rvCategories
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
 private val categories = listOf("Business", "Entertainment", "General", "Health", "Science", "Sports", "Technology")
 
-class CategoriesFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<String> {
+class CategoriesFragment : BaseFragment<CategoriesViewModel>(), BaseAdapter.OnItemClickListener<String> {
 
 	override fun getLayoutId(): Int = R.layout.fragment_categories
-	override fun getClassTypeVM(): Class<ReadLaterViewModel> = ReadLaterViewModel::class.java
+	override fun getClassTypeVM(): Class<CategoriesViewModel> = CategoriesViewModel::class.java
 
 	private val adapterCategories: CategoriesAdapter by lazy {
 		CategoriesAdapter().apply {
