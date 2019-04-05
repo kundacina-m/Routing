@@ -53,7 +53,7 @@
 
 	<fragment
 		android:id="@+id/articleDetailsFragment"
-		android:name="com.example.topnews.screens.articledetails.ArticleDetailsFragment"
+		android:name="com.example.topnews.screens.article.details.ArticleDetailsFragment"
 		tools:layout="@layout/fragment_article_details">
 
 		<argument

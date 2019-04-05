@@ -2,8 +2,9 @@ package com.example.topnews.screens.articlescategory
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.topnews.screens.Article
-import com.example.topnews.utils.App
+import com.example.topnews.data.model.Article
+import com.example.topnews.App
+import com.example.topnews.domain.WrappedResponse.OnSuccess
 
 class ArticlesCategoryViewModel : ViewModel() {
 
@@ -14,7 +15,8 @@ class ArticlesCategoryViewModel : ViewModel() {
 
 	fun getArticlesFromCategory(category: String) {
 		repository.getArticlesByCategory(category) {
-			articles.postValue(it)
+			if (it is OnSuccess)
+			articles.postValue(it.item)
 		}
 	}
 }

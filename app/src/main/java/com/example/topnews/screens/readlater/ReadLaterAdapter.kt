@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
-import com.example.topnews.ImageDialog
+import com.example.topnews.screens.ImageDialog
 import com.example.topnews.R
-import com.example.topnews.screens.Article
+import com.example.topnews.data.model.Article
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlin.properties.Delegates
 

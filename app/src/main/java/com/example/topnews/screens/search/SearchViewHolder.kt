@@ -7,7 +7,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
-import com.example.topnews.screens.Article
+import com.example.topnews.data.model.Article
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource

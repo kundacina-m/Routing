@@ -2,8 +2,9 @@ package com.example.topnews.screens.readlater
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.topnews.screens.Article
-import com.example.topnews.utils.App
+import com.example.topnews.App
+import com.example.topnews.data.model.Article
+import com.example.topnews.domain.WrappedResponse.OnSuccess
 
 const val pageSize = 6
 
@@ -26,28 +27,32 @@ class ReadLaterViewModel : ViewModel() {
 			pages * pageSize,
 			(pages + 1) * pageSize
 		) {
-			endOfDB = it.size < (pages + 1) * pageSize
-			articles.postValue(it)
-			pages++
+			if (it is OnSuccess) {
+				endOfDB = it.item.size < (pages + 1) * pageSize
+				articles.postValue(it.item)
+				pages++
+			}
 		}
 	}
 
 	fun removeWhenAllSelected(data: ArrayList<Article>) {
 		val listToDelete = arrayListOf<Article>()
 		repository.getAllLocal {
-			for (element in it) {
-				if (!data.contains(element)) {
-					listToDelete.add(element)
+			if (it is OnSuccess) {
+				for (element in it.item) {
+					if (!data.contains(element)) {
+						listToDelete.add(element)
+					}
 				}
+				removeSelected(listToDelete)
 			}
-			removeSelected(listToDelete)
 		}
 	}
 
 	fun removeSelected(data: ArrayList<Article>) {
 		for (article in data)
 			repository.removeLocal(article) {
-				if (it) {
+				if (it is OnSuccess && it.item) {
 					val array = ArrayList<Article>()
 					array.addAll(articles.value?.asIterable()!!)
 					articles.postValue(array - data)

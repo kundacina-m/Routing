@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import com.example.topnews.R
-import com.example.topnews.screens.Article
+import com.example.topnews.data.model.Article
 import com.example.topnews.screens.readlater.ReadLaterViewHolder
 
 class ArticlesCategoryAdapter : BaseAdapter<Article>() {

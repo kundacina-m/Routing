@@ -8,7 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import com.example.topnews.R
-import com.example.topnews.screens.Article
+import com.example.topnews.data.model.Article
 import kotlinx.android.synthetic.main.item_top_news.view.ivArticleImage
 import kotlinx.android.synthetic.main.item_top_news.view.tvArticleTitle
 

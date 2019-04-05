@@ -2,6 +2,7 @@ package com.example.topnews.screens.topnews
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.widget.ImageView
@@ -14,13 +15,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionInflater
 import base.BaseFragment
 import com.example.topnews.R
-import com.example.topnews.screens.Article
+import com.example.topnews.data.model.Article
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
 class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClickTransition {
+
+	override var TAG = TopNewsFragment::class.java.simpleName
 
 	private val adapterTopNews: TopNewsAdapter by lazy {
 		TopNewsAdapter().apply {
@@ -34,6 +37,8 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setObservers()
+		fetchData()
+
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
@@ -42,11 +47,12 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 	}
 
 	override fun initView() {
+		Log.d(TAG, "initView: $viewModel")
 		actionBarSetup()
 		setupRecyclerView()
-		fetchData()
-
 	}
+
+
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 		inflater.inflate(R.menu.default_menu, menu)

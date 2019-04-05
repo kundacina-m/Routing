@@ -2,8 +2,8 @@ package com.example.topnews.screens.search
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.topnews.screens.Article
-import com.example.topnews.utils.App
+import com.example.topnews.data.model.Article
+import com.example.topnews.App
 
 const val pageSize = 6
 

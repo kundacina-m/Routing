@@ -8,6 +8,7 @@
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:statusBarColor">@android:color/transparent</item>
 		<item name="panelBackground">@color/colorBackground</item>
+		<item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
 	</style>
 
@@ -31,6 +32,7 @@
 
 	<!-- ActionBar default theme -->
 	<style name="AppTheme.ActionBar">
+		<item name="android:background">@color/colorPrimary</item>
 		<item name="android:windowCloseOnTouchOutside">false</item>
 		<item name="android:textColorPrimary">@color/colorFrameTextIcons</item>
 	</style>
