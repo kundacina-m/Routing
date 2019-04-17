@@ -16,7 +16,6 @@ import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
-import com.example.topnews.screens.frame.SearchTimer
 import com.example.topnews.utils.Constants
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top

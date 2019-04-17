@@ -29,14 +29,13 @@ class SearchViewModel : BaseViewModel() {
 	}
 
 	private fun getArticlesByPages(searchText: String = searchString) {
+		val previousList = arrayListOf<Article>()
+		articles.value?.let { previousList.addAll(it.asIterable()) }
+
 		disposables.add(repository.getArticlesByPages(searchText, pages).subscribeBy { list ->
-			val previousList = arrayListOf<Article>()
-			articles.value?.let {
-				previousList.addAll(it.asIterable())
-			}
 			previousList.addAll((list as OnSuccess).item)
 
-			articles.value = previousList
+			articles.postValue(previousList)
 			searchString = searchText
 			pages++
 		})

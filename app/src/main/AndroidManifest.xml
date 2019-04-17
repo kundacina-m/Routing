@@ -8,7 +8,7 @@
 
 
     <application
-            android:name=".utils.App"
+            android:name=".App"
             android:allowBackup="true"
             android:hardwareAccelerated="true"
             android:icon="@mipmap/ic_launcher"
@@ -18,10 +18,10 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
-        <service android:name=".widget.WidgetRemoteViewService"
+        <service android:name="com.example.topnews.screens.widget.WidgetRemoteViewService"
                  android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <receiver android:name=".widget.ReadLaterWidget">
+        <receiver android:name="com.example.topnews.screens.widget.ReadLaterWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
                 <action android:name="com.example.topnews.app.ACTION_DATA_UPDATED" />
@@ -34,12 +34,12 @@
 
 
 
-        <activity android:name=".widget.ReadLaterWidgetConfigureActivity">
+        <activity android:name="com.example.topnews.screens.widget.ReadLaterWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
-        <activity android:name=".screens.frame.FrameActivity">
+        <activity android:name=".screens.home.FrameActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

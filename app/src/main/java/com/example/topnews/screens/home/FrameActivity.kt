@@ -1,4 +1,4 @@
-package com.example.topnews.screens.frame
+package com.example.topnews.screens.home
 
 import android.os.Bundle
 import androidx.navigation.NavController

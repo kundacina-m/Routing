@@ -17,10 +17,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
+import com.example.topnews.screens.widget.ReadLaterWidget
 import com.example.topnews.utils.Constants.MAP_SOURCE_KEY_NAME
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
-import com.example.topnews.widget.ReadLaterWidget
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 import kotlinx.android.synthetic.main.fragment_article_details.appbar

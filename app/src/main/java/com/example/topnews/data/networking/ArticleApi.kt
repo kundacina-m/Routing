@@ -1,6 +1,6 @@
 package com.example.topnews.data.networking
 
-import com.example.topnews.data.model.ResponseArticle
+import com.example.topnews.data.networking.responses.ResponseArticle
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.QueryMap

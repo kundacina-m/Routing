@@ -1,6 +1,7 @@
 package com.example.topnews.screens.article.details
 
 import androidx.lifecycle.MutableLiveData
+
 import base.BaseViewModel
 import com.example.topnews.App
 import com.example.topnews.data.model.Article

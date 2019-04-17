@@ -5,10 +5,7 @@ import base.BaseViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.data.model.Article
-import kotlinx.android.synthetic.main.item_search_result.view.ivImg
-import kotlinx.android.synthetic.main.item_search_result.view.tvPublishTime
-import kotlinx.android.synthetic.main.item_search_result.view.tvSource
-import kotlinx.android.synthetic.main.item_search_result.view.tvTitle
+import kotlinx.android.synthetic.main.item_vertical_article.view.*
 
 class SearchViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 

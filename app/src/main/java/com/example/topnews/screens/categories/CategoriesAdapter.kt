@@ -8,14 +8,14 @@ import com.example.topnews.R
 
 class CategoriesAdapter : BaseAdapter<String>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        CategoriesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_section, parent, false))
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+		CategoriesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_section, parent, false))
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        super.onBindViewHolder(holder, position)
+	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+		super.onBindViewHolder(holder, position)
 
-        holder.itemView.setOnClickListener {
-            oneClickListener?.invoke(getItemOnPosition(position))
-        }
-    }
+		holder.itemView.setOnClickListener {
+			oneClickListener?.invoke(getItemOnPosition(position))
+		}
+	}
 }

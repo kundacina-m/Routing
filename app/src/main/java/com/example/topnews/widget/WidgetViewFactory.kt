@@ -9,9 +9,9 @@ import android.widget.AdapterView
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.example.topnews.R
+import com.example.topnews.data.db.sqlite.DBContract
+import com.example.topnews.data.db.sqlite.DBHelper
 import com.example.topnews.data.model.Article
-import com.example.topnews.sqlite.DBContract
-import com.example.topnews.sqlite.DBHelper
 import com.example.topnews.utils.Constants
 
 class MyWidgetRemoteViewsFactory(private val mContext: Context) :

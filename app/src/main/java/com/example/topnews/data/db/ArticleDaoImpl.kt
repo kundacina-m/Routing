@@ -4,12 +4,12 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.SQLException
 import com.example.topnews.App
+import com.example.topnews.data.db.sqlite.DBContract
+import com.example.topnews.data.db.sqlite.DBHelper
+import com.example.topnews.data.db.sqlite.DBHelper.Companion.SQL_CREATE_ENTRIES
 import com.example.topnews.data.model.Article
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.domain.WrappedResponse.OnSuccess
-import com.example.topnews.sqlite.DBContract
-import com.example.topnews.sqlite.DBHelper
-import com.example.topnews.sqlite.DBHelper.Companion.SQL_CREATE_ENTRIES
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.ARTICLE_NO_AUTHOR
 import com.example.topnews.utils.Constants.ARTICLE_NO_CONTENT

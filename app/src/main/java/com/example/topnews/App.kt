@@ -6,7 +6,7 @@ import com.example.topnews.data.networking.ArticleApi
 import com.example.topnews.data.repository.ArticleRepository
 import com.example.topnews.domain.ArticleLocalStorageImpl
 import com.example.topnews.domain.ArticleRemoteStorageImpl
-import com.example.topnews.sqlite.DBHelper
+import com.example.topnews.data.db.sqlite.DBHelper
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

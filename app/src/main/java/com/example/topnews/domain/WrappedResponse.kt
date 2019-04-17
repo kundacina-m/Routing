@@ -3,9 +3,6 @@ package com.example.topnews.domain
 import com.example.topnews.domain.RequestError.HttpError
 import com.example.topnews.domain.RequestError.NoInternetError
 import com.example.topnews.domain.RequestError.UnknownError
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
