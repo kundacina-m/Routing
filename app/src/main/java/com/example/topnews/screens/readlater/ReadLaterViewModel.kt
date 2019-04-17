@@ -1,63 +1,60 @@
 package com.example.topnews.screens.readlater
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.topnews.screens.Article
-import com.example.topnews.db.ArticleDaoImpl
+import base.BaseViewModel
+import com.example.topnews.App
+import com.example.topnews.data.model.Article
+import com.example.topnews.domain.WrappedResponse.OnSuccess
+import io.reactivex.rxkotlin.subscribeBy
 
 const val pageSize = 6
 
-class ReadLaterViewModel : ViewModel() {
+class ReadLaterViewModel : BaseViewModel() {
 
-    private val articleDao by lazy {
-        ArticleDaoImpl()
-    }
+	private val repository = App.injectRepository()
 
-    private var pages: Int = 0
-    var endOfDB = false
+	private var pages: Int = 0
+	var endOfDB = false
 
-    private var articles = MutableLiveData<List<Article>>()
-    fun getFavouritesFromDB() = articles
+	private var articles = MutableLiveData<List<Article>>()
+	fun getFavouritesFromDB() = articles
 
-    fun getArticlesFromDB() {
+	fun getArticlesFromDB() {
+		val previousArticles = arrayListOf<Article>()
+		articles.value?.let { previousArticles.addAll(articles.value!!) }
 
-        val array = ArrayList<Article>()
-        articles.value?.let {
-            array.addAll(articles.value?.asIterable()!!)
-        }
+		disposables.add(repository.getArticlesPagination(pages * pageSize, (pages + 1) * pageSize).subscribeBy {
+			if (it is OnSuccess) {
+				endOfDB = it.item.size < (pages + 1) * pageSize
+				articles.postValue(it.item)
+				pages++
+			}
+		})
+	}
 
-        articleDao.getArticlesFromTo(pages * pageSize, (pages + 1) * pageSize).executeAsync {
-            endOfDB = it.size < pageSize
-            array.addAll(it)
+	fun removeWhenAllSelected(data: ArrayList<Article>) {
+		val listToDelete = arrayListOf<Article>()
+		disposables.add(repository.getAllLocal().subscribeBy {
+			if (it is OnSuccess) {
+				for (element in it.item) {
+					if (!data.contains(element)) {
+						listToDelete.add(element)
+					}
+				}
+				removeSelected(listToDelete)
+			}
+		})
+	}
 
-            articles.postValue(array)
-            pages++
-        }
-
-    }
-
-    fun removeWhenAllSelected(data: ArrayList<Article>) {
-        val listToDelete = arrayListOf<Article>()
-        articleDao.getAllItems().executeAsync {
-            val array = arrayListOf<Article>()
-            array.addAll(it)
-            for (element in array) {
-                if (!data.contains(element)) {
-                    listToDelete.add(element)
-                }
-            }
-            removeSelected(listToDelete)
-        }
-    }
-
-
-    fun removeSelected(data: ArrayList<Article>) {
-        for (article in data)
-            articleDao.removeItem(article).executeAsync {
-                val array = ArrayList<Article>()
-                array.addAll(articles.value?.asIterable()!!)
-                articles.postValue(array - data)
-            }
-    }
+	fun removeSelected(data: ArrayList<Article>) {
+		for (article in data)
+			disposables.add(repository.removeLocal(article).subscribeBy {
+				if (it is OnSuccess && it.item) {
+					val array = ArrayList<Article>()
+					array.addAll(articles.value?.asIterable()!!)
+					articles.postValue(array - data)
+				}
+			})
+	}
 
 }

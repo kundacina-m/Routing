@@ -1,57 +1,76 @@
 package base
 
-
 import android.os.Bundle
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.example.topnews.R
-import kotlinx.android.synthetic.main.activity_frame.*
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 abstract class BaseFragment<VM : ViewModel> : Fragment() {
 
-    protected var actionBar: ActionBar? = null
+	protected open var TAG: String = "BaseFragment"
 
-    protected val viewModel: VM by lazy {
-        ViewModelProviders.of(this).get(getClassTypeVM())
-    }
+	protected var actionBar: ActionBar? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val inflated = inflater.inflate(getLayoutId(), container, false)
-        setHasOptionsMenu(true)
-        return inflated
-    }
+	private val subscriptions = CompositeDisposable()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-    }
+	protected val viewModel: VM by lazy {
+		ViewModelProviders.of(this).get(getClassTypeVM())
+	}
 
-    abstract fun initView()
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		 val inflated = inflater.inflate(getLayoutId(), container, false)
+		setHasOptionsMenu(true)
+		return inflated
+	}
 
-    @LayoutRes
-    abstract fun getLayoutId(): Int
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		initView()
+	}
 
-    abstract fun getClassTypeVM(): Class<VM>
+	abstract fun initView()
 
-    protected fun setActionBar(toolbar: Toolbar, up: Boolean = false) {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        val supportActionBar = (activity as AppCompatActivity).supportActionBar
-        supportActionBar?.setDisplayHomeAsUpEnabled(up)
-        actionBar = supportActionBar
-    }
+	@LayoutRes
+	abstract fun getLayoutId(): Int
 
-    protected fun handleSearchMenu(menuItem: MenuItem){
-        menuItem.setOnMenuItemClickListener {
-            Navigation.findNavController(activity!!,R.id.nav_host_fragment).navigate(R.id.action_global_searchFragment)
-            true
-        }
-    }
+	abstract fun getClassTypeVM(): Class<VM>
+
+	protected fun setActionBar(toolbar: Toolbar, up: Boolean = false) {
+		(activity as AppCompatActivity).setSupportActionBar(toolbar)
+		val supportActionBar = (activity as AppCompatActivity).supportActionBar
+		supportActionBar?.setDisplayHomeAsUpEnabled(up)
+		actionBar = supportActionBar
+	}
+
+	protected fun handleSearchMenu(menuItem: MenuItem) {
+		menuItem.setOnMenuItemClickListener {
+			Navigation.findNavController(activity!!, R.id.nav_host_fragment).navigate(R.id.action_global_searchFragment)
+			true
+		}
+	}
+
+
+	fun subscribe(disposable: Disposable): Disposable {
+		subscriptions.add(disposable)
+		return disposable
+	}
+
+	override fun onStop() {
+		super.onStop()
+		subscriptions.clear()
+	}
 
 }

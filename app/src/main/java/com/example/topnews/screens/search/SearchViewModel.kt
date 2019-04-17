@@ -1,55 +1,45 @@
 package com.example.topnews.screens.search
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.topnews.utils.App
-import com.example.topnews.screens.Article
-import com.example.topnews.screens.ResponseModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import base.BaseViewModel
+import com.example.topnews.App
+import com.example.topnews.data.model.Article
+import com.example.topnews.domain.WrappedResponse.OnSuccess
+import io.reactivex.rxkotlin.subscribeBy
 
 const val pageSize = 6
 
-class SearchViewModel : ViewModel() {
-    private var pages: Int = 1
-    var totalResults: Int = 0
-    private lateinit var searchString: String
-    private var articles = MutableLiveData<List<Article>>()
-    fun getNetworkSearchResults() = articles
+class SearchViewModel : BaseViewModel() {
+	private val repository = App.injectRepository()
 
-    fun getArticlesForQuery(searchText: String) {
-        pages = 1
-        articles.postValue(emptyList())
-        getArticlesByPages(searchText)
-    }
+	private var pages: Int = 1
+	var totalResults: Int = 0
+	private lateinit var searchString: String
+	private var articles = MutableLiveData<List<Article>>()
+	fun getNetworkSearchResults() = articles
 
-    fun getArticlesForQueryOnScroll() {
-        getArticlesByPages()
-    }
+	fun getArticlesForQuery(searchText: String) {
+		pages = 1
+		articles.postValue(emptyList())
+		getArticlesByPages(searchText)
+	}
 
-    private fun getArticlesByPages(searchText: String = searchString) {
-        App.injectApi().getArticlesForKeyword(searchText, pages, pageSize).enqueue(object : Callback<ResponseModel> {
-            override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                Log.d("Failed", t.message)
-            }
+	fun getArticlesForQueryOnScroll() {
+		getArticlesByPages()
+	}
 
-            override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
-                val array = ArrayList<Article>()
-                articles.value?.let {
-                    array.addAll(articles.value?.asIterable()!!)
-                }
+	private fun getArticlesByPages(searchText: String = searchString) {
+		disposables.add(repository.getArticlesByPages(searchText, pages).subscribeBy { list ->
+			val previousList = arrayListOf<Article>()
+			articles.value?.let {
+				previousList.addAll(it.asIterable())
+			}
+			previousList.addAll((list as OnSuccess).item)
 
-                array.addAll(response.body()!!.articles)
-
-                totalResults = response.body()?.totalResults ?: 0
-
-                articles.value = array
-                searchString = searchText
-                pages++
-            }
-        })
-    }
+			articles.value = previousList
+			searchString = searchText
+			pages++
+		})
+	}
 
 }
