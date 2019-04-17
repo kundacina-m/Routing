@@ -2,93 +2,93 @@ package com.example.topnews.screens.topnews
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
-import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionInflater
-import com.example.topnews.R
-import com.example.topnews.screens.*
-import base.BaseAdapter
 import base.BaseFragment
-import com.example.topnews.screens.frame.FrameActivity
+import com.example.topnews.R
+import com.example.topnews.data.model.Article
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
-import kotlinx.android.synthetic.main.fragment_top_news.*
-import kotlinx.android.synthetic.main.toolbar_default.*
-
+import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
+import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
 class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClickTransition {
 
-    private val adapterTopNews: TopNewsAdapter by lazy {
-        TopNewsAdapter().apply {
-            onClickWithTransition = this@TopNewsFragment::onItemClickWithImgTransition
-        }
-    }
+	override var TAG = TopNewsFragment::class.java.simpleName
 
-    override fun getLayoutId(): Int = R.layout.fragment_top_news
-    override fun getClassTypeVM(): Class<TopNewsViewModel> = TopNewsViewModel::class.java
+	private val adapterTopNews: TopNewsAdapter by lazy {
+		TopNewsAdapter().apply {
+			onClickWithTransition = this@TopNewsFragment::onItemClickWithImgTransition
+		}
+	}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setObservers()
+	override fun getLayoutId(): Int = R.layout.fragment_top_news
+	override fun getClassTypeVM(): Class<TopNewsViewModel> = TopNewsViewModel::class.java
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        }
-        sharedElementReturnTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-    }
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setObservers()
+		fetchData()
 
-    override fun initView() {
-        actionBarSetup()
-        setupRecyclerView()
-        fetchData()
 
-    }
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+		}
+		sharedElementReturnTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+	}
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.default_menu, menu)
-        handleSearchMenu(menu.findItem(R.id.search))
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+	override fun initView() {
+		Log.d(TAG, "initView: $viewModel")
+		actionBarSetup()
+		setupRecyclerView()
+	}
 
-    private fun actionBarSetup() {
-        setActionBar(toolbar_top)
-        actionBar?.title = getString(R.string.topNews)
-    }
 
-    private fun setObservers() = viewModel.getNetworkResults().observe(this, Observer { adapterTopNews.setData(it) })
 
-    private fun fetchData() = viewModel.getArticles()
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		inflater.inflate(R.menu.default_menu, menu)
+		handleSearchMenu(menu.findItem(R.id.search))
+		super.onCreateOptionsMenu(menu, inflater)
+	}
 
-    private fun setupRecyclerView() =
-        rwTopNews.apply {
-            layoutManager = GridLayoutManager(context, 2)
-            adapter = adapterTopNews
-        }
+	private fun actionBarSetup() {
+		setActionBar(toolbar_top)
+		actionBar?.title = getString(R.string.topNews)
+	}
 
-    override fun onItemClickWithImgTransition(dataItem: Article, img: ImageView, title: TextView) {
-        val extras = FragmentNavigator.Extras.Builder()
-            .addSharedElement(img, ViewCompat.getTransitionName(img)!!)
-            .addSharedElement(title, ViewCompat.getTransitionName(title)!!)
-            .build()
+	private fun setObservers() = viewModel.getNetworkResults().observe(this, Observer { adapterTopNews.setData(it) })
 
-        navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem)
-        putBoolean(TRANSITION_ENABLED, true)}, extras)
-    }
+	private fun fetchData() = viewModel.getArticles()
 
-    private fun navigateToArticleDetails(bundle: Bundle, extras: FragmentNavigator.Extras) =
-        Navigation.findNavController(activity!!, R.id.nav_host_fragment)
-            .navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle, null, extras)
+	private fun setupRecyclerView() =
+		rwTopNews.apply {
+			layoutManager = GridLayoutManager(context, 2)
+			adapter = adapterTopNews
+		}
+
+	override fun onItemClickWithImgTransition(dataItem: Article, img: ImageView, title: TextView) {
+		val extras = FragmentNavigator.Extras.Builder()
+			.addSharedElement(img, ViewCompat.getTransitionName(img)!!)
+			.addSharedElement(title, ViewCompat.getTransitionName(title)!!)
+			.build()
+
+		navigateToArticleDetails(Bundle().apply {
+			putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem)
+			putBoolean(TRANSITION_ENABLED, true)
+		}, extras)
+	}
+
+	private fun navigateToArticleDetails(bundle: Bundle, extras: FragmentNavigator.Extras) =
+		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+			.navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle, null, extras)
 
 }

@@ -1,45 +1,53 @@
 package com.example.topnews.screens.articlescategory
 
+import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
-import com.example.topnews.screens.Article
-import kotlinx.android.synthetic.main.fragment_articles_category.*
+import com.example.topnews.data.model.Article
+import kotlinx.android.synthetic.main.fragment_articles_category.rvArticlesFromCategory
 
 class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), BaseAdapter.OnItemClickListener<Article> {
 
-    private val adapterArticlesCategory by lazy {
-        ArticlesCategoryAdapter().apply {
-            oneClickListener = this@ArticlesCategoryFragment::onItemClick
-        }
-    }
+	private val adapterArticlesCategory by lazy {
+		ArticlesCategoryAdapter().apply {
+			oneClickListener = this@ArticlesCategoryFragment::onItemClick
+		}
+	}
 
-    private val category by lazy {
-        arguments?.get("Category") as String
-    }
+	private val category by lazy {
+		arguments?.get("Category") as String
+	}
 
-    override fun getLayoutId(): Int = R.layout.fragment_articles_category
-    override fun getClassTypeVM(): Class<ArticlesCategoryViewModel> = ArticlesCategoryViewModel::class.java
+	override fun getLayoutId(): Int = R.layout.fragment_articles_category
+	override fun getClassTypeVM(): Class<ArticlesCategoryViewModel> = ArticlesCategoryViewModel::class.java
 
-    override fun initView() {
-        setupRecyclerView()
-        observeForData()
-    }
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+	}
+	override fun initView() {
+		setupRecyclerView()
+		observeForData()
+	}
 
-    private fun observeForData() {
-        viewModel.apply {
-            getNetworkResults().observe(this@ArticlesCategoryFragment, Observer { adapterArticlesCategory.setData(it) })
-            getArticlesFromCategory(category.toLowerCase())
-        }
-    }
+	override fun onResume() {
+		super.onResume()
+	}
 
-    private fun setupRecyclerView() =
-        rvArticlesFromCategory.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = adapterArticlesCategory
-        }
+	private fun observeForData() {
+		viewModel.apply {
+			getNetworkResults().observe(this@ArticlesCategoryFragment, Observer { adapterArticlesCategory.setData(it) })
+			getArticlesFromCategory(category.toLowerCase())
+		}
+	}
 
-    override fun onItemClick(dataItem: Article) {}
+	private fun setupRecyclerView() =
+		rvArticlesFromCategory.apply {
+			layoutManager = LinearLayoutManager(context)
+			adapter = adapterArticlesCategory
+		}
+
+	override fun onItemClick(dataItem: Article) {}
 }
