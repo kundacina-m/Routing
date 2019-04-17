@@ -44,7 +44,7 @@ class ArticleRepository {
 		return remoteStorage.getItemsByQuery(
 			mapOf(
 				"q" to query, "page" to pages.toString(), "pageSize" to pageSize
-					.toString()
+				.toString()
 			)
 		)
 	}

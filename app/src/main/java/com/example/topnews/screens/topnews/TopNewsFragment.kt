@@ -2,6 +2,7 @@ package com.example.topnews.screens.topnews
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.widget.ImageView
@@ -15,6 +16,9 @@ import androidx.transition.TransitionInflater
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
+import com.example.topnews.domain.RequestError
+import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
@@ -59,7 +63,11 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 		actionBar?.title = getString(R.string.topNews)
 	}
 
-	private fun setObservers() = viewModel.getNetworkResults().observe(this, Observer { adapterTopNews.setData(it) })
+	private fun setObservers() =
+		viewModel.getNetworkResults()
+			.observe(this, Observer {
+				if (it is OnSuccess) adapterTopNews.setData(it.item) else handleError(it as OnError)
+			})
 
 	private fun fetchData() = viewModel.getArticles()
 
@@ -84,5 +92,14 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 	private fun navigateToArticleDetails(bundle: Bundle, extras: FragmentNavigator.Extras) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
 			.navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle, null, extras)
+
+	private fun handleError(onError: OnError<List<Article>>) {
+		when (onError.error) {
+			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
+			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
+			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
+			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
+		}
+	}
 
 }

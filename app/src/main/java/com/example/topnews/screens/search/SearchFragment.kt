@@ -2,6 +2,7 @@ package com.example.topnews.screens.search
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,6 +17,9 @@ import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
+import com.example.topnews.domain.RequestError
+import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
@@ -150,11 +154,14 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 		}
 
 	private fun setObservers() = viewModel.getNetworkSearchResults().observe(this, Observer {
-		adapterSearch.setData(it)
-		loading = false
+		if (it is OnSuccess) {
+			adapterSearch.setData(it.item)
+			loading = false
+		} else (handleError(it as OnError))
+
 	})
 
-	fun fetchData(searchKeyword: String) = viewModel.getArticlesForQuery(searchKeyword)
+	private fun fetchData(searchKeyword: String) = viewModel.getArticlesForQuery(searchKeyword)
 
 	override fun onItemClick(dataItem: Article) =
 		navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
@@ -162,4 +169,14 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	private fun navigateToArticleDetails(bundle: Bundle) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
 			.navigate(R.id.action_searchFragment_to_articleDetailsFragment, bundle)
+
+	private fun handleError(onError: OnError<List<Article>>) {
+		when (onError.error) {
+			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
+			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
+			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
+			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
+		}
+	}
+
 }
