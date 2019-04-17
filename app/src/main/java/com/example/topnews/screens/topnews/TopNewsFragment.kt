@@ -93,13 +93,12 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
 			.navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle, null, extras)
 
-	private fun handleError(onError: OnError<List<Article>>) {
+	private fun handleError(onError: OnError<List<Article>>) =
 		when (onError.error) {
 			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
 			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
 			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
 			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
 		}
-	}
 
 }

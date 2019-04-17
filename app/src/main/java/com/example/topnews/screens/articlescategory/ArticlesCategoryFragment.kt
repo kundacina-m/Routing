@@ -49,13 +49,12 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), Base
 
 	override fun onItemClick(dataItem: Article) {}
 
-	private fun handleError(onError: OnError<List<Article>>) {
+	private fun handleError(onError: OnError<List<Article>>) =
 		when (onError.error) {
 			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
 			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
 			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
 			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
 		}
-	}
 
 }

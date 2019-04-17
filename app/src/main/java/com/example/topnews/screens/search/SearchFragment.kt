@@ -170,13 +170,12 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
 			.navigate(R.id.action_searchFragment_to_articleDetailsFragment, bundle)
 
-	private fun handleError(onError: OnError<List<Article>>) {
+	private fun handleError(onError: OnError<List<Article>>) =
 		when (onError.error) {
 			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
 			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
 			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
 			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
 		}
-	}
 
 }
