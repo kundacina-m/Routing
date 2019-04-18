@@ -10,9 +10,7 @@ import io.reactivex.rxkotlin.subscribeBy
 class TopNewsViewModel : BaseViewModel() {
 
 	private val repository = App.injectRepository()
-	private var articles = MutableLiveData<WrappedResponse<List<Article>>>()
-
-	fun getNetworkResults() = articles
+	internal var articles = MutableLiveData<WrappedResponse<List<Article>>>()
 
 	fun getArticles() =
 		disposables.add(repository.getAllRemote()

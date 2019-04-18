@@ -2,6 +2,7 @@ package com.example.topnews.data.repository
 
 import com.example.topnews.App
 import com.example.topnews.data.model.Article
+import com.example.topnews.domain.ArticleLocalStorage
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.screens.search.pageSize
 import io.reactivex.Flowable
@@ -9,7 +10,7 @@ import io.reactivex.Single
 
 class ArticleRepository {
 
-	private val localStorage by lazy {
+	private val localStorage:ArticleLocalStorage by lazy {
 		App.injectLocalStorage()
 	}
 

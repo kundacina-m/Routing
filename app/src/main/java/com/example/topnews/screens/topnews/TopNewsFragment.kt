@@ -64,7 +64,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 	}
 
 	private fun setObservers() =
-		viewModel.getNetworkResults()
+		viewModel.articles
 			.observe(this, Observer {
 				if (it is OnSuccess) adapterTopNews.setData(it.item) else handleError(it as OnError)
 			})
