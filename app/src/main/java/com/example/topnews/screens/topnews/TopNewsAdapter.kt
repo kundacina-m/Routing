@@ -35,7 +35,7 @@ class TopNewsAdapter : BaseAdapter<Article>() {
 		}
 	}
 
-	interface onClickTransition {
+	interface OnClickTransition {
 		fun onItemClickWithImgTransition(dataItem: Article, img: ImageView, title: TextView)
 	}
 }

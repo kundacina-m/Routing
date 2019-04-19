@@ -14,21 +14,21 @@ class ArticleDetailsViewModel : BaseViewModel() {
 
 	var isInDb = MutableLiveData<Boolean>()
 
-	fun insertArticleInDb(article: Article) =
+	fun insertArticle(article: Article) =
 		disposables.add(repository.addLocal(article).subscribeBy {
 			if (it is OnSuccess) {
 				isInDb.postValue(it.item)
 			}
 		})
 
-	fun removeArticleFromDb(article: Article) =
+	fun removeArticle(article: Article) =
 		disposables.add(repository.removeLocal(article).subscribeBy {
 			if (it is OnSuccess) {
 				isInDb.postValue(!it.item)
 			}
 		})
 
-	fun checkIfArticleExistsInDB(article: Article) =
+	fun checkIfArticleExists(article: Article) =
 		disposables.add(
 			repository.checkIfArticleExistsInDB(article).subscribeBy {
 				isInDb.postValue(it)

@@ -19,12 +19,16 @@ import com.example.topnews.data.model.Article
 import com.example.topnews.domain.RequestError
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
+import com.example.topnews.utils.Constants.ERROR_HTTP
+import com.example.topnews.utils.Constants.ERROR_INTERNET
+import com.example.topnews.utils.Constants.ERROR_SERVER
+import com.example.topnews.utils.Constants.ERROR_UNKNOWN
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
-class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClickTransition {
+class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClickTransition {
 
 	private val adapterTopNews: TopNewsAdapter by lazy {
 		TopNewsAdapter().apply {
@@ -42,7 +46,6 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 		}
-		sharedElementReturnTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 	}
 
 	override fun initView() {
@@ -95,10 +98,10 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 
 	private fun handleError(onError: OnError<List<Article>>) =
 		when (onError.error) {
-			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
-			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
-			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
-			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
+			is RequestError.UnknownError -> Log.d(TAG, ERROR_UNKNOWN)
+			is RequestError.HttpError -> Log.d(TAG, ERROR_HTTP)
+			is RequestError.NoInternetError -> Log.d(TAG, ERROR_INTERNET)
+			is RequestError.ServerError -> Log.d(TAG, ERROR_SERVER)
 		}
 
 }

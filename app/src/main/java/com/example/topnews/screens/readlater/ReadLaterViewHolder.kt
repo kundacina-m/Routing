@@ -10,7 +10,11 @@ import com.example.topnews.R
 import com.example.topnews.data.model.Article
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.ObservableData
-import kotlinx.android.synthetic.main.item_vertical_article.view.*
+import kotlinx.android.synthetic.main.item_vertical_article.view.cbToSelect
+import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvTitle
 import java.util.Observable
 
 class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), ReadLaterObserver {

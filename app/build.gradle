@@ -77,8 +77,6 @@ dependencies {
     // RxKotlin
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
 
-
-
 }
 
 

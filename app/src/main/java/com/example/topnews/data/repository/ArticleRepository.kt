@@ -3,18 +3,20 @@ package com.example.topnews.data.repository
 import com.example.topnews.App
 import com.example.topnews.data.model.Article
 import com.example.topnews.domain.ArticleLocalStorage
+import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.screens.search.pageSize
+import com.example.topnews.utils.Constants.ARG_CATEGORY
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 class ArticleRepository {
 
-	private val localStorage:ArticleLocalStorage by lazy {
+	private val localStorage: ArticleLocalStorage by lazy {
 		App.injectLocalStorage()
 	}
 
-	private val remoteStorage by lazy {
+	private val remoteStorage: ArticleRemoteStorage by lazy {
 		App.injectRemoteStorage()
 	}
 
@@ -44,14 +46,15 @@ class ArticleRepository {
 	fun getArticlesByPages(query: String, pages: Int): Single<WrappedResponse<List<Article>>> {
 		return remoteStorage.getItemsByQuery(
 			mapOf(
-				"q" to query, "page" to pages.toString(), "pageSize" to pageSize
-				.toString()
+				"q" to query,
+				"page" to pages.toString(),
+				"pageSize" to pageSize.toString()
 			)
 		)
 	}
 
 	fun getArticlesByCategory(category: String): Single<WrappedResponse<List<Article>>> {
-		return remoteStorage.getItemsByQuery(mapOf("category" to category))
+		return remoteStorage.getItemsByQuery(mapOf(ARG_CATEGORY to category))
 	}
 
 	fun checkIfArticleExistsInDB(article: Article): Flowable<Boolean> {

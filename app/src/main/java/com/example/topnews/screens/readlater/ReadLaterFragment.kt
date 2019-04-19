@@ -17,6 +17,7 @@ import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.screens.home.FrameActivity
 import com.example.topnews.screens.widget.ReadLaterWidget
+import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import kotlinx.android.synthetic.main.fragment_read_later.readLaterRecyclerView
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
@@ -146,10 +147,10 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 
 	private fun handleError(onError: OnError<List<Article>>) =
 		when (onError.error) {
-			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
-			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
-			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
-			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
+			is RequestError.UnknownError -> Log.d(TAG, Constants.ERROR_UNKNOWN)
+			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
+			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
+			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
 		}
 
 }

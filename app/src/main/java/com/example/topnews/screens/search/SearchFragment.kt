@@ -13,6 +13,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
@@ -83,11 +85,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 
 		MenuItemCompat.setOnActionExpandListener(searchItem, object : MenuItemCompat.OnActionExpandListener {
 			override fun onMenuItemActionExpand(item: MenuItem?): Boolean = true
-			override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-				navCtrl.navigateUp()
-				return true
-			}
-
+			override fun onMenuItemActionCollapse(item: MenuItem?): Boolean = navCtrl.navigateUp()
 		})
 
 		val searchView = searchItem.actionView as SearchView
@@ -97,9 +95,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	private fun setSearchViewListener(searchView: SearchView) =
 		searchView.apply {
 			setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-				override fun onQueryTextSubmit(query: String?): Boolean {
-					return false
-				}
+				override fun onQueryTextSubmit(query: String?): Boolean = false
 
 				override fun onQueryTextChange(newText: String?): Boolean {
 					return if (!newText?.isEmpty()!!) {
@@ -153,6 +149,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 			})
 		}
 
+
 	private fun setObservers() = viewModel.getNetworkSearchResults().observe(this, Observer {
 		if (it is OnSuccess) {
 			adapterSearch.setData(it.item)
@@ -172,10 +169,10 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 
 	private fun handleError(onError: OnError<List<Article>>) =
 		when (onError.error) {
-			is RequestError.UnknownError -> Log.d(TAG, "handleError: Unknown ")
-			is RequestError.HttpError -> Log.d(TAG, "handleError: Http")
-			is RequestError.NoInternetError -> Log.d(TAG, "handleError: No Internet")
-			is RequestError.ServerError -> Log.d(TAG, "handleError: Server")
+			is RequestError.UnknownError -> Log.d(TAG, Constants.ERROR_UNKNOWN)
+			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
+			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
+			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
 		}
 
 }

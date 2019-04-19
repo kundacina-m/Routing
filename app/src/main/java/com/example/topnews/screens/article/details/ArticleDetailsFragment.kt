@@ -57,7 +57,7 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 
 		setObservers()
 
-		viewModel.checkIfArticleExistsInDB(dataItem)
+		viewModel.checkIfArticleExists(dataItem)
 
 		activity?.bottom_navigation?.visibility = View.GONE
 		actionBarSetup()
@@ -152,11 +152,11 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 	}
 
 	private fun addArticleToFavourites(article: Article) {
-		viewModel.insertArticleInDb(article)
+		viewModel.insertArticle(article)
 	}
 
 	private fun removeArticleFromFavourites(article: Article) {
-		viewModel.removeArticleFromDb(article)
+		viewModel.removeArticle(article)
 	}
 
 	private fun setOnTransitionEnterEndListener() {
