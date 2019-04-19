@@ -1,4 +1,4 @@
-package com.example.topnews.screens.widget
+package com.example.topnews.widget
 
 import android.content.Context
 import android.content.Intent

@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.example.topnews.R
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 abstract class BaseFragment<VM : ViewModel> : Fragment() {
 
@@ -22,17 +24,13 @@ abstract class BaseFragment<VM : ViewModel> : Fragment() {
 
 	protected var actionBar: ActionBar? = null
 
+	private val subscriptions = CompositeDisposable()
+
 	protected val viewModel: VM by lazy {
 		ViewModelProviders.of(this).get(getClassTypeVM())
 	}
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		Log.d(TAG, "onCreate")
-	}
-
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		Log.d(TAG, "onCreateView: ")
 		 val inflated = inflater.inflate(getLayoutId(), container, false)
 		setHasOptionsMenu(true)
 		return inflated
@@ -40,39 +38,7 @@ abstract class BaseFragment<VM : ViewModel> : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		Log.d(TAG, "onViewCreated: ")
 		initView()
-	}
-
-	override fun onStart() {
-		Log.d(TAG, "onStart: ")
-		super.onStart()
-	}
-
-	override fun onResume() {
-		Log.d(TAG, "onResume: ")
-		super.onResume()
-	}
-
-	override fun onPause() {
-		Log.d(TAG, "onPause: ")
-		super.onPause()
-	}
-
-	override fun onStop() {
-		Log.d(TAG, "onStop: ")
-		super.onStop()
-	}
-
-
-	override fun onDestroyView() {
-		Log.d(TAG, "onDestroyView: ")
-		super.onDestroyView()
-	}
-
-	override fun onDestroy() {
-		Log.d(TAG, "onDestroy: ")
-		super.onDestroy()
 	}
 
 	abstract fun initView()
@@ -94,6 +60,17 @@ abstract class BaseFragment<VM : ViewModel> : Fragment() {
 			Navigation.findNavController(activity!!, R.id.nav_host_fragment).navigate(R.id.action_global_searchFragment)
 			true
 		}
+	}
+
+
+	fun subscribe(disposable: Disposable): Disposable {
+		subscriptions.add(disposable)
+		return disposable
+	}
+
+	override fun onStop() {
+		super.onStop()
+		subscriptions.clear()
 	}
 
 }

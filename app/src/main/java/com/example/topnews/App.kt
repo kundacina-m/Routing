@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.topnews.data.networking.ArticleApi
 import com.example.topnews.data.repository.ArticleRepository
+import com.example.topnews.data.repository.ArticleLocalStorageImpl
+import com.example.topnews.data.repository.ArticleRemoteStorageImpl
 import com.example.topnews.data.db.sqlite.DBHelper
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -14,10 +16,15 @@ class App : Application() {
 		private lateinit var articleApi: ArticleApi
 		private lateinit var database: DBHelper
 		private lateinit var repository: ArticleRepository
+		private lateinit var localStorage: ArticleLocalStorageImpl
+		private lateinit var remoteStorage: ArticleRemoteStorageImpl
 
 		fun injectDB() = database
 		fun injectApi() = articleApi
 		fun injectRepository() = repository
+
+		fun injectLocalStorage() = localStorage
+		fun injectRemoteStorage() = remoteStorage
 	}
 
 	private lateinit var retrofit: Retrofit
@@ -41,6 +48,9 @@ class App : Application() {
 		database = DBHelper(appContext)
 
 		repository = ArticleRepository()
+
+		localStorage = ArticleLocalStorageImpl()
+		remoteStorage = ArticleRemoteStorageImpl()
 
 	}
 }

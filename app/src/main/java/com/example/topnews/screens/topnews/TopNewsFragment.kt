@@ -16,14 +16,19 @@ import androidx.transition.TransitionInflater
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
+import com.example.topnews.domain.RequestError
+import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.domain.WrappedResponse.OnSuccess
+import com.example.topnews.utils.Constants.ERROR_HTTP
+import com.example.topnews.utils.Constants.ERROR_INTERNET
+import com.example.topnews.utils.Constants.ERROR_SERVER
+import com.example.topnews.utils.Constants.ERROR_UNKNOWN
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
-class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClickTransition {
-
-	override var TAG = TopNewsFragment::class.java.simpleName
+class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClickTransition {
 
 	private val adapterTopNews: TopNewsAdapter by lazy {
 		TopNewsAdapter().apply {
@@ -37,22 +42,18 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setObservers()
-		fetchData()
-
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 		}
-		sharedElementReturnTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 	}
 
 	override fun initView() {
-		Log.d(TAG, "initView: $viewModel")
 		actionBarSetup()
 		setupRecyclerView()
+		fetchData()
+
 	}
-
-
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 		inflater.inflate(R.menu.default_menu, menu)
@@ -65,7 +66,11 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 		actionBar?.title = getString(R.string.topNews)
 	}
 
-	private fun setObservers() = viewModel.getNetworkResults().observe(this, Observer { adapterTopNews.setData(it) })
+	private fun setObservers() =
+		viewModel.articles
+			.observe(this, Observer {
+				if (it is OnSuccess) adapterTopNews.setData(it.item) else handleError(it as OnError)
+			})
 
 	private fun fetchData() = viewModel.getArticles()
 
@@ -90,5 +95,13 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.onClick
 	private fun navigateToArticleDetails(bundle: Bundle, extras: FragmentNavigator.Extras) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
 			.navigate(R.id.action_topNewsFragment_to_articleDetailsFragment, bundle, null, extras)
+
+	private fun handleError(onError: OnError<List<Article>>) =
+		when (onError.error) {
+			is RequestError.UnknownError -> Log.d(TAG, ERROR_UNKNOWN)
+			is RequestError.HttpError -> Log.d(TAG, ERROR_HTTP)
+			is RequestError.NoInternetError -> Log.d(TAG, ERROR_INTERNET)
+			is RequestError.ServerError -> Log.d(TAG, ERROR_SERVER)
+		}
 
 }

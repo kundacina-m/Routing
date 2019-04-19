@@ -1,10 +1,12 @@
 package com.example.topnews.domain.crud
 
-import com.example.topnews.domain.OnWrappedResponse
+import com.example.topnews.domain.WrappedResponse
+import io.reactivex.Single
 
 interface RemoteCRUD<T> {
-	fun addRemote(item: T, onWrappedResponse: OnWrappedResponse<Boolean>)
-	fun removeRemote(item: T, onWrappedResponse: OnWrappedResponse<Boolean>)
-	fun getRemote(id: String, onWrappedResponse: OnWrappedResponse<T>)
-	fun getAllRemote(onWrappedResponse: OnWrappedResponse<List<T>>)
+	fun add(item: T): Single<WrappedResponse<Boolean>>
+	fun remove(item: T): Single<WrappedResponse<Boolean>>
+	fun get(id: String): Single<WrappedResponse<T>>
+	fun getAll(): Single<WrappedResponse<List<T>>>
+	fun getItemsByQuery(queryParams: Map<String, String>): Single<WrappedResponse<List<T>>>
 }

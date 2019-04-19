@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
+import com.example.topnews.utils.Constants.ARG_CATEGORY
 
 import kotlinx.android.synthetic.main.fragment_categories.rvCategories
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
@@ -27,7 +28,7 @@ class CategoriesFragment : BaseFragment<CategoriesViewModel>(), BaseAdapter.OnIt
 	}
 
 	override fun initView() {
-		toolbarSetup()
+		actionBarSetup()
 		setupRecyclerView()
 	}
 
@@ -38,7 +39,7 @@ class CategoriesFragment : BaseFragment<CategoriesViewModel>(), BaseAdapter.OnIt
 		super.onCreateOptionsMenu(menu, inflater)
 	}
 
-	private fun toolbarSetup() {
+	private fun actionBarSetup() {
 		setActionBar(toolbar_top)
 		actionBar?.title = getString(R.string.categories)
 	}
@@ -51,7 +52,7 @@ class CategoriesFragment : BaseFragment<CategoriesViewModel>(), BaseAdapter.OnIt
 
 	override fun onItemClick(dataItem: String) {
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
-			.navigate(R.id.articlesCategoryFragment, Bundle().apply { putString("Category", dataItem) })
+			.navigate(R.id.articlesCategoryFragment, Bundle().apply { putString(ARG_CATEGORY, dataItem) })
 	}
 
 }

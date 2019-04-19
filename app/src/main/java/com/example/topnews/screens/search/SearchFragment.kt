@@ -2,6 +2,7 @@ package com.example.topnews.screens.search
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -12,10 +13,15 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
+import com.example.topnews.domain.RequestError
+import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
@@ -79,11 +85,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 
 		MenuItemCompat.setOnActionExpandListener(searchItem, object : MenuItemCompat.OnActionExpandListener {
 			override fun onMenuItemActionExpand(item: MenuItem?): Boolean = true
-			override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-				navCtrl.navigateUp()
-				return true
-			}
-
+			override fun onMenuItemActionCollapse(item: MenuItem?): Boolean = navCtrl.navigateUp()
 		})
 
 		val searchView = searchItem.actionView as SearchView
@@ -93,9 +95,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	private fun setSearchViewListener(searchView: SearchView) =
 		searchView.apply {
 			setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-				override fun onQueryTextSubmit(query: String?): Boolean {
-					return false
-				}
+				override fun onQueryTextSubmit(query: String?): Boolean = false
 
 				override fun onQueryTextChange(newText: String?): Boolean {
 					return if (!newText?.isEmpty()!!) {
@@ -149,12 +149,16 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 			})
 		}
 
+
 	private fun setObservers() = viewModel.getNetworkSearchResults().observe(this, Observer {
-		adapterSearch.setData(it)
-		loading = false
+		if (it is OnSuccess) {
+			adapterSearch.setData(it.item)
+			loading = false
+		} else (handleError(it as OnError))
+
 	})
 
-	fun fetchData(searchKeyword: String) = viewModel.getArticlesForQuery(searchKeyword)
+	private fun fetchData(searchKeyword: String) = viewModel.getArticlesForQuery(searchKeyword)
 
 	override fun onItemClick(dataItem: Article) =
 		navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
@@ -162,4 +166,13 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	private fun navigateToArticleDetails(bundle: Bundle) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
 			.navigate(R.id.action_searchFragment_to_articleDetailsFragment, bundle)
+
+	private fun handleError(onError: OnError<List<Article>>) =
+		when (onError.error) {
+			is RequestError.UnknownError -> Log.d(TAG, Constants.ERROR_UNKNOWN)
+			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
+			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
+			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
+		}
+
 }

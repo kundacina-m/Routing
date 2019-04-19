@@ -40,7 +40,7 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 	override fun getLayoutId(): Int = R.layout.fragment_article_details
 	override fun getClassTypeVM(): Class<ArticleDetailsViewModel> = ArticleDetailsViewModel::class.java
 
-	private  var menu: Menu?=null
+	private var menu: Menu? = null
 
 	private val dataItem by lazy {
 		arguments?.getParcelable(PARCEL_FOR_ARTICLE_DETAILS) as Article
@@ -57,7 +57,7 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 
 		setObservers()
 
-		viewModel.checkIfArticleExistsInDB(dataItem)
+		viewModel.checkIfArticleExists(dataItem)
 
 		activity?.bottom_navigation?.visibility = View.GONE
 		actionBarSetup()
@@ -76,19 +76,18 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 
 	}
 
-	private fun setObservers(){
+	private fun setObservers() {
 		viewModel.isInDb.observe(this, Observer {
 			fab.isActivated = it
-		})
-
-		viewModel.articleState.observe(this, Observer {
-			if (it){
-
-			} else {
-
-			}
-
 			ReadLaterWidget.WidgetRefresher.sendRefreshBroadcast(context!!)
+
+			if (it) {
+				fab.setOnClickListener {
+					removeArticleFromFavourites(dataItem)
+				}
+			} else fab.setOnClickListener {
+				addArticleToFavourites(dataItem)
+			}
 		})
 	}
 
@@ -153,11 +152,11 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 	}
 
 	private fun addArticleToFavourites(article: Article) {
-		viewModel.insertArticleInDb(article)
+		viewModel.insertArticle(article)
 	}
 
 	private fun removeArticleFromFavourites(article: Article) {
-		viewModel.removeArticleFromDb(article)
+		viewModel.removeArticle(article)
 	}
 
 	private fun setOnTransitionEnterEndListener() {

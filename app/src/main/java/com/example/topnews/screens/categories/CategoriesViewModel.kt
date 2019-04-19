@@ -1,6 +1,6 @@
 package com.example.topnews.screens.categories
 
-import androidx.lifecycle.ViewModel
+import base.BaseViewModel
 
-class CategoriesViewModel: ViewModel() {
+class CategoriesViewModel : BaseViewModel() {
 }

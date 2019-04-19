@@ -3,46 +3,57 @@ package com.example.topnews.data.db
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.SQLException
-import com.example.topnews.data.model.Article
+import com.example.topnews.App
 import com.example.topnews.data.db.sqlite.DBContract
 import com.example.topnews.data.db.sqlite.DBHelper
 import com.example.topnews.data.db.sqlite.DBHelper.Companion.SQL_CREATE_ENTRIES
-import com.example.topnews.App
+import com.example.topnews.data.model.Article
+import com.example.topnews.domain.WrappedResponse
+import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.ARTICLE_NO_AUTHOR
 import com.example.topnews.utils.Constants.ARTICLE_NO_CONTENT
+import io.reactivex.Flowable
 
 class ArticleDaoImpl : ArticleDao {
 
 	private var database: DBHelper = App.injectDB()
 
-	protected fun addItem(item: Article): Boolean {
-		if (checkIfRowAlreadyExists(item)) return false
+	override fun addItem(item: Article): Flowable<WrappedResponse<Boolean>> {
+		return checkIfArticleExists(item)
+			.doOnNext {
+				if (!it) {
+					val db = database.writableDatabase
+					db.insert(DBContract.ArticleEntry.TABLE_NAME, null, getRowValues(item))
 
-		val db = database.writableDatabase
-		db.insert(DBContract.ArticleEntry.TABLE_NAME, null, getRowValues(item))
+				}
+			}.map {
+				OnSuccess(it.not())
+			}
 
-		return true
+		//		if (checkIfRowAlreadyExists(item)) return
+
 	}
 
-	protected fun deleteItem(item: Article): Boolean {
+	override fun deleteItem(item: Article): Flowable<WrappedResponse<Boolean>> {
 		val db = database.writableDatabase
 
 		try {
 			db.execSQL(
-				"delete from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.publishedAt.hashCode())
+				"delete from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.publishedAt.hashCode()
+			)
 		} catch (e: SQLException) {
-			db.close(); return false
+			db.close(); return Flowable.just(OnSuccess(false))
 		}
 
-		return true
+		return Flowable.just(OnSuccess(true))
 	}
 
-	protected fun changeItem(item: Article): Boolean {
-		return false
+	override fun changeItem(item: Article): Flowable<WrappedResponse<Boolean>> {
+		return Flowable.just(OnSuccess(false))
 	}
 
-	protected fun readAll(): ArrayList<Article> {
+	override fun getAllItems(): Flowable<WrappedResponse<ArrayList<Article>>> {
 		val articles by lazy { ArrayList<Article>() }
 		val db = database.readableDatabase
 		val cursor = db.rawQuery("select * from " + DBContract.ArticleEntry.TABLE_NAME, null)
@@ -53,12 +64,12 @@ class ArticleDaoImpl : ArticleDao {
 				articles.add(createObjFromRow(cursor))
 				cursor.moveToNext()
 			}
-		} ?: db.execSQL(DBHelper.SQL_CREATE_ENTRIES) ?: return ArrayList()
+		} ?: db.execSQL(SQL_CREATE_ENTRIES) ?: return Flowable.just(OnSuccess(ArrayList()))
 		cursor.close()
-		return articles
+		return Flowable.just(OnSuccess(articles))
 	}
 
-	protected fun getArticlesInRange(from: Int, to: Int): ArrayList<Article> {
+	override fun getArticlesFromTo(from: Int, to: Int): Flowable<WrappedResponse<ArrayList<Article>>> {
 		val articles by lazy { ArrayList<Article>() }
 		val db = database.readableDatabase
 		val cursor = db.rawQuery(
@@ -69,29 +80,30 @@ class ArticleDaoImpl : ArticleDao {
 		cursor?.let {
 			cursor.moveToPosition(from)
 			while (cursor.position < to) {
-				if (cursor.isAfterLast) return articles
+				if (cursor.isAfterLast) return Flowable.just(OnSuccess(articles))
 				articles.add(createObjFromRow(cursor))
 				cursor.moveToNext()
 			}
-		} ?: db.execSQL(SQL_CREATE_ENTRIES) ?: return ArrayList()
+		} ?: db.execSQL(SQL_CREATE_ENTRIES) ?: return Flowable.just(OnSuccess(ArrayList()))
 		cursor.close()
-		return articles
+		return Flowable.just(OnSuccess(articles))
 
 	}
 
-	protected fun checkIfRowAlreadyExists(item: Article): Boolean {
+	override fun checkIfArticleExists(article: Article): Flowable<Boolean> {
 		val db = database.readableDatabase
 
 		val cursor = db.rawQuery(
-			"select * from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + " = " + item.publishedAt.hashCode()
+			"select * from " + DBContract.ArticleEntry.TABLE_NAME + " where " + DBContract.ArticleEntry.COLUMN_ID + "" +
+				" = " + article.publishedAt.hashCode()
 			, null
 		)
 		if (cursor.count > 0) {
 			cursor.close()
-			return true
+			return Flowable.just(true)
 		}
 		cursor.close()
-		return false
+		return Flowable.just(false)
 	}
 
 	private fun getRowValues(article: Article?): ContentValues {
@@ -115,8 +127,11 @@ class ArticleDaoImpl : ArticleDao {
 
 	private fun createObjFromRow(cursor: Cursor): Article {
 		return Article(
-			hashMapOf(Constants.MAP_SOURCE_KEY_NAME to cursor.getString(
-				cursor.getColumnIndex(DBContract.ArticleEntry.COLUMN_SOURCE))),
+			hashMapOf(
+				Constants.MAP_SOURCE_KEY_NAME to cursor.getString(
+					cursor.getColumnIndex(DBContract.ArticleEntry.COLUMN_SOURCE)
+				)
+			),
 			cursor.getString(cursor.getColumnIndex(DBContract.ArticleEntry.COLUMN_AUTHOR)),
 			cursor.getString(cursor.getColumnIndex(DBContract.ArticleEntry.COLUMN_TITLE)),
 			cursor.getString(cursor.getColumnIndex(DBContract.ArticleEntry.COLUMN_DESCRIPTION)),
@@ -126,29 +141,4 @@ class ArticleDaoImpl : ArticleDao {
 			cursor.getString(cursor.getColumnIndex(DBContract.ArticleEntry.COLUMN_CONTENT))
 		)
 	}
-
-	override fun getAllItems(): Execute<List<Article>> {
-		return Execute(::readAll)
-	}
-
-	override fun insertItem(item: Article): Execute<Boolean> {
-		return Execute(::addItem, item)
-	}
-
-	override fun removeItem(item: Article): Execute<Boolean> {
-		return Execute(::deleteItem, item)
-	}
-
-	override fun updateItem(item: Article): Execute<Boolean> {
-		return Execute(::changeItem)
-	}
-
-	override fun getArticlesFromTo(from: Int, to: Int): Execute<ArrayList<Article>> {
-		return Execute(::getArticlesInRange, from, to)
-	}
-
-	override fun checkIfArticleExists(article: Article): Execute<Boolean> {
-		return Execute(::checkIfRowAlreadyExists, article)
-	}
-
 }

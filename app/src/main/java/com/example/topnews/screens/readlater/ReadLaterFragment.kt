@@ -1,6 +1,7 @@
 package com.example.topnews.screens.readlater
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.lifecycle.Observer
@@ -11,16 +12,18 @@ import base.BaseAdapter
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
+import com.example.topnews.domain.RequestError
+import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.screens.home.FrameActivity
-import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.screens.widget.ReadLaterWidget
+import com.example.topnews.utils.Constants
+import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import kotlinx.android.synthetic.main.fragment_read_later.readLaterRecyclerView
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
 class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItemClickListener<Article>,
 						  ReadLaterAdapter.PopUpMenu {
-
-	override var TAG: String = ReadLaterFragment::class.java.simpleName
 
 	private var loading = false
 	private lateinit var menu: Menu
@@ -44,9 +47,10 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 	}
 
 	override fun initView() {
-		fetchData()
 		actionBarSetup()
 		setupRecyclerView()
+		fetchData()
+
 	}
 
 	private fun actionBarSetup() {
@@ -64,8 +68,10 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 
 	private fun setObservers() {
 		viewModel.getFavouritesFromDB().observe(this@ReadLaterFragment, Observer {
-			adapterReadLater.setData(it)
-			loading = false
+			if (it is OnSuccess) {
+				adapterReadLater.setData(it.item)
+				loading = false
+			} else handleError(it as OnError)
 		})
 	}
 
@@ -138,5 +144,13 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 	private fun navigateToArticleDetails(bundle: Bundle) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
 			.navigate(R.id.action_readLaterFragment_to_articleDetailsFragment, bundle)
+
+	private fun handleError(onError: OnError<List<Article>>) =
+		when (onError.error) {
+			is RequestError.UnknownError -> Log.d(TAG, Constants.ERROR_UNKNOWN)
+			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
+			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
+			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
+		}
 
 }
