@@ -21,15 +21,23 @@ class ReadLaterViewModel : BaseViewModel() {
 	fun getFavouritesFromDB() = articles
 
 	fun getArticlesFromDB() {
-		val previousArticles = getListFromLiveData()
 
-		disposables.add(repository.getArticlesPagination(pages * pageSize, (pages + 1) * pageSize).subscribeBy {
-			if (it is OnSuccess) {
-				endOfDB = it.item.size < (pages + 1) * pageSize
-				articles.postValue(OnSuccess(previousArticles + it.item))
-				pages++
-			}
+		disposables.add(repository.getAllLocal().subscribeBy {
+			articles.postValue(it)
 		})
+
+
+
+
+//		val previousArticles = getListFromLiveData()
+//
+//		disposables.add(repository.getArticlesPagination(pages * pageSize, (pages + 1) * pageSize).subscribeBy {
+//			if (it is OnSuccess) {
+//				endOfDB = it.item.size < (pages + 1) * pageSize
+//				articles.postValue(OnSuccess(previousArticles + it.item))
+//				pages++
+//			}
+//		})
 	}
 
 	fun removeWhenAllSelected(data: ArrayList<Article>) {
@@ -47,13 +55,13 @@ class ReadLaterViewModel : BaseViewModel() {
 	}
 
 	fun removeSelected(data: ArrayList<Article>) {
-		for (article in data)
-			disposables.add(repository.removeLocal(article).subscribeBy {
-				if (it is OnSuccess && it.item) {
-					val array = getListFromLiveData()
-					articles.postValue(OnSuccess(array - data))
-				}
-			})
+//		for (article in data)
+//			disposables.add(repository.removeLocal(article).subscribeBy {
+//				if (it is OnSuccess && it.item) {
+//					val array = getListFromLiveData()
+//					articles.postValue(OnSuccess(array - data))
+//				}
+//			})
 	}
 
 	private fun getListFromLiveData(): ArrayList<Article> {

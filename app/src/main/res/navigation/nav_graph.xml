@@ -60,7 +60,7 @@
 			android:name="urlImg"
 			app:argType="string"/>
 		<argument
-			android:name="source"
+			android:name="sourceRaw"
 			app:argType="string"/>
 		<argument
 			android:name="title"

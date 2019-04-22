@@ -9,7 +9,6 @@ abstract class BaseActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(getViewLayout())
-		//        setSupportActionBar(toolbar_top)
 		initView()
 	}
 

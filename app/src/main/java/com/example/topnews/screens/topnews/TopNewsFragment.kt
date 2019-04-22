@@ -102,6 +102,8 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			is RequestError.HttpError -> Log.d(TAG, ERROR_HTTP)
 			is RequestError.NoInternetError -> Log.d(TAG, ERROR_INTERNET)
 			is RequestError.ServerError -> Log.d(TAG, ERROR_SERVER)
+			is RequestError.DatabaseError -> Log.d(TAG, "handleError: DATABASE")
+
 		}
 
 }
