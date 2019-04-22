@@ -1,11 +1,27 @@
 package com.example.topnews.data.db
 
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.example.topnews.data.model.Article
-import com.example.topnews.domain.WrappedResponse
 import io.reactivex.Flowable
+import io.reactivex.Single
 
-interface ArticleDao : BaseDao<Article> {
+@Dao
+interface ArticleDao {
 
-	fun getArticlesFromTo(from: Int, to: Int): Flowable<WrappedResponse<ArrayList<Article>>>
-	fun checkIfArticleExists(article: Article): Flowable<Boolean>
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun addItem(article: Article): Long
+
+	@Query("SELECT * FROM articles")
+	fun getAllItems(): Flowable<List<Article>>
+
+	@Delete
+	fun deleteItem(article: Article): Int
+
+	@Query("SELECT * FROM articles where publishedAt = :publishedAt")
+	fun getItem(publishedAt: String): Single<Article>
+
 }

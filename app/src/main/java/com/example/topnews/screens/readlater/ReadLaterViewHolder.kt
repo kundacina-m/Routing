@@ -37,7 +37,7 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), R
 		article = dataItem
 		itemView.apply {
 			tvTitle.text = dataItem.title
-			tvSource.text = dataItem.source.getValue(Constants.MAP_SOURCE_KEY_NAME)
+			tvSource.text = dataItem.source
 			tvPublishTime.text = dataItem.publishedAt
 		}
 

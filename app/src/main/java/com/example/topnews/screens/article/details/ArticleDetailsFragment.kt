@@ -18,7 +18,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
 import com.example.topnews.screens.widget.ReadLaterWidget
-import com.example.topnews.utils.Constants.MAP_SOURCE_KEY_NAME
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import com.google.android.material.appbar.AppBarLayout
@@ -143,7 +142,7 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 	}
 
 	private fun fillViewWithData() {
-		tvSource.text = dataItem.source.get(key = MAP_SOURCE_KEY_NAME)
+		tvSource.text = dataItem.source
 		tvDescription.text = dataItem.description
 		tvContent.text = dataItem.content
 		tvPublishedAt.text = dataItem.publishedAt

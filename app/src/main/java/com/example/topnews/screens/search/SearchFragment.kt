@@ -173,6 +173,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
 			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
 			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
+			is RequestError.DatabaseError -> Log.d(TAG, "handleError: DATABASE")
 		}
 
 }

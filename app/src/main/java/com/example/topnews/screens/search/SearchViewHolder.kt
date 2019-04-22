@@ -12,7 +12,7 @@ class SearchViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 	override fun bind(dataItem: Article) {
 		itemView.apply {
 			tvTitle.text = dataItem.title
-			tvSource.text = dataItem.source.getValue("name")
+			tvSource.text = dataItem.source
 			tvPublishTime.text = dataItem.publishedAt
 		}
 		Glide.with(itemView.context).load(dataItem.urlToImage).apply(RequestOptions().override(400, 600))

@@ -2,11 +2,12 @@ package com.example.topnews
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.room.Room
+import com.example.topnews.data.db.ArticleDao
+import com.example.topnews.data.db.ArticleDatabase
 import com.example.topnews.data.networking.ArticleApi
-import com.example.topnews.data.repository.ArticleRepository
-import com.example.topnews.data.repository.ArticleLocalStorageImpl
 import com.example.topnews.data.repository.ArticleRemoteStorageImpl
-import com.example.topnews.data.db.sqlite.DBHelper
+import com.example.topnews.data.repository.ArticleRepository
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,17 +15,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 class App : Application() {
 	companion object {
 		private lateinit var articleApi: ArticleApi
-		private lateinit var database: DBHelper
 		private lateinit var repository: ArticleRepository
-		private lateinit var localStorage: ArticleLocalStorageImpl
 		private lateinit var remoteStorage: ArticleRemoteStorageImpl
+		private lateinit var articleDatabase: ArticleDatabase
+		private lateinit var articleDao: ArticleDao
 
-		fun injectDB() = database
 		fun injectApi() = articleApi
 		fun injectRepository() = repository
 
-		fun injectLocalStorage() = localStorage
 		fun injectRemoteStorage() = remoteStorage
+
+		fun injectArticleDao() = articleDao
+
 	}
 
 	private lateinit var retrofit: Retrofit
@@ -33,7 +35,8 @@ class App : Application() {
 		super.onCreate()
 
 		AppCompatDelegate.setDefaultNightMode(
-			AppCompatDelegate.MODE_NIGHT_YES)
+			AppCompatDelegate.MODE_NIGHT_YES
+		)
 
 		val appContext = applicationContext
 
@@ -45,11 +48,13 @@ class App : Application() {
 
 		articleApi = retrofit.create(ArticleApi::class.java)
 
-		database = DBHelper(appContext)
+
+		articleDatabase = Room.databaseBuilder(applicationContext, ArticleDatabase::class.java, "article-db").build()
+		articleDao = articleDatabase.articlesDao()
+
 
 		repository = ArticleRepository()
 
-		localStorage = ArticleLocalStorageImpl()
 		remoteStorage = ArticleRemoteStorageImpl()
 
 	}

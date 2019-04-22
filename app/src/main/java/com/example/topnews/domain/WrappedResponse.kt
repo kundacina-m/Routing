@@ -19,6 +19,7 @@ sealed class RequestError {
 	object UnknownError : RequestError()
 	object NoInternetError : RequestError()
 	object ServerError : RequestError()
+	object DatabaseError : RequestError()
 	data class HttpError(val code: Int, val message: String) : RequestError()
 }
 
