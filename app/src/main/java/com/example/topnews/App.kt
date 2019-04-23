@@ -16,15 +16,10 @@ class App : Application() {
 	companion object {
 		private lateinit var articleApi: ArticleApi
 		private lateinit var repository: ArticleRepository
-		private lateinit var remoteStorage: ArticleRemoteStorageImpl
-		private lateinit var articleDatabase: ArticleDatabase
 		private lateinit var articleDao: ArticleDao
 
 		fun injectApi() = articleApi
 		fun injectRepository() = repository
-
-		fun injectRemoteStorage() = remoteStorage
-
 		fun injectArticleDao() = articleDao
 
 	}
@@ -38,8 +33,6 @@ class App : Application() {
 			AppCompatDelegate.MODE_NIGHT_YES
 		)
 
-		val appContext = applicationContext
-
 		retrofit = Retrofit.Builder()
 			.addConverterFactory(GsonConverterFactory.create())
 			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -48,14 +41,14 @@ class App : Application() {
 
 		articleApi = retrofit.create(ArticleApi::class.java)
 
+		val articleDatabase = Room
+			.databaseBuilder(applicationContext, ArticleDatabase::class.java, "article-db")
+			.build()
 
-		articleDatabase = Room.databaseBuilder(applicationContext, ArticleDatabase::class.java, "article-db").build()
 		articleDao = articleDatabase.articlesDao()
 
-
-		repository = ArticleRepository()
-
-		remoteStorage = ArticleRemoteStorageImpl()
+		val remoteStorage = ArticleRemoteStorageImpl()
+		repository = ArticleRepository(articleDao, remoteStorage)
 
 	}
 }
