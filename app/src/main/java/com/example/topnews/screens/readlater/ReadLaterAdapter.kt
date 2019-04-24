@@ -6,9 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
+import com.example.topnews.screens.ImageDialog
+import com.example.topnews.screens.TagDialog
+import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlin.properties.Delegates
 
-class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleCheckbox {
+class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) : BaseAdapter<Article>(), ReadLaterViewHolder
+.ArticleCheckbox, TagDialog
+.OnConfirmedTag {
+
 
 	private var observable = ReadLaterObservable()
 	var checkedArticles: ArrayList<Article> = arrayListOf()
@@ -46,6 +52,22 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
 				oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition))
 			}
 			setOnLongClickListener { setupLongClickListenerAction(holder.adapterPosition);true }
+
+			ivImg.setOnClickListener {
+				ImageDialog.build(context) {
+					urlToImg = getItemOnPosition(holder.adapterPosition).urlToImage
+					themeId = R.style.AppTheme_Dialog_NoClick
+				}.show()
+			}
+
+			ivImg.setOnLongClickListener {
+				TagDialog.build(context){
+					article = getItemOnPosition(holder.adapterPosition)
+					confirmedTag = viewModel::addTagToArticle
+				}.show()
+				true
+			}
+
 		}
 	}
 
@@ -68,6 +90,10 @@ class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleChec
 				if (!uncheckedArticles.contains(article)) uncheckedArticles.add(article)
 			}
 		}
+	}
+
+	override fun onTagConfirmed(dataItem: Article, tag: String) {
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 	}
 
 	interface PopUpMenu {

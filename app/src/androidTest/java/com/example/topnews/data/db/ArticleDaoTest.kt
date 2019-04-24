@@ -15,7 +15,7 @@ const val ONE = "1"
 const val TWO = "2"
 // endregion constants
 
-class ArticleDatabaseTest {
+class ArticleDaoTest {
 
 	// region helper fields
 
@@ -25,15 +25,15 @@ class ArticleDatabaseTest {
 	// endregion helper fields
 
 	private lateinit var articleDao: ArticleDao
-	private lateinit var db: ArticleDatabase
+	private lateinit var db: AppDatabase
 
 	@Before
 	fun setup() {
 
 		db =
 			Room.inMemoryDatabaseBuilder(
-				InstrumentationRegistry.getInstrumentation().context,
-				ArticleDatabase::class.java
+				InstrumentationRegistry.getInstrumentation().targetContext,
+				AppDatabase::class.java
 			).build()
 
 		articleDao = db.articlesDao()
@@ -45,6 +45,8 @@ class ArticleDatabaseTest {
 
 		db.close()
 	}
+
+	// region Article Dao
 
 	@Test
 	fun insertItem_successfully_assertForID() {
@@ -105,7 +107,7 @@ class ArticleDatabaseTest {
 	fun deleteItem_notExisting_assertForZeroDeletedRows() {
 
 		val deleted = articleDao.deleteItem(first)
-		Assert.assertEquals(0,deleted)
+		Assert.assertEquals(0, deleted)
 	}
 
 	@Test
@@ -113,10 +115,10 @@ class ArticleDatabaseTest {
 
 		articleDao.addItem(first)
 		val deleted = articleDao.deleteItem(first)
-		Assert.assertEquals(1,deleted)
+		Assert.assertEquals(1, deleted)
 	}
 
-
+	// endregion Article Dao
 
 	// region helper functions
 

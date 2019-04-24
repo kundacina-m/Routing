@@ -29,7 +29,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(), BaseAdapter.OnItem
 	private lateinit var menu: Menu
 
 	private val adapterReadLater by lazy {
-		ReadLaterAdapter().apply {
+		ReadLaterAdapter(viewModel).apply {
 			oneClickListener = this@ReadLaterFragment::onItemClick
 			handleMenu = this@ReadLaterFragment::showMenu
 		}

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.room.Room
 import com.example.topnews.data.db.ArticleDao
-import com.example.topnews.data.db.ArticleDatabase
+import com.example.topnews.data.db.AppDatabase
 import com.example.topnews.data.networking.ArticleApi
 import com.example.topnews.data.repository.ArticleRemoteStorageImpl
 import com.example.topnews.data.repository.ArticleRepository
@@ -42,12 +42,12 @@ class App : Application() {
 		articleApi = retrofit.create(ArticleApi::class.java)
 
 		val articleDatabase = Room
-			.databaseBuilder(applicationContext, ArticleDatabase::class.java, "article-db")
+			.databaseBuilder(applicationContext, AppDatabase::class.java, "article-db")
 			.build()
 
 		articleDao = articleDatabase.articlesDao()
 
-		val remoteStorage = ArticleRemoteStorageImpl()
+		val remoteStorage = ArticleRemoteStorageImpl(articleApi)
 		repository = ArticleRepository(articleDao, remoteStorage)
 
 	}

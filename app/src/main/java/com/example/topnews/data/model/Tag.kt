@@ -7,10 +7,8 @@ import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@Entity(tableName = "sources")
-data class SourceRaw(
-	@ColumnInfo(name = "id")
-	var id: String? = null,
+@Entity(tableName = "tags")
+data class Tag(
 
 	@PrimaryKey
 	@ColumnInfo(name = "name")

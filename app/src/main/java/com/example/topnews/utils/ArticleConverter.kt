@@ -24,7 +24,7 @@ object ArticleConverter {
 			this.author = obj.author
 			this.content = obj.content
 			this.description = obj.description
-			this.sourceRaw = SourceRaw(null, obj.source)
+			this.sourceRaw = SourceRaw(null, obj.source!!)
 			this.title = obj.title
 			this.url = obj.url
 			this.urlToImage = obj.urlToImage

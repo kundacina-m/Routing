@@ -1,5 +1,6 @@
 package com.example.topnews.screens.readlater
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import base.BaseViewModel
 import com.example.topnews.App
@@ -9,6 +10,9 @@ import com.example.topnews.domain.WrappedResponse.OnSuccess
 import io.reactivex.rxkotlin.subscribeBy
 
 const val pageSize = 6
+
+
+private  const val  TAG = "ReadLaterViewModel"
 
 class ReadLaterViewModel : BaseViewModel() {
 
@@ -72,6 +76,10 @@ class ReadLaterViewModel : BaseViewModel() {
 			}
 		}
 		return array
+	}
+
+	fun addTagToArticle(articleId: String, tag: String){
+		Log.d(TAG, "addTagToArticle: ")
 	}
 
 }
