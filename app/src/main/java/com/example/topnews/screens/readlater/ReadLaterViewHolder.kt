@@ -8,7 +8,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
-import com.example.topnews.utils.Constants
+import com.example.topnews.screens.ImageDialog
 import com.example.topnews.utils.ObservableData
 import kotlinx.android.synthetic.main.item_vertical_article.view.cbToSelect
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
@@ -34,24 +34,44 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), R
 	var onChecked: ((Article, Boolean) -> Unit?)? = null
 
 	override fun bind(dataItem: Article) {
+
 		article = dataItem
+
+		populateViewWithData(dataItem)
+
+		setCheckListener(dataItem)
+
+		setOnImgClickListener(dataItem)
+
+	}
+
+	private fun populateViewWithData(dataItem: Article) {
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source
 			tvPublishTime.text = dataItem.publishedAt
 		}
 
-		val options = RequestOptions()
+		Glide.with(itemView.context).load(dataItem.urlToImage).apply(getGlideOptions())
+			.into(itemView.ivImg)
+	}
+
+	private fun getGlideOptions(): RequestOptions {
+		return RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
 			.error(R.drawable.error_img)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
+	}
 
-		Glide.with(itemView.context).load(dataItem.urlToImage).apply(options)
-			.into(itemView.ivImg)
-
-		setCheckListener(dataItem)
+	private fun setOnImgClickListener(dataItem: Article) {
+		itemView.ivImg.setOnClickListener {
+			ImageDialog.build(itemView.context) {
+				urlToImg = dataItem.urlToImage
+				themeId = R.style.AppTheme_Dialog_NoClick
+			}.show()
+		}
 	}
 
 	private fun setCheckListener(article: Article) {

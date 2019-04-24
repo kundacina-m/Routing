@@ -10,6 +10,5 @@ import com.example.topnews.data.model.Tag
 abstract class AppDatabase : RoomDatabase() {
 
 	abstract fun articlesDao(): ArticleDao
-	abstract fun sourceDao(): SourceDao
 	abstract fun tagsDao(): TagsDao
 }

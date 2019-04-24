@@ -5,8 +5,9 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.topnews.data.model.SourceRaw
 import com.example.topnews.data.model.Tag
+import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface TagsDao {
@@ -17,8 +18,8 @@ interface TagsDao {
 	fun removeTag(tag: Tag): Int
 
 	@Query("SELECT * FROM tags")
-	fun getAllTags(): List<SourceRaw>
+	fun getAllTags(): Flowable<List<Tag>>
 
 	@Query("SELECT * FROM tags where name == (:name)")
-	fun getTagByName(name: String) : Tag
+	fun getTagByName(name: String): Single<Tag>
 }

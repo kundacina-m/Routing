@@ -1,20 +1,19 @@
 package com.example.topnews.screens.readlater
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.data.model.Article
-import com.example.topnews.screens.ImageDialog
 import com.example.topnews.screens.TagDialog
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlin.properties.Delegates
 
-class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) : BaseAdapter<Article>(), ReadLaterViewHolder
-.ArticleCheckbox, TagDialog
-.OnConfirmedTag {
-
+class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) :
+	BaseAdapter<Article>(), ReadLaterViewHolder.ArticleCheckbox {
 
 	private var observable = ReadLaterObservable()
 	var checkedArticles: ArrayList<Article> = arrayListOf()
@@ -46,32 +45,40 @@ class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) : BaseAdapter<
 
 		observable.addObserver(holder as ReadLaterViewHolder)
 
+		setupListeners(holder)
+
+	}
+
+	private fun setupListeners(holder: ViewHolder) {
 		holder.itemView.apply {
 			setOnClickListener {
 				selectionInProgress = false
 				oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition))
 			}
-			setOnLongClickListener { setupLongClickListenerAction(holder.adapterPosition);true }
 
-			ivImg.setOnClickListener {
-				ImageDialog.build(context) {
-					urlToImg = getItemOnPosition(holder.adapterPosition).urlToImage
-					themeId = R.style.AppTheme_Dialog_NoClick
-				}.show()
+			setOnLongClickListener {
+				setupLongClickListenerAction(holder.adapterPosition)
+				true
 			}
 
 			ivImg.setOnLongClickListener {
-				TagDialog.build(context){
-					article = getItemOnPosition(holder.adapterPosition)
-					confirmedTag = viewModel::addTagToArticle
-				}.show()
+				addTag(context, holder)
 				true
 			}
 
 		}
 	}
 
+	private fun addTag(context: Context, holder: ViewHolder) {
+
+		TagDialog.build(context) {
+			article = getItemOnPosition(holder.adapterPosition)
+			confirmedTag = viewModel::addTagToArticle
+		}.show()
+	}
+
 	private fun setupLongClickListenerAction(position: Int) {
+
 		if (!selectionInProgress) {
 			selectionInProgress = true
 			observable.notifyAll(arrayListOf(getItemOnPosition(position)), null, selectionInProgress)
@@ -90,10 +97,6 @@ class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) : BaseAdapter<
 				if (!uncheckedArticles.contains(article)) uncheckedArticles.add(article)
 			}
 		}
-	}
-
-	override fun onTagConfirmed(dataItem: Article, tag: String) {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 	}
 
 	interface PopUpMenu {
