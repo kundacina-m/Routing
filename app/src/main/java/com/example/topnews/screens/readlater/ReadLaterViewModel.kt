@@ -79,7 +79,7 @@ class ReadLaterViewModel : BaseViewModel() {
 	}
 
 	fun addTagToArticle(articleId: String, tag: String){
-		Log.d(TAG, "addTagToArticle: ")
+		repository.addTag(articleId,tag)
 	}
 
 }

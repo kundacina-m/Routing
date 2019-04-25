@@ -3,14 +3,19 @@ package com.example.topnews
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.room.Room
-import com.example.topnews.data.db.ArticleDao
+import androidx.room.RoomDatabase.Callback
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.topnews.data.db.AppDatabase
+import com.example.topnews.data.db.ArticleDao
 import com.example.topnews.data.networking.ArticleApi
 import com.example.topnews.data.repository.ArticleRemoteStorageImpl
 import com.example.topnews.data.repository.ArticleRepository
+import com.facebook.stetho.Stetho
+import io.reactivex.annotations.NonNull
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.Executors
 
 class App : Application() {
 	companion object {
@@ -18,7 +23,6 @@ class App : Application() {
 		private lateinit var repository: ArticleRepository
 		private lateinit var articleDao: ArticleDao
 
-		fun injectApi() = articleApi
 		fun injectRepository() = repository
 		fun injectArticleDao() = articleDao
 
@@ -41,14 +45,26 @@ class App : Application() {
 
 		articleApi = retrofit.create(ArticleApi::class.java)
 
-		val articleDatabase = Room
-			.databaseBuilder(applicationContext, AppDatabase::class.java, "article-db")
-			.build()
+		val articleDatabase = AppDatabase.getInstance(applicationContext)
 
 		articleDao = articleDatabase.articlesDao()
+		val tagDao = articleDatabase.tagsDao()
+		val tagArticleDao = articleDatabase.tagArticleDao()
 
 		val remoteStorage = ArticleRemoteStorageImpl(articleApi)
-		repository = ArticleRepository(articleDao, remoteStorage)
+		repository = ArticleRepository(tagDao, tagArticleDao, articleDao, remoteStorage)
+
+
+		addStetho()
 
 	}
+
+	private fun addStetho() {
+		if (BuildConfig.DEBUG){
+			Stetho.initializeWithDefaults(this)
+		}
+	}
+
+
+
 }

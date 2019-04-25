@@ -3,15 +3,15 @@ package com.example.topnews.data.model
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class TagWithArticles (
-	@Embedded val tag: Tag,
+ class TagWithArticlesOld {
+	@Embedded lateinit  var tag: Tag
 	@Relation(
 		parentColumn = "name",
 		entityColumn = "tagName",
-		entity = TagArticle::class,
-		projection = ["articleId"]
-	) val articleIdList: List<String>
-)
+		entity = TagArticle::class
+	)
+	var  articleIdList: List<Article>?=null
+}
 
 data class ArticlesWithTag (
 	@Embedded val article: Article,

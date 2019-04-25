@@ -14,6 +14,9 @@ interface TagsDao {
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	fun addTag(tag: Tag): Long
 
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	fun addTags(tags: List<Tag>)
+
 	@Delete
 	fun removeTag(tag: Tag): Int
 
@@ -22,4 +25,5 @@ interface TagsDao {
 
 	@Query("SELECT * FROM tags where name == (:name)")
 	fun getTagByName(name: String): Single<Tag>
+
 }

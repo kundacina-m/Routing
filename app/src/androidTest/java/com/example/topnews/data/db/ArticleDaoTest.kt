@@ -118,6 +118,17 @@ class ArticleDaoTest {
 		Assert.assertEquals(1, deleted)
 	}
 
+	@Test
+	fun getArticleByIds_successfully_return2Items() {
+		articleDao.addItem(first)
+		articleDao.addItem(second)
+
+		articleDao.getItemsById(listOf("1","2"))
+			.test()
+			.assertValues(listOf(first,second))
+			.dispose()
+	}
+
 	// endregion Article Dao
 
 	// region helper functions

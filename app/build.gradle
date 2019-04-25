@@ -93,6 +93,8 @@ dependencies {
     // RxKotlin
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
 
+    // Stetho
+    implementation 'com.facebook.stetho:stetho:1.5.1'
 }
 
 

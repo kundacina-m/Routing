@@ -24,4 +24,7 @@ interface ArticleDao {
 	@Query("SELECT * FROM articles where publishedAt = :publishedAt")
 	fun getItem(publishedAt: String): Single<Article>
 
+	@Query("SELECT * FROM articles where publishedAt in (:listId)")
+	fun getItemsById(listId: List<String>): Single<List<Article>>
+
 }

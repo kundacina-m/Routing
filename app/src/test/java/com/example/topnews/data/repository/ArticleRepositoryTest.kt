@@ -1,6 +1,8 @@
 package com.example.topnews.data.repository
 
 import com.example.topnews.data.db.ArticleDao
+import com.example.topnews.data.db.TagArticleDao
+import com.example.topnews.data.db.TagsDao
 import com.example.topnews.data.model.Article
 import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse.OnSuccess
@@ -28,14 +30,32 @@ class ArticleRepositoryTest {
 
 	val localStorage: ArticleDao = mockk()
 	val remoteStorage: ArticleRemoteStorage = mockk()
+	val tagDao: TagsDao = mockk()
+	val tagArticleDao: TagArticleDao = mockk()
 
 	// endregion helper fields
 	lateinit var SUT: ArticleRepository
 
 	@Before
 	fun setup() {
-		SUT = ArticleRepository(localStorage, remoteStorage)
+		SUT = ArticleRepository(tagDao,tagArticleDao,localStorage, remoteStorage)
 	}
+
+	// region tags tests
+	@Test
+	fun getArticlesFromTag_successfully_assertTwoItems() {
+
+		every { tagArticleDao.getArticleIdsByTag("1") } returns Single.just(listOf("1","2"))
+		every { localStorage.getItemsById(listOf("1","2")) } returns Single.just(listOf(first,second))
+
+
+		SUT.getArticlesFromTag("1")
+			.test()
+			.assertValues(listOf(first,second))
+
+	}
+
+	// endregion tags tests
 
 	// region remote tests
 
