@@ -5,15 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.topnews.data.model.Article
-import com.example.topnews.data.model.SourceRaw
 import com.example.topnews.data.model.Tag
 import com.example.topnews.data.model.TagArticle
 import java.util.concurrent.Executors
 
 @Database(
-	entities = [Article::class, SourceRaw::class, Tag::class, TagArticle::class], version = 1, exportSchema =
-	true
+	entities = [Article::class, Source::class, Tag::class, TagArticle::class],
+	version = 1, exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 

@@ -8,7 +8,7 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.example.topnews.App
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.utils.Constants
 import io.reactivex.rxkotlin.subscribeBy
 

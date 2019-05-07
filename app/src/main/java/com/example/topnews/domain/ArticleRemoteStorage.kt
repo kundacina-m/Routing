@@ -1,6 +1,6 @@
 package com.example.topnews.domain
 
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.domain.crud.RemoteCRUD
 import io.reactivex.Single
 

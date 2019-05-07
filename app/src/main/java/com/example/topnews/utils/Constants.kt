@@ -19,5 +19,7 @@ object Constants {
 	const val ERROR_INTERNET = "handleError: Internet"
 	const val ERROR_HTTP = "handleError: Http"
 
+	// Time Formats
+	const val DATE_ONLY = "dd. MMMMM yyyy"
 
 }

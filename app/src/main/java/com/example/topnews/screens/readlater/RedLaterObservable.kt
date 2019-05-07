@@ -1,6 +1,6 @@
 package com.example.topnews.screens.readlater
 
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.utils.ObservableData
 import java.util.Observable
 import java.util.Observer

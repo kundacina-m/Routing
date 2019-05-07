@@ -1,8 +1,8 @@
 //package com.example.topnews.data.repository
 //
-//import com.example.topnews.data.model.Article
+//import com.example.topnews.data.db.Article
 //import com.example.topnews.data.model.ArticleRaw
-//import com.example.topnews.data.model.SourceRaw
+//import com.example.topnews.data.db.Source
 //import com.example.topnews.data.networking.ArticleApi
 //import com.example.topnews.data.networking.responses.ResponseArticle
 //import com.example.topnews.domain.WrappedResponse.OnSuccess
@@ -88,7 +88,7 @@
 //
 //	private fun createArticleRaw(num: Int): ArticleRaw {
 //		return ArticleRaw(
-//			SourceRaw(num.toString(), num.toString()),
+//			Source(num.toString(), num.toString()),
 //			num.toString(),
 //			num.toString(),
 //			num.toString(),

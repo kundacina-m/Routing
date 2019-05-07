@@ -1,10 +1,9 @@
 package com.example.topnews.screens.readlater
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import base.BaseViewModel
 import com.example.topnews.App
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.domain.WrappedResponse.OnSuccess
 import io.reactivex.rxkotlin.subscribeBy
@@ -80,6 +79,12 @@ class ReadLaterViewModel : BaseViewModel() {
 
 	fun addTagToArticle(articleId: String, tag: String){
 		repository.addTag(articleId,tag)
+	}
+
+	fun getArticlesByTag(tag: String){
+		disposables.add(repository.getArticlesFromTag(tag).subscribeBy {
+			articles.postValue(OnSuccess(it))
+		})
 	}
 
 }

@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.annotation.StyleRes
 import com.example.topnews.R.layout
 import com.example.topnews.R.style
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import kotlinx.android.synthetic.main.dialog_tag.btCancel
 import kotlinx.android.synthetic.main.dialog_tag.btConfirm
 import kotlinx.android.synthetic.main.dialog_tag.etName

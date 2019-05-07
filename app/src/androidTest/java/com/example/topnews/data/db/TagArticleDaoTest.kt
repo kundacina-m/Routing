@@ -2,7 +2,6 @@ package com.example.topnews.data.db
 
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.topnews.data.model.Article
 import com.example.topnews.data.model.Tag
 import com.example.topnews.data.model.TagArticle
 import org.junit.After
@@ -104,18 +103,18 @@ class TagArticleDaoTest {
 
 	}
 
-	@Test
-	fun getTagsWithArticles_successfully() {
-
-		arrangeDB()
-
-		tagArticleDao.getTagsWithArticles()
-			.test()
-			.assertValue {
-				it.size == 4
-			}.dispose()
-
-	}
+//	@Test
+//	fun getTagsWithArticles_successfully() {
+//
+//		arrangeDB()
+//
+//		tagArticleDao.getTagsWithArticles()
+//			.test()
+//			.assertValue {
+//				it.size == 4
+//			}.dispose()
+//
+//	}
 
 	private fun arrangeDB() {
 		addArticle(1)

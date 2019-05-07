@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.example.topnews">
+	xmlns:tools="http://schemas.android.com/tools"
+	package="com.example.topnews">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
-
-    <application
-            android:name=".App"
-            android:allowBackup="false"
-            android:hardwareAccelerated="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/appName"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme"
-            tools:ignore="GoogleAppIndexingWarning">
-
-        <service android:name="com.example.topnews.screens.widget.WidgetRemoteViewService"
-                 android:permission="android.permission.BIND_REMOTEVIEWS"/>
-
-        <receiver android:name="com.example.topnews.screens.widget.ReadLaterWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <action android:name="com.example.topnews.app.ACTION_DATA_UPDATED" />
-            </intent-filter>
-
-            <meta-data
-                    android:name="android.appwidget.provider"
-                    android:resource="@xml/read_later_widget_info"/>
-        </receiver>
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 
+	<application
+		android:name=".App"
+		android:allowBackup="false"
+		android:hardwareAccelerated="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/appName"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme"
+		tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="com.example.topnews.screens.widget.ReadLaterWidgetConfigureActivity">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".screens.home.FrameActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+		<service
+			android:name="com.example.topnews.screens.widget.WidgetRemoteViewService"
+			android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+		<receiver android:name="com.example.topnews.screens.widget.ReadLaterWidget">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+				<action android:name="com.example.topnews.app.ACTION_DATA_UPDATED"/>
+			</intent-filter>
 
-    </application>
+			<meta-data
+				android:name="android.appwidget.provider"
+				android:resource="@xml/read_later_widget_info"/>
+		</receiver>
+
+
+		<activity android:name="com.example.topnews.screens.widget.ReadLaterWidgetConfigureActivity">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+			</intent-filter>
+		</activity>
+		<activity android:name=".screens.home.FrameActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+
+	</application>
 
 
 </manifest>

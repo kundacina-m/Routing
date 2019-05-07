@@ -1,6 +1,6 @@
 package com.example.topnews.data.repository
 
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.data.networking.ArticleApi
 import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse

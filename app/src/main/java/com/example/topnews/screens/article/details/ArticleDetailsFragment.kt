@@ -16,10 +16,12 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.screens.widget.ReadLaterWidget
+import com.example.topnews.utils.Constants.DATE_ONLY
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
+import com.example.topnews.utils.asString
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 import kotlinx.android.synthetic.main.fragment_article_details.appbar
@@ -109,8 +111,8 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 	}
 
 	private fun setTransitionElements() {
-		ViewCompat.setTransitionName(ivArticleImage, dataItem.publishedAt)
-		ViewCompat.setTransitionName(tvTitle, dataItem.publishedAt + "title")
+		ViewCompat.setTransitionName(ivArticleImage, dataItem.publishedAt.toString())
+		ViewCompat.setTransitionName(tvTitle, dataItem.publishedAt.toString() + "title")
 		tvTitle.text = dataItem.title
 
 		val options = RequestOptions()
@@ -145,7 +147,7 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 		tvSource.text = dataItem.source
 		tvDescription.text = dataItem.description
 		tvContent.text = dataItem.content
-		tvPublishedAt.text = dataItem.publishedAt
+		tvPublishedAt.text = dataItem.publishedAt.asString(DATE_ONLY)
 		tvAuthor.text = dataItem.author
 		linkToWeb.text = dataItem.url
 	}

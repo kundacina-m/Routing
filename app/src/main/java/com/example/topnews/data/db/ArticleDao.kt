@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.topnews.data.model.Article
 import io.reactivex.Flowable
 import io.reactivex.Single
 

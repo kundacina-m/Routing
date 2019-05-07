@@ -1,4 +1,4 @@
-package com.example.topnews.data.model
+package com.example.topnews.data.db
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "sources")
-data class SourceRaw(
+data class Source(
 	@ColumnInfo(name = "id")
 	var id: String? = null,
 

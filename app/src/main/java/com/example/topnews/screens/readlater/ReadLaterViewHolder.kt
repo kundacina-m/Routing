@@ -7,9 +7,11 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.screens.ImageDialog
+import com.example.topnews.utils.Constants.DATE_ONLY
 import com.example.topnews.utils.ObservableData
+import com.example.topnews.utils.asString
 import kotlinx.android.synthetic.main.item_vertical_article.view.cbToSelect
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
@@ -49,7 +51,7 @@ class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), R
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source
-			tvPublishTime.text = dataItem.publishedAt
+			tvPublishTime.text = dataItem.publishedAt.asString(DATE_ONLY)
 		}
 
 		Glide.with(itemView.context).load(dataItem.urlToImage).apply(getGlideOptions())

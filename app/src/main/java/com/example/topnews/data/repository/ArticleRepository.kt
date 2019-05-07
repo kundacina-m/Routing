@@ -3,7 +3,7 @@ package com.example.topnews.data.repository
 import com.example.topnews.data.db.ArticleDao
 import com.example.topnews.data.db.TagArticleDao
 import com.example.topnews.data.db.TagsDao
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.data.model.Tag
 import com.example.topnews.data.model.TagArticle
 import com.example.topnews.domain.ArticleRemoteStorage
@@ -72,7 +72,6 @@ class ArticleRepository(
 	}
 
 	fun getArticlesFromTag(tagName: String): Single<List<Article>> {
-		val listOfIds = tagArticleDao.getArticleIdsByTag(tagName).blockingGet()
-		return articleDao.getItemsById(listOfIds)
+		return tagArticleDao.getArticlesByTag(tagName)
 	}
 }

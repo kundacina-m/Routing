@@ -1,6 +1,7 @@
 package com.example.topnews.data.model
 
 import android.os.Parcelable
+import com.example.topnews.data.db.Source
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -8,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
 data class ArticleRaw(
 
 	@SerializedName("source")
-	var sourceRaw: SourceRaw? = null,
+	var source: Source? = null,
 
 	@SerializedName("author")
 	var author: String? = null,

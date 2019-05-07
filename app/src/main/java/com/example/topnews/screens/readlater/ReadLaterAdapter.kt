@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BaseAdapter
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.screens.TagDialog
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlin.properties.Delegates

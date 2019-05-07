@@ -1,10 +1,11 @@
-package com.example.topnews.data.model
+package com.example.topnews.data.db
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import java.sql.Timestamp
 
 @Entity(tableName = "articles")
 @Parcelize
@@ -30,7 +31,7 @@ data class Article(
 
 	@PrimaryKey
 	@ColumnInfo(name = "publishedAt")
-	var publishedAt: String,
+	var publishedAt: Timestamp,
 
 	@ColumnInfo(name = "content")
 	var content: String? = null

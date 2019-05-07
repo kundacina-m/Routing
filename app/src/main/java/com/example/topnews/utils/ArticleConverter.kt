@@ -1,17 +1,18 @@
 package com.example.topnews.utils
 
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
+import com.example.topnews.data.db.Source
 import com.example.topnews.data.model.ArticleRaw
-import com.example.topnews.data.model.SourceRaw
+import com.example.topnews.utils.Constants.DATE_ONLY
 
 object ArticleConverter {
 
 	fun fromRawToObj(raw: ArticleRaw): Article {
-		return Article(publishedAt = raw.publishedAt!!).apply {
+		return Article(publishedAt = raw.publishedAt!!.fromISOtoTimestamp()).apply {
 			this.author = raw.author
 			this.content = raw.content
 			this.description = raw.description
-			this.source = raw.sourceRaw?.name
+			this.source = raw.source?.name
 			this.title = raw.title
 			this.url = raw.url
 			this.urlToImage = raw.urlToImage
@@ -20,11 +21,11 @@ object ArticleConverter {
 
 	fun fromObjToRaw(obj: Article): ArticleRaw {
 		return ArticleRaw().apply {
-			this.publishedAt = obj.publishedAt
+			this.publishedAt = obj.publishedAt.asString(DATE_ONLY)
 			this.author = obj.author
 			this.content = obj.content
 			this.description = obj.description
-			this.sourceRaw = SourceRaw(null, obj.source!!)
+			this.source = Source(null, obj.source!!)
 			this.title = obj.title
 			this.url = obj.url
 			this.urlToImage = obj.urlToImage

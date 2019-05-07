@@ -3,7 +3,7 @@ package com.example.topnews.data.repository
 import com.example.topnews.data.db.ArticleDao
 import com.example.topnews.data.db.TagArticleDao
 import com.example.topnews.data.db.TagsDao
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
@@ -45,8 +45,7 @@ class ArticleRepositoryTest {
 	@Test
 	fun getArticlesFromTag_successfully_assertTwoItems() {
 
-		every { tagArticleDao.getArticleIdsByTag("1") } returns Single.just(listOf("1","2"))
-		every { localStorage.getItemsById(listOf("1","2")) } returns Single.just(listOf(first,second))
+		every { tagArticleDao.getArticlesByTag("1") } returns Single.just(listOf(first,second))
 
 
 		SUT.getArticlesFromTag("1")
