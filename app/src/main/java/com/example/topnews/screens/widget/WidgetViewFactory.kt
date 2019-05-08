@@ -57,7 +57,7 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context) :
 
 	override fun getItemId(position: Int): Long {
 		return if (articles.isNotEmpty()) {
-			articles[position].publishedAt.toLong()
+			articles[position].publishedAt.time
 		} else
 			return position.toLong()
 	}

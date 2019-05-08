@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.topnews.data.model.Tag
 import com.example.topnews.data.model.TagArticle
@@ -13,6 +14,8 @@ import java.util.concurrent.Executors
 	entities = [Article::class, Source::class, Tag::class, TagArticle::class],
 	version = 1, exportSchema = true
 )
+@TypeConverters(DateConverter::class)
+
 abstract class AppDatabase : RoomDatabase() {
 
 	abstract fun articlesDao(): ArticleDao

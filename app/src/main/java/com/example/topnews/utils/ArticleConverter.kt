@@ -4,11 +4,16 @@ import com.example.topnews.data.db.Article
 import com.example.topnews.data.db.Source
 import com.example.topnews.data.model.ArticleRaw
 import com.example.topnews.utils.Constants.DATE_ONLY
+import java.time.Instant
+import java.util.Date
 
 object ArticleConverter {
 
 	fun fromRawToObj(raw: ArticleRaw): Article {
-		return Article(publishedAt = raw.publishedAt!!.fromISOtoTimestamp()).apply {
+
+		val what = raw.publishedAt!!.fromStringISOtoDate()
+
+		return Article(publishedAt = what).apply {
 			this.author = raw.author
 			this.content = raw.content
 			this.description = raw.description
@@ -19,16 +24,16 @@ object ArticleConverter {
 		}
 	}
 
-	fun fromObjToRaw(obj: Article): ArticleRaw {
-		return ArticleRaw().apply {
-			this.publishedAt = obj.publishedAt.asString(DATE_ONLY)
-			this.author = obj.author
-			this.content = obj.content
-			this.description = obj.description
-			this.source = Source(null, obj.source!!)
-			this.title = obj.title
-			this.url = obj.url
-			this.urlToImage = obj.urlToImage
-		}
-	}
+//	fun fromObjToRaw(obj: Article): ArticleRaw {
+//		return ArticleRaw().apply {
+//			this.publishedAt = obj.publishedAt
+//			this.author = obj.author
+//			this.content = obj.content
+//			this.description = obj.description
+//			this.source = Source(null, obj.source!!)
+//			this.title = obj.title
+//			this.url = obj.url
+//			this.urlToImage = obj.urlToImage
+//		}
+//	}
 }

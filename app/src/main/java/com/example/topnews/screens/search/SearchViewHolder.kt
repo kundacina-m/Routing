@@ -15,7 +15,7 @@ class SearchViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source
-			tvPublishTime.text = dataItem.publishedAt.asString(DATE_ONLY)
+			tvPublishTime.text = dataItem.publishedAt.toString()
 		}
 		Glide.with(itemView.context).load(dataItem.urlToImage).apply(RequestOptions().override(400, 600))
 			.into(itemView.ivImg)

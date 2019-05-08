@@ -21,7 +21,7 @@ private constructor(private val builder: Builder) : Dialog(builder.context, buil
 
 
 		btConfirm.setOnClickListener {
-			builder.confirmedTag.invoke(builder.article.publishedAt,etName.text.toString())
+			builder.confirmedTag.invoke(builder.article.publishedAt.toString(),etName.text.toString())
 		}
 
 		btCancel.setOnClickListener {

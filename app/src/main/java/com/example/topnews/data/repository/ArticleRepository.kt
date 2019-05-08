@@ -57,7 +57,7 @@ class ArticleRepository(
 	}
 
 	fun checkIfArticleExistsInDB(article: Article): Single<WrappedResponse<Article>> {
-		return articleDao.getItem(article.publishedAt).toSealed()
+		return articleDao.getItem(article.publishedAt.toString()).toSealed()
 	}
 
 	fun addTag(articleId: String, tag: String) {

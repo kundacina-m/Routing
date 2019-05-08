@@ -20,6 +20,7 @@ object Constants {
 	const val ERROR_HTTP = "handleError: Http"
 
 	// Time Formats
-	const val DATE_ONLY = "dd. MMMMM yyyy"
+	const val DATE_ONLY = "dd. MMMM yyyy"
+	const val API_TIME_FORMAT = "yyyy-MM-dd'T'hh:mm:ss'Z'"
 
 }
