@@ -2,13 +2,15 @@ package com.example.topnews.data.model
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class SourceRaw(
-	@ColumnInfo(name = "id")
-	var id: String? = null,
+@Entity(tableName = "tags")
+data class Tag(
 
+	@PrimaryKey
 	@ColumnInfo(name = "name")
-	var name: String? = null
+	var name: String
 ) : Parcelable

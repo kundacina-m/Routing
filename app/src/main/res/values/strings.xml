@@ -6,10 +6,12 @@
 	<string name="search">Search</string>
 
 	<string name="sourceRaw">Source:</string>
-	<string name="publishedAt">Published at:</string>
+	<string name="publishedAt">Published:</string>
 	<string name="appwidget_text">EXAMPLE</string>
 	<string name="configure">Configure</string>
 	<string name="add_widget">Add widget</string>
 	<string name="close_button">X</string>
 
+	<string name="today">Today</string>
+	<string name="yesterday">Yesterday</string>
 </resources>

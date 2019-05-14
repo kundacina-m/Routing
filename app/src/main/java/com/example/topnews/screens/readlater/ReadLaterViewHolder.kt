@@ -1,66 +1,60 @@
 package com.example.topnews.screens.readlater
 
 import android.view.View
-import base.BaseViewHolder
+import androidx.recyclerview.widget.RecyclerView
+import base.BasePagedListAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
-import com.example.topnews.utils.Constants
-import com.example.topnews.utils.ObservableData
-import kotlinx.android.synthetic.main.item_vertical_article.view.cbToSelect
+import com.example.topnews.data.db.Article
+import com.example.topnews.screens.ImageDialog
+import com.example.topnews.utils.asString
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvTitle
-import java.util.Observable
 
-class ReadLaterViewHolder(itemView: View) : BaseViewHolder<Article>(itemView), ReadLaterObserver {
+class ReadLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+											BasePagedListAdapter.ViewHolderAdapterBinder<Article> {
 
 	lateinit var article: Article
 
-	override fun updateView(o: Observable, observedData: ObservableData) {
+	override fun bind(dataItem: Article) {
 
-		observedData.apply {
-
-			checkAll?.let { itemView.cbToSelect.isChecked = it }
-			articles?.let { itemView.cbToSelect.isChecked = it.contains(article) }
-			showCheckbox?.let { itemView.cbToSelect.visibility = if (it) View.VISIBLE else View.GONE }
-		}
+		article = dataItem
+		populateViewWithData(dataItem)
+		setOnImgClickListener(dataItem)
 	}
 
-	var onChecked: ((Article, Boolean) -> Unit?)? = null
-
-	override fun bind(dataItem: Article) {
-		article = dataItem
+	private fun populateViewWithData(dataItem: Article) {
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source
-			tvPublishTime.text = dataItem.publishedAt
+			tvPublishTime.text = dataItem.publishedAt?.asString()
 		}
 
-		val options = RequestOptions()
+		Glide.with(itemView.context).load(dataItem.urlToImage).apply(getGlideOptions())
+			.into(itemView.ivImg)
+	}
+
+	private fun getGlideOptions(): RequestOptions {
+		return RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
 			.error(R.drawable.error_img)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
-
-		Glide.with(itemView.context).load(dataItem.urlToImage).apply(options)
-			.into(itemView.ivImg)
-
-		setCheckListener(dataItem)
 	}
 
-	private fun setCheckListener(article: Article) {
-		itemView.cbToSelect.setOnCheckedChangeListener { _, isChecked ->
-			onChecked?.invoke(article, isChecked)
+	private fun setOnImgClickListener(dataItem: Article) {
+		itemView.ivImg.setOnClickListener {
+			ImageDialog.build(itemView.context) {
+				urlToImg = dataItem.urlToImage
+				themeId = R.style.AppTheme_Dialog_NoClick
+			}.show()
 		}
 	}
 
-	interface ArticleCheckbox {
-		fun onChecked(article: Article, check: Boolean)
-	}
 }

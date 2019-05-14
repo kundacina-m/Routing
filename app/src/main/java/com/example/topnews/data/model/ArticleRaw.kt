@@ -1,33 +1,37 @@
 package com.example.topnews.data.model
 
+import android.os.Parcelable
+import com.example.topnews.data.db.Source
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-class ArticleRaw {
+@Parcelize
+data class ArticleRaw(
 
 	@SerializedName("source")
-	var sourceRaw: SourceRaw? = null
+	var source: Source? = null,
 
 	@SerializedName("author")
-	var author: String? = null
+	var author: String? = null,
 
 	@SerializedName("title")
-	var title: String? = null
+	var title: String? = null,
 
 	@SerializedName("description")
-	var description: String? = null
+	var description: String? = null,
 
 	@SerializedName("url")
-	var url: String? = null
+	var url: String? = null,
 
 	@SerializedName("urlToImage")
-	var urlToImage: String? = null
+	var urlToImage: String? = null,
 
 	@SerializedName("publishedAt")
-	var publishedAt: String? = null
+	var publishedAt: String? = null,
 
 	@SerializedName("content")
 	var content: String? = null
-}
+) : Parcelable
 
 
 

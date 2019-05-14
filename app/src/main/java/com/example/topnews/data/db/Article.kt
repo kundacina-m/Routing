@@ -1,10 +1,11 @@
-package com.example.topnews.data.model
+package com.example.topnews.data.db
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import java.util.Date
 
 @Entity(tableName = "articles")
 @Parcelize
@@ -22,15 +23,15 @@ data class Article(
 	@ColumnInfo(name = "description")
 	var description: String? = null,
 
+	@PrimaryKey
 	@ColumnInfo(name = "url")
-	var url: String? = null,
+	var url: String,
 
 	@ColumnInfo(name = "urlToImg")
 	var urlToImage: String? = null,
 
-	@PrimaryKey
 	@ColumnInfo(name = "publishedAt")
-	var publishedAt: String,
+	var publishedAt: Date? = null,
 
 	@ColumnInfo(name = "content")
 	var content: String? = null

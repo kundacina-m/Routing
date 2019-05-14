@@ -6,21 +6,20 @@ import android.os.Binder
 import android.os.Bundle
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import com.example.topnews.App
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.utils.Constants
-import io.reactivex.rxkotlin.subscribeBy
 
 class MyWidgetRemoteViewsFactory(private val mContext: Context) :
 	RemoteViewsService.RemoteViewsFactory {
 	private var articles = arrayListOf<Article>()
 
 	override fun onCreate() {
-		App.injectArticleDao().getAllItems().subscribeBy {
-			articles.clear()
-			articles.addAll(it)
-		}
+		// TODO
+		//		App.injectArticleDao().getAllItems().subscribeBy {
+		//			articles.clear()
+		//			articles.addAll(it)
+		//		}
 
 	}
 
@@ -57,7 +56,7 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context) :
 
 	override fun getItemId(position: Int): Long {
 		return if (articles.isNotEmpty()) {
-			articles[position].publishedAt.toLong()
+			articles[position].publishedAt?.time!!
 		} else
 			return position.toLong()
 	}

@@ -1,76 +1,62 @@
 package com.example.topnews.screens.readlater
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import base.BaseAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import base.BasePagedListAdapter
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
-import kotlin.properties.Delegates
+import com.example.topnews.data.db.Article
+import com.example.topnews.screens.TagDialog
+import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 
-class ReadLaterAdapter : BaseAdapter<Article>(), ReadLaterViewHolder.ArticleCheckbox {
+class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) :
+	BasePagedListAdapter<Article>(diffCallback) {
 
-	private var observable = ReadLaterObservable()
-	var checkedArticles: ArrayList<Article> = arrayListOf()
-	var handleMenu: ((Boolean, Boolean) -> Unit?)? = null
-
-	var selectionInProgress: Boolean by Delegates.observable(false) { _, _, newValue ->
-		handleMenu?.invoke(newValue, newValue)
-		observable.notifyAll(checkedArticles, null, newValue)
-	}
-
-	var checkAll: Boolean by Delegates.observable(false) { _, _, newValue ->
-		observable.notifyAll(checkedArticles, newValue)
-		if (checkAll) uncheckedArticles = arrayListOf()
-	}
-
-	var uncheckedArticles: ArrayList<Article> = arrayListOf()
-
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
 		ReadLaterViewHolder(
 			LayoutInflater.from(parent.context).inflate(
 				R.layout.item_vertical_article,
 				parent,
 				false
 			)
-		).apply { onChecked = this@ReadLaterAdapter::onChecked }
+		)
 
-	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 		super.onBindViewHolder(holder, position)
-
-		observable.addObserver(holder as ReadLaterViewHolder)
-
-		holder.itemView.apply {
-			setOnClickListener {
-				selectionInProgress = false
-				oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition))
-			}
-			setOnLongClickListener { setupLongClickListenerAction(holder.adapterPosition);true }
-		}
+		setupListeners(holder)
 	}
 
-	private fun setupLongClickListenerAction(position: Int) {
-		if (!selectionInProgress) {
-			selectionInProgress = true
-			observable.notifyAll(arrayListOf(getItemOnPosition(position)), null, selectionInProgress)
+	private fun setupListeners(holder: ViewHolder) {
+
+		holder.itemView.ivImg.setOnLongClickListener {
+			addTag(it.context, holder)
+			true
 		}
+
+		holder.itemView.setOnClickListener {
+			oneClickListener?.invoke(getItem(holder.adapterPosition)!!)
+		}
+
 	}
 
-	override fun onChecked(article: Article, check: Boolean) {
-		when {
-			check -> {
-				if (!checkedArticles.contains(article)) checkedArticles.add(article)
-				uncheckedArticles.remove(article)
-			}
-			!check -> {
-				handleMenu?.invoke(checkedArticles.isNotEmpty(), true)
-				checkedArticles.remove(article)
-				if (!uncheckedArticles.contains(article)) uncheckedArticles.add(article)
-			}
-		}
+	private fun addTag(context: Context, holder: ViewHolder) {
+
+		TagDialog.build(context) {
+			//			article = getItemOnPosition(holder.adapterPosition)
+			confirmedTag = viewModel::addTagToArticle
+		}.show()
 	}
 
-	interface PopUpMenu {
-		fun showMenu(visibilityRemove: Boolean, visibilitySelectAll: Boolean)
+	companion object {
+
+		val diffCallback = object : DiffUtil.ItemCallback<Article>() {
+			override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
+				oldItem.url == newItem.url
+
+			override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
+				oldItem == newItem
+		}
 	}
 }

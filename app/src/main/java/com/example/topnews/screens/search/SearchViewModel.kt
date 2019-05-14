@@ -3,7 +3,7 @@ package com.example.topnews.screens.search
 import androidx.lifecycle.MutableLiveData
 import base.BaseViewModel
 import com.example.topnews.App
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
@@ -40,7 +40,7 @@ class SearchViewModel : BaseViewModel() {
 
 
 		disposables.add(
-			repository.getArticlesByPages(searchText, pages)
+			repository.getByQueryRemote(searchText, pages)
 				.subscribeBy { list ->
 					if (list is OnSuccess) {
 						previousList.addAll(list.item)

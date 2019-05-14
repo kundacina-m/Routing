@@ -1,61 +1,69 @@
 package com.example.topnews
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.room.Room
-import com.example.topnews.data.db.ArticleDao
-import com.example.topnews.data.db.ArticleDatabase
+import com.example.topnews.data.db.AppDatabase
 import com.example.topnews.data.networking.ArticleApi
 import com.example.topnews.data.repository.ArticleRemoteStorageImpl
 import com.example.topnews.data.repository.ArticleRepository
+import com.example.topnews.utils.Constants.API_BASE_URL
+import com.facebook.stetho.Stetho
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class App : Application() {
 	companion object {
-		private lateinit var articleApi: ArticleApi
 		private lateinit var repository: ArticleRepository
-		private lateinit var remoteStorage: ArticleRemoteStorageImpl
-		private lateinit var articleDatabase: ArticleDatabase
-		private lateinit var articleDao: ArticleDao
+		@SuppressLint("StaticFieldLeak")
+		private lateinit var contextApp: Context
 
-		fun injectApi() = articleApi
 		fun injectRepository() = repository
-
-		fun injectRemoteStorage() = remoteStorage
-
-		fun injectArticleDao() = articleDao
-
+		fun getContext() = contextApp
 	}
-
-	private lateinit var retrofit: Retrofit
 
 	override fun onCreate() {
 		super.onCreate()
+		handleTheme()
+
+		contextApp = applicationContext
+
+		repository = setupRepository(AppDatabase.getInstance(applicationContext))
+		setupStetho()
+	}
+
+	private fun handleTheme() {
 
 		AppCompatDelegate.setDefaultNightMode(
 			AppCompatDelegate.MODE_NIGHT_YES
 		)
+	}
 
-		val appContext = applicationContext
+	private fun setupRepository(appDB: AppDatabase) =
 
-		retrofit = Retrofit.Builder()
+		ArticleRepository(
+			appDB.tagsDao(),
+			appDB.tagArticleDao(),
+			appDB.articlesDao(),
+			ArticleRemoteStorageImpl(setupRetrofit())
+		)
+
+	private fun setupRetrofit(): ArticleApi =
+
+		Retrofit.Builder()
 			.addConverterFactory(GsonConverterFactory.create())
 			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-			.baseUrl("https://newsapi.org/v2/")
+			.baseUrl(API_BASE_URL)
 			.build()
+			.create(ArticleApi::class.java)
 
-		articleApi = retrofit.create(ArticleApi::class.java)
+	private fun setupStetho() {
 
-
-		articleDatabase = Room.databaseBuilder(applicationContext, ArticleDatabase::class.java, "article-db").build()
-		articleDao = articleDatabase.articlesDao()
-
-
-		repository = ArticleRepository()
-
-		remoteStorage = ArticleRemoteStorageImpl()
-
+		if (BuildConfig.DEBUG) {
+			Stetho.initializeWithDefaults(this)
+		}
 	}
+
 }

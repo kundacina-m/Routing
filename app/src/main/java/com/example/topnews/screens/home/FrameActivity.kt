@@ -6,7 +6,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import base.BaseActivity
 import com.example.topnews.R
-import com.example.topnews.data.model.Article
+import com.example.topnews.data.db.Article
 import com.example.topnews.utils.Constants
 import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 
