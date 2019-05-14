@@ -44,4 +44,10 @@ class ArticleDataSource(
 
 	override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Article>) {}
 
+	// Added for clearing disposables
+	override fun addInvalidatedCallback(onInvalidatedCallback: InvalidatedCallback) {
+		super.addInvalidatedCallback(onInvalidatedCallback)
+		disposables.clear()
+	}
+
 }

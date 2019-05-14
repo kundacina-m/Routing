@@ -25,7 +25,7 @@ private constructor(private val builder: Builder) : Dialog(builder.context, buil
 		}
 
 		btCancel.setOnClickListener {
-
+			this.dismiss()
 		}
 
 	}

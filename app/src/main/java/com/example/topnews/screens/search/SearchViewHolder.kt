@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.item_vertical_article.view.*
 class SearchViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 
 	override fun bind(dataItem: Article) {
+
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source

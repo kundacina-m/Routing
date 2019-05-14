@@ -1,11 +1,12 @@
-package com.example.topnews.data.db
+package com.example.topnews.data.db.dao
 
 import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.topnews.data.model.TagArticle
+import com.example.topnews.data.db.Article
+import com.example.topnews.data.db.TagArticle
 import io.reactivex.Single
 
 @Dao

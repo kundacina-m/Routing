@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.topnews.data.model.Tag
-import com.example.topnews.data.model.TagArticle
+import com.example.topnews.data.db.dao.ArticleDao
+import com.example.topnews.data.db.dao.TagArticleDao
+import com.example.topnews.data.db.dao.TagsDao
 import java.util.concurrent.Executors
 
 @Database(

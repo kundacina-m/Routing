@@ -24,11 +24,8 @@ class ArticlesCategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
 	override fun bind(dataItem: Article) {
 
 		article = dataItem
-
 		populateViewWithData(dataItem)
-
 		setOnImgClickListener(dataItem)
-
 	}
 
 	private fun populateViewWithData(dataItem: Article) {
@@ -42,14 +39,13 @@ class ArticlesCategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
 			.into(itemView.ivImg)
 	}
 
-	private fun getGlideOptions(): RequestOptions {
-		return RequestOptions()
+	private fun getGlideOptions() =
+		RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
 			.error(R.drawable.error_img)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
-	}
 
 	private fun setOnImgClickListener(dataItem: Article) {
 		itemView.ivImg.setOnClickListener {

@@ -2,22 +2,22 @@ package com.example.topnews.data.db
 
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.topnews.data.model.Tag
-import com.example.topnews.data.model.TagArticle
+import com.example.topnews.data.db.dao.TagArticleDao
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
+import java.util.Date
 
 class TagArticleDaoTest {
 
 	private lateinit var tagArticleDao: TagArticleDao
 	private lateinit var db: AppDatabase
 
-	private val first = TagArticle( "1", "1")
-	private val second = TagArticle( "1", "2")
-	private val third = TagArticle( "3", "3")
+	private val first = TagArticle("1", "1")
+	private val second = TagArticle("1", "2")
+	private val third = TagArticle("3", "3")
 
 	@Before
 	fun setup() {
@@ -122,10 +122,10 @@ class TagArticleDaoTest {
 		addArticle(3)
 		addTags()
 
-		tagArticleDao.addTagArticleRow(TagArticle("tag1","1"))
-		tagArticleDao.addTagArticleRow(TagArticle("tag2","1"))
-		tagArticleDao.addTagArticleRow(TagArticle("tag1","2"))
-		tagArticleDao.addTagArticleRow(TagArticle("tag3","2"))
+		tagArticleDao.addTagArticleRow(TagArticle("tag1", "1"))
+		tagArticleDao.addTagArticleRow(TagArticle("tag2", "1"))
+		tagArticleDao.addTagArticleRow(TagArticle("tag1", "2"))
+		tagArticleDao.addTagArticleRow(TagArticle("tag3", "2"))
 	}
 
 	private fun addArticle(int: Int){
@@ -134,7 +134,12 @@ class TagArticleDaoTest {
 
 	private fun addTags(){
 		db.tagsDao().apply {
-			addTags(listOf(Tag("tag1"),Tag("tag2"),Tag("tag3"),Tag("tag4")))
+			addTags(listOf(
+				Tag("tag1"),
+				Tag("tag2"),
+				Tag("tag3"),
+				Tag("tag4")
+			))
 		}
 	}
 
@@ -146,7 +151,7 @@ class TagArticleDaoTest {
 			num.toString(),
 			num.toString(),
 			num.toString(),
-			num.toString(),
+			Date(),
 			num.toString()
 		)
 	}

@@ -2,11 +2,11 @@ package com.example.topnews.data.repository
 
 import androidx.paging.DataSource
 import com.example.topnews.data.db.Article
-import com.example.topnews.data.db.ArticleDao
-import com.example.topnews.data.db.TagArticleDao
-import com.example.topnews.data.db.TagsDao
-import com.example.topnews.data.model.Tag
-import com.example.topnews.data.model.TagArticle
+import com.example.topnews.data.db.dao.ArticleDao
+import com.example.topnews.data.db.dao.TagArticleDao
+import com.example.topnews.data.db.dao.TagsDao
+import com.example.topnews.data.db.Tag
+import com.example.topnews.data.db.TagArticle
 import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.screens.search.pageSize
@@ -16,7 +16,6 @@ import com.example.topnews.utils.Constants.API_PAGESIZE
 import com.example.topnews.utils.Constants.API_QUERY
 import com.example.topnews.utils.toSealed
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 

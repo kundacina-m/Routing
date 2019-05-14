@@ -56,7 +56,6 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
 	private fun setObservers() {
 		viewModel.getArticles().observe(this@ReadLaterFragment, Observer { it ->
 			it?.let { adapterReadLater.submitList(it) }
-
 		})
 	}
 

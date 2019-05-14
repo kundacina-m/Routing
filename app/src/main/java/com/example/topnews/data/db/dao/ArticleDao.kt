@@ -1,4 +1,4 @@
-package com.example.topnews.data.db
+package com.example.topnews.data.db.dao
 
 import androidx.paging.DataSource
 import androidx.room.Dao
@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.topnews.data.db.Article
 import io.reactivex.Single
 
 @Dao

@@ -1,4 +1,4 @@
-package com.example.topnews.data.model
+package com.example.topnews.data.db
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
