@@ -24,7 +24,7 @@ interface TagArticleDao {
 	@Query(
 		""" SELECT * from
 		articles a left join TagArticle t
-		on a.publishedAt = t.articleId
+		on a.url = t.articleId
 		where t.tagName == :tagName"""
 	)
 	fun getArticlesByTag(tagName: String): Single<List<Article>>

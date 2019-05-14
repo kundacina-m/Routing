@@ -23,15 +23,15 @@ data class Article(
 	@ColumnInfo(name = "description")
 	var description: String? = null,
 
+	@PrimaryKey
 	@ColumnInfo(name = "url")
-	var url: String? = null,
+	var url: String,
 
 	@ColumnInfo(name = "urlToImg")
 	var urlToImage: String? = null,
 
-	@PrimaryKey
 	@ColumnInfo(name = "publishedAt")
-	var publishedAt: Date,
+	var publishedAt: Date? = null,
 
 	@ColumnInfo(name = "content")
 	var content: String? = null

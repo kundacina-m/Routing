@@ -4,11 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
-import com.example.topnews.R
+import com.example.topnews.R.layout
 import com.example.topnews.data.db.Article
-import com.example.topnews.screens.readlater.ReadLaterViewHolder
 
 class ArticlesCategoryAdapter : BaseAdapter<Article>() {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-		ReadLaterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_vertical_article, parent, false))
+		ArticlesCategoryViewHolder(
+			LayoutInflater.from(parent.context).inflate(
+				layout.item_vertical_article,
+				parent,
+				false
+			)
+		)
 }

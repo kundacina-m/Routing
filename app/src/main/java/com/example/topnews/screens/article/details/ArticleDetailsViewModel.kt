@@ -21,7 +21,7 @@ class ArticleDetailsViewModel : BaseViewModel() {
 			Single.just(repository)
 				.subscribeOn(Schedulers.io())
 				.subscribeBy {
-					it.addLocal(item = article).subscribeBy { returnVal ->
+					it.addToDB(item = article).subscribeBy { returnVal ->
 						if (returnVal is OnSuccess)
 							isInDb.postValue(true)
 						else isInDb.postValue(false)
@@ -35,7 +35,7 @@ class ArticleDetailsViewModel : BaseViewModel() {
 			Single.just(repository)
 				.subscribeOn(Schedulers.io())
 				.subscribeBy {
-					it.removeLocal(item = article).subscribeBy { returnVal ->
+					it.removeFromDB(item = article).subscribeBy { returnVal ->
 						if (returnVal is OnSuccess)
 							isInDb.postValue(false)
 						else isInDb.postValue(true)

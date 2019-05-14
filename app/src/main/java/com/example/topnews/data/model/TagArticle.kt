@@ -19,7 +19,7 @@ import com.example.topnews.data.db.Article
 
 		ForeignKey(
 			entity = Article::class,
-			parentColumns = arrayOf("publishedAt"),
+			parentColumns = arrayOf("url"),
 			childColumns = arrayOf("articleId"),
 			onDelete = CASCADE
 		)

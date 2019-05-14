@@ -27,6 +27,7 @@ import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
+import kotlin.math.log
 
 class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClickTransition {
 
@@ -51,7 +52,6 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 	override fun initView() {
 		actionBarSetup()
 		setupRecyclerView()
-		fetchData()
 
 	}
 
@@ -66,13 +66,16 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 		actionBar?.title = getString(R.string.topNews)
 	}
 
-	private fun setObservers() =
-		viewModel.articles
+	private fun setObservers() {
+		viewModel.articlePagedList
 			.observe(this, Observer {
-				if (it is OnSuccess) adapterTopNews.setData(it.item) else handleError(it as OnError)
+				adapterTopNews.submitList(it)
 			})
+		viewModel.onError.observe(this, Observer { error ->
+			error?.let { handleError(it) }
+		})
+	}
 
-	private fun fetchData() = viewModel.getArticles()
 
 	private fun setupRecyclerView() =
 		rwTopNews.apply {
@@ -103,7 +106,6 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			is RequestError.NoInternetError -> Log.d(TAG, ERROR_INTERNET)
 			is RequestError.ServerError -> Log.d(TAG, ERROR_SERVER)
 			is RequestError.DatabaseError -> Log.d(TAG, "handleError: DATABASE")
-
 		}
 
 }

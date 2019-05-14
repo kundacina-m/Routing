@@ -40,7 +40,7 @@ class SearchViewModel : BaseViewModel() {
 
 
 		disposables.add(
-			repository.getArticlesByPages(searchText, pages)
+			repository.getByQueryRemote(searchText, pages)
 				.subscribeBy { list ->
 					if (list is OnSuccess) {
 						previousList.addAll(list.item)

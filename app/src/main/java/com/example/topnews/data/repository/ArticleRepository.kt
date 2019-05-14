@@ -1,9 +1,10 @@
 package com.example.topnews.data.repository
 
+import androidx.paging.DataSource
+import com.example.topnews.data.db.Article
 import com.example.topnews.data.db.ArticleDao
 import com.example.topnews.data.db.TagArticleDao
 import com.example.topnews.data.db.TagsDao
-import com.example.topnews.data.db.Article
 import com.example.topnews.data.model.Tag
 import com.example.topnews.data.model.TagArticle
 import com.example.topnews.domain.ArticleRemoteStorage
@@ -26,41 +27,23 @@ class ArticleRepository(
 	private val remoteStorage: ArticleRemoteStorage
 ) {
 
-	fun addLocal(item: Article): Single<WrappedResponse<Long>> {
-		return Single.just(articleDao.addItem(item)).toSealed()
-	}
+	// region local calls
 
-	fun removeLocal(item: Article): Single<WrappedResponse<Int>> {
-		return Single.just(articleDao.deleteItem(item)).toSealed()
-	}
+	fun addToDB(item: Article): Single<WrappedResponse<Long>> =
+		Single.just(articleDao.addItem(item)).toSealed()
 
-	fun getAllLocal(): Flowable<WrappedResponse<List<Article>>> {
-		return articleDao.getAllItems().toSealed()
-	}
+	fun removeFromDB(item: Article): Single<WrappedResponse<Int>> =
+		Single.just(articleDao.deleteItem(item)).toSealed()
 
-	fun getAllRemote(): Single<WrappedResponse<List<Article>>> {
-		return remoteStorage.getAll()
-	}
+	fun getArticlesPagination(): DataSource.Factory<Int, Article> =
+		articleDao.getArticlesPagination()
 
-	fun getArticlesByPages(query: String, pages: Int): Single<WrappedResponse<List<Article>>> {
-		return remoteStorage.getItemsByQuery(
-			mapOf(
-				API_QUERY to query,
-				API_PAGE to pages.toString(),
-				API_PAGESIZE to pageSize.toString()
-			)
-		)
-	}
+	fun checkIfArticleExistsInDB(article: Article): Single<WrappedResponse<Article>> =
+		articleDao.getItem(article.url)
+			.subscribeOn(Schedulers.io())
+			.toSealed()
 
-	fun getArticlesByCategory(category: String): Single<WrappedResponse<List<Article>>> {
-		return remoteStorage.getItemsByQuery(mapOf(API_CATEGORY to category))
-	}
-
-	fun checkIfArticleExistsInDB(article: Article): Single<WrappedResponse<Article>> {
-		return articleDao.getItem(article.publishedAt.toString()).toSealed()
-	}
-
-	fun addTag(articleId: String, tag: String) {
+	fun addTag(articleId: String, tag: String) =
 		Completable.create {
 			tagsDao.addTag(Tag(tag))
 			tagArticleDao.addTagArticleRow(TagArticle(tag, articleId))
@@ -68,10 +51,38 @@ class ArticleRepository(
 		}
 			.subscribeOn(Schedulers.io())
 			.subscribe()
-//			.dispose()
-	}
 
-	fun getArticlesFromTag(tagName: String): Single<List<Article>> {
-		return tagArticleDao.getArticlesByTag(tagName)
-	}
+	fun getArticlesFromTag(tagName: String): Single<List<Article>> =
+		tagArticleDao.getArticlesByTag(tagName)
+
+	// endregion local calls
+
+
+	// region network calls
+
+	fun getAllRemote(pageNum: Int): Single<WrappedResponse<List<Article>>> =
+		remoteStorage.getItemsByQuery(
+			mapOf(
+				API_PAGE to pageNum.toString(),
+				API_PAGESIZE to 5.toString()
+			)
+		)
+
+	fun getByQueryRemote(query: String, pages: Int): Single<WrappedResponse<List<Article>>> =
+		remoteStorage.getItemsByQuery(
+			mapOf(
+				API_QUERY to query,
+				API_PAGE to pages.toString(),
+				API_PAGESIZE to pageSize.toString()
+			)
+		)
+
+	fun getArticlesByCategory(category: String): Single<WrappedResponse<List<Article>>> =
+		remoteStorage.getItemsByQuery(mapOf(API_CATEGORY to category))
+
+	// endregion network calls
+
+
+
+
 }

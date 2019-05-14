@@ -2,21 +2,25 @@ package com.example.topnews.screens.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 
 class SearchAdapter : BaseAdapter<Article>() {
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
 		SearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_search_result, parent, false))
 
-	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 		super.onBindViewHolder(holder, position)
+		clickListener(holder)
 
+	}
+
+	private fun clickListener(holder: ViewHolder) {
 		holder.itemView.setOnClickListener {
-			oneClickListener?.invoke(getItemOnPosition(position))
+			oneClickListener?.invoke(getItemOnPosition(holder.adapterPosition))
 		}
 	}
 }

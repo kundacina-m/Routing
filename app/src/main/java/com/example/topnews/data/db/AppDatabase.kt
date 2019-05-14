@@ -39,7 +39,7 @@ abstract class AppDatabase : RoomDatabase() {
 				.databaseBuilder(context, AppDatabase::class.java, "article-db")
 				.addCallback(object : Callback() {
 					override fun onCreate(db: SupportSQLiteDatabase) {
-						super.onCreate(db);
+						super.onCreate(db)
 						Executors.newSingleThreadScheduledExecutor().execute {
 							getInstance(context).tagsDao().addTags(
 								listOf(

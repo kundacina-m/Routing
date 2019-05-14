@@ -147,7 +147,7 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 		tvSource.text = dataItem.source
 		tvDescription.text = dataItem.description
 		tvContent.text = dataItem.content
-		tvPublishedAt.text = dataItem.publishedAt.asString(DATE_ONLY)
+		tvPublishedAt.text = dataItem.publishedAt?.asString()
 		tvAuthor.text = dataItem.author
 		linkToWeb.text = dataItem.url
 	}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="appName">Najnovije vijesti</string>
+	<string name="topNews">Najnovije vijesti</string>
+	<string name="categories">Kategorije</string>
+	<string name="readLater">Citaj kasnije</string>
+	<string name="search">Pretraga</string>
+
+	<string name="sourceRaw">Izvor: </string>
+	<string name="publishedAt">Objavljeno: </string>
+	<string name="appwidget_text">EXAMPLE</string>
+	<string name="configure">Configure</string>
+	<string name="add_widget">Add widget</string>
+	<string name="close_button">X</string>
+
+	<string name="today">Danas</string>
+	<string name="yesterday">Juce</string>
+</resources>

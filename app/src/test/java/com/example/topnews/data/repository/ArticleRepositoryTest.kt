@@ -90,7 +90,7 @@ class ArticleRepositoryTest {
 			)
 		} returns Single.just(OnSuccess(emptyList()))
 
-		SUT.getArticlesByPages("query", 1)
+		SUT.getByQueryRemote("query", 1)
 			.test()
 			.assertValues(OnSuccess(emptyList()))
 			.dispose()
@@ -108,7 +108,7 @@ class ArticleRepositoryTest {
 			)
 		} returns Single.just(OnSuccess(listOf(first, second)))
 
-		SUT.getArticlesByPages("query", 1)
+		SUT.getByQueryRemote("query", 1)
 			.test()
 			.assertValues(OnSuccess(listOf(first, second)))
 			.dispose()
@@ -153,7 +153,7 @@ class ArticleRepositoryTest {
 	fun getAllLocal_assertEmptyList() {
 		every { localStorage.getAllItems() } returns Flowable.just(emptyList())
 
-		SUT.getAllLocal()
+		SUT.getAllFromDB()
 			.test()
 			.assertValues(OnSuccess(emptyList()))
 			.dispose()
@@ -163,7 +163,7 @@ class ArticleRepositoryTest {
 	fun getAllLocal_assertNotEmptyList() {
 		every { localStorage.getAllItems() } returns Flowable.just(listOf(first, second))
 
-		SUT.getAllLocal()
+		SUT.getAllFromDB()
 			.test()
 			.assertValues(OnSuccess(listOf(first, second)))
 			.dispose()
@@ -184,7 +184,7 @@ class ArticleRepositoryTest {
 	fun insertItemLocal_assertTrue() {
 		every { localStorage.addItem(first) } returns 1.toLong()
 
-		SUT.addLocal(first)
+		SUT.addToDB(first)
 			.test()
 			.assertValue(OnSuccess(1.toLong()))
 			.dispose()
@@ -194,7 +194,7 @@ class ArticleRepositoryTest {
 	fun remoteItemLocal_assertZeroRemoved() {
 		every { localStorage.deleteItem(first) } returns 0
 
-		SUT.removeLocal(first)
+		SUT.removeFromDB(first)
 			.test()
 			.assertValue(OnSuccess(0))
 			.dispose()
@@ -204,7 +204,7 @@ class ArticleRepositoryTest {
 	fun remoteItemLocal_assertOneRemoved() {
 		every { localStorage.deleteItem(first) } returns 1
 
-		SUT.removeLocal(first)
+		SUT.removeFromDB(first)
 			.test()
 			.assertValue(OnSuccess(1))
 			.dispose()

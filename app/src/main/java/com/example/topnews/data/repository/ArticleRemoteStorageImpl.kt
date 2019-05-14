@@ -12,17 +12,6 @@ import io.reactivex.schedulers.Schedulers
 
 class ArticleRemoteStorageImpl(private val api: ArticleApi) : ArticleRemoteStorage {
 
-	override fun getAll(): Single<WrappedResponse<List<Article>>> {
-
-		return api.getArticles()
-			.map { it.articles }
-			.flatMap { task ->
-				Observable.fromIterable(task).map(ArticleConverter::fromRawToObj).toList()
-			}
-			.subscribeOn(Schedulers.io())
-			.toSealed()
-	}
-
 	override fun getItemsByQuery(queryParams: Map<String, String>): Single<WrappedResponse<List<Article>>> {
 
 		return api.getItemsByQuery(queryParams)

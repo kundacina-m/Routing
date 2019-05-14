@@ -1,8 +1,8 @@
-package com.example.topnews.screens.readlater
+package com.example.topnews.screens.articlescategory
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import base.BasePagedListAdapter
+import base.BaseAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -16,16 +16,19 @@ import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvTitle
 
-class ReadLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-											BasePagedListAdapter.ViewHolderAdapterBinder<Article> {
+class ArticlesCategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+												   BaseAdapter.ViewHolderAdapterBinder<Article> {
 
 	lateinit var article: Article
 
 	override fun bind(dataItem: Article) {
 
 		article = dataItem
+
 		populateViewWithData(dataItem)
+
 		setOnImgClickListener(dataItem)
+
 	}
 
 	private fun populateViewWithData(dataItem: Article) {

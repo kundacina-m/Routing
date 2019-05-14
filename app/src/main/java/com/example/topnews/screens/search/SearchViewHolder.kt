@@ -5,8 +5,6 @@ import base.BaseViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.data.db.Article
-import com.example.topnews.utils.Constants.DATE_ONLY
-import com.example.topnews.utils.asString
 import kotlinx.android.synthetic.main.item_vertical_article.view.*
 
 class SearchViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
