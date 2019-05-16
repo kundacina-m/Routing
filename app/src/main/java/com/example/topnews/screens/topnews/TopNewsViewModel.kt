@@ -9,7 +9,7 @@ import com.example.topnews.domain.WrappedResponse.OnError
 class TopNewsViewModel : BaseViewModel() {
 
 	var onError = MutableLiveData<OnError<Nothing>>()
-	private val dataSourceFactory = ArticleDataSourceFactory(onError)
+	private val dataSourceFactory = TopNewsDataSourceFactory(onError)
 	var articles = LivePagedListBuilder(dataSourceFactory, configurePagination()).build()
 
 	private fun configurePagination(): PagedList.Config =

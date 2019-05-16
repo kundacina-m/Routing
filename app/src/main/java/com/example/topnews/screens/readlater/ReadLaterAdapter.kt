@@ -31,7 +31,7 @@ class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) :
 	private fun setupListeners(holder: ViewHolder) {
 
 		holder.itemView.ivImg.setOnLongClickListener {
-			addTag(it.context, holder)
+			addTag(it.context)
 			true
 		}
 
@@ -41,7 +41,7 @@ class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) :
 
 	}
 
-	private fun addTag(context: Context, holder: ViewHolder) {
+	private fun addTag(context: Context) {
 
 		TagDialog.build(context) {
 			//			article = getItemOnPosition(holder.adapterPosition)

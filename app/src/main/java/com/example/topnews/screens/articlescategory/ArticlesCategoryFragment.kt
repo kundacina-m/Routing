@@ -12,11 +12,12 @@ import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.ARG_CATEGORY
+import com.example.topnews.utils.Constants.ERROR_DATABASE
 import kotlinx.android.synthetic.main.fragment_articles_category.rvArticlesFromCategory
 
 class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), BaseAdapter.OnItemClickListener<Article> {
 
-	private val adapterArticlesCategory by lazy {
+	private val adapter by lazy {
 		ArticlesCategoryAdapter().apply {
 			oneClickListener = this@ArticlesCategoryFragment::onItemClick
 		}
@@ -37,7 +38,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), Base
 	private fun observeForData() {
 		viewModel.apply {
 			getNetworkResults().observe(this@ArticlesCategoryFragment, Observer {
-				if (it is OnSuccess) adapterArticlesCategory.setData(it.item) else handleError(it as OnError)
+				if (it is OnSuccess) adapter.setData(it.item) else handleError(it as OnError)
 			})
 			getArticlesFromCategory(category.toLowerCase())
 		}
@@ -46,7 +47,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), Base
 	private fun setupRecyclerView() =
 		rvArticlesFromCategory.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = adapterArticlesCategory
+			adapter = this@ArticlesCategoryFragment.adapter
 		}
 
 	override fun onItemClick(dataItem: Article) {}
@@ -57,7 +58,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), Base
 			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
 			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
 			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
-			is RequestError.DatabaseError -> Log.d(TAG, "handleError: DATABASE")
+			is RequestError.DatabaseError -> Log.d(TAG, ERROR_DATABASE)
 
 		}
 

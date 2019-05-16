@@ -9,7 +9,7 @@ import com.example.topnews.domain.WrappedResponse.OnSuccess
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
-class ArticleDataSource(
+class TopNewsDataSource(
 	val repository: ArticleRepository,
 	private val onError: MutableLiveData<OnError<Nothing>>
 ) : PageKeyedDataSource<Int, Article>() {

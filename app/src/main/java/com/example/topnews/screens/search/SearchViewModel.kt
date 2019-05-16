@@ -1,56 +1,37 @@
 package com.example.topnews.screens.search
 
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import base.BaseViewModel
 import com.example.topnews.App
 import com.example.topnews.data.db.Article
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
+import com.example.topnews.screens.topnews.TopNewsDataSourceFactory
 import io.reactivex.rxkotlin.subscribeBy
 
 const val pageSize = 6
 
 class SearchViewModel : BaseViewModel() {
-	private val repository = App.injectRepository()
 
-	private var pages: Int = 1
-	var totalResults: Int = 0
-	private lateinit var searchString: String
-	private var articles = MutableLiveData<WrappedResponse<List<Article>>>()
-	fun getNetworkSearchResults() = articles
+	var onError = MutableLiveData<OnError<Nothing>>()
+	private val dataSourceFactory = SearchDataSourceFactory(onError)
+	var articles = LivePagedListBuilder(dataSourceFactory, configurePagination()).build()
 
-	fun getArticlesForQuery(searchText: String) {
-		pages = 1
-		articles.postValue(OnSuccess(emptyList()))
-		getArticlesByPages(searchText)
+	private fun configurePagination(): PagedList.Config =
+		PagedList.Config.Builder()
+			.setEnablePlaceholders(false)
+			.setPageSize(1)
+			.build()
+
+	fun queryForString(query: String) {
+		dataSourceFactory
 	}
 
-	fun getArticlesForQueryOnScroll() {
-		getArticlesByPages()
+	override fun onCleared() {
+		super.onCleared()
+		dataSourceFactory.articleLiveDataSource.value?.invalidate()
 	}
-
-	private fun getArticlesByPages(searchText: String = searchString) {
-		val previousList = arrayListOf<Article>()
-		articles.value?.let {
-			if (articles.value is OnSuccess) {
-				previousList.addAll((articles.value as OnSuccess<List<Article>>).item)
-			}
-		}
-
-
-		disposables.add(
-			repository.getByQueryRemote(searchText, pages)
-				.subscribeBy { list ->
-					if (list is OnSuccess) {
-						previousList.addAll(list.item)
-						articles.postValue(OnSuccess(previousList))
-						searchString = searchText
-						pages++
-					} else if (list is OnError){
-						articles.postValue(list)
-					}
-				})
-	}
-
 }

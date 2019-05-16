@@ -19,7 +19,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
 
 	private lateinit var menu: Menu
 
-	private val adapterReadLater by lazy {
+	private val adapter by lazy {
 		ReadLaterAdapter(viewModel).apply {
 			oneClickListener = this@ReadLaterFragment::onItemClick
 		}
@@ -55,14 +55,14 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
 
 	private fun setObservers() {
 		viewModel.getArticles().observe(this@ReadLaterFragment, Observer { it ->
-			it?.let { adapterReadLater.submitList(it) }
+			it?.let { adapter.submitList(it) }
 		})
 	}
 
 	private fun setupRecyclerView() =
 		readLaterRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = adapterReadLater
+			adapter = this@ReadLaterFragment.adapter
 		}
 
 	override fun onItemClick(dataItem: Article) =

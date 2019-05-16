@@ -18,6 +18,7 @@ object Constants {
 	const val ERROR_SERVER = "handleError: Server"
 	const val ERROR_INTERNET = "handleError: Internet"
 	const val ERROR_HTTP = "handleError: Http"
+	const val ERROR_DATABASE = "handleError: Database"
 
 	// Time
 	const val DATE_ONLY = "dd. MMMM yyyy - hh:mm a"

@@ -18,6 +18,7 @@ import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.domain.RequestError
 import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.utils.Constants.ERROR_DATABASE
 import com.example.topnews.utils.Constants.ERROR_HTTP
 import com.example.topnews.utils.Constants.ERROR_INTERNET
 import com.example.topnews.utils.Constants.ERROR_SERVER
@@ -90,6 +91,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			Bundle().apply {
 				putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem)
 				putBoolean(TRANSITION_ENABLED, true)
+				                                             
 			}
 			, setTransitionElements(img, title))
 
@@ -109,7 +111,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			is RequestError.HttpError -> Log.d(TAG, ERROR_HTTP)
 			is RequestError.NoInternetError -> Log.d(TAG, ERROR_INTERNET)
 			is RequestError.ServerError -> Log.d(TAG, ERROR_SERVER)
-			is RequestError.DatabaseError -> Log.d(TAG, "handleError: DATABASE")
+			is RequestError.DatabaseError -> Log.d(TAG, ERROR_DATABASE)
 		}
 
 }

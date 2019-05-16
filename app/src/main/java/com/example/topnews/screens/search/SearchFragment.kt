@@ -15,16 +15,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import base.BaseFragment
+import base.BasePagedListAdapter
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.domain.RequestError
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
+import com.example.topnews.utils.Constants.ERROR_DATABASE
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
-class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnItemClickListener<Article> {
 
 	private val navCtrl: NavController by lazy {
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
@@ -39,9 +41,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 		}
 	}
 
-	private var loading = false
-
-	private val adapterSearch: SearchAdapter by lazy {
+	private val adapter: SearchAdapter by lazy {
 		SearchAdapter().apply {
 			oneClickListener = this@SearchFragment::onItemClick
 		}
@@ -128,30 +128,13 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	private fun setupRecyclerView() =
 		rvSearchResults.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = adapterSearch
-			addOnScrollListener(object : RecyclerView.OnScrollListener() {
-				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-					super.onScrolled(recyclerView, dx, dy)
-					if (dy > 0) {
-						val totalItemCount = layoutManager?.itemCount
-						val pastVisibleItem = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
-						if (totalItemCount != null && totalItemCount < viewModel.totalResults) {
-							if ((totalItemCount <= pastVisibleItem + 5) && !loading) {
-								loading = true
-								viewModel.getArticlesForQueryOnScroll()
-							}
-						}
-					}
-				}
-			})
+			adapter = this@SearchFragment.adapter
 		}
 
 
 	private fun setObservers() = viewModel.getNetworkSearchResults().observe(this, Observer {
 		if (it is OnSuccess) {
-			adapterSearch.setData(it.item)
-			loading = false
+//			adapter.submitList(it.item) loading = false
 		} else (handleError(it as OnError))
 
 	})
@@ -171,7 +154,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
 			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
 			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
-			is RequestError.DatabaseError -> Log.d(TAG, "handleError: DATABASE")
+			is RequestError.DatabaseError -> Log.d(TAG, ERROR_DATABASE)
 		}
 
 }

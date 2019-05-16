@@ -20,7 +20,7 @@ class CategoriesFragment : BaseFragment<CategoriesViewModel>(), BaseAdapter.OnIt
 	override fun getLayoutId(): Int = R.layout.fragment_categories
 	override fun getClassTypeVM(): Class<CategoriesViewModel> = CategoriesViewModel::class.java
 
-	private val adapterCategories: CategoriesAdapter by lazy {
+	private val adapter: CategoriesAdapter by lazy {
 		CategoriesAdapter().apply {
 			setData(categories)
 			oneClickListener = this@CategoriesFragment::onItemClick
@@ -47,7 +47,7 @@ class CategoriesFragment : BaseFragment<CategoriesViewModel>(), BaseAdapter.OnIt
 	private fun setupRecyclerView() =
 		rvCategories.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = adapterCategories
+			adapter = this@CategoriesFragment.adapter
 		}
 
 	override fun onItemClick(dataItem: String) {
