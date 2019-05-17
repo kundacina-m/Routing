@@ -2,11 +2,11 @@ package com.example.topnews.data.repository
 
 import androidx.paging.DataSource
 import com.example.topnews.data.db.Article
+import com.example.topnews.data.db.Tag
+import com.example.topnews.data.db.TagArticle
 import com.example.topnews.data.db.dao.ArticleDao
 import com.example.topnews.data.db.dao.TagArticleDao
 import com.example.topnews.data.db.dao.TagsDao
-import com.example.topnews.data.db.Tag
-import com.example.topnews.data.db.TagArticle
 import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.screens.search.pageSize
@@ -56,7 +56,6 @@ class ArticleRepository(
 
 	// endregion local calls
 
-
 	// region network calls
 
 	fun getAllRemote(pageNum: Int): Single<WrappedResponse<List<Article>>> =
@@ -77,11 +76,14 @@ class ArticleRepository(
 		)
 
 	fun getArticlesByCategory(category: String): Single<WrappedResponse<List<Article>>> =
-		remoteStorage.getItemsByQuery(mapOf(API_CATEGORY to category))
+		remoteStorage.getItemsByQuery(
+			mapOf(
+				API_PAGE to 1.toString(),
+				API_PAGESIZE to 10.toString(),
+				API_CATEGORY to category
+			)
+		)
 
 	// endregion network calls
-
-
-
 
 }

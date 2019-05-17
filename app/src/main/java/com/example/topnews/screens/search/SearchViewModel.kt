@@ -4,13 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import base.BaseViewModel
-import com.example.topnews.App
-import com.example.topnews.data.db.Article
-import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.domain.WrappedResponse.OnError
-import com.example.topnews.domain.WrappedResponse.OnSuccess
-import com.example.topnews.screens.topnews.TopNewsDataSourceFactory
-import io.reactivex.rxkotlin.subscribeBy
 
 const val pageSize = 6
 
@@ -27,11 +21,15 @@ class SearchViewModel : BaseViewModel() {
 			.build()
 
 	fun queryForString(query: String) {
-		dataSourceFactory
+		dataSourceFactory.query = query
+		invalidateDataSource()
 	}
 
 	override fun onCleared() {
 		super.onCleared()
-		dataSourceFactory.articleLiveDataSource.value?.invalidate()
+		invalidateDataSource()
 	}
+
+	private fun invalidateDataSource() =
+		dataSourceFactory.dataSource.value?.invalidate()
 }

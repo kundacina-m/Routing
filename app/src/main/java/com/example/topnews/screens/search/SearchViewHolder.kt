@@ -4,8 +4,12 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import base.BasePagedListAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.example.topnews.R
 import com.example.topnews.data.db.Article
+import com.example.topnews.utils.asString
 import kotlinx.android.synthetic.main.item_vertical_article.view.*
 
 class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -16,9 +20,18 @@ class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source
-			tvPublishTime.text = dataItem.publishedAt.toString()
+			tvPublishTime.text = dataItem.publishedAt?.asString()
 		}
-		Glide.with(itemView.context).load(dataItem.urlToImage).apply(RequestOptions().override(400, 600))
+		Glide.with(itemView.context).load(dataItem.urlToImage).apply(getGlideOptions())
 			.into(itemView.ivImg)
+	}
+
+	private fun getGlideOptions(): RequestOptions {
+		return RequestOptions()
+			.centerCrop()
+			.placeholder(R.drawable.loading)
+			.error(R.drawable.error_img)
+			.diskCacheStrategy(DiskCacheStrategy.ALL)
+			.priority(Priority.HIGH)
 	}
 }

@@ -1,10 +1,13 @@
 package com.example.topnews.screens.articlescategory
 
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseAdapter
 import base.BaseFragment
+import base.BasePagedListAdapter
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.domain.RequestError
@@ -14,8 +17,9 @@ import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.ARG_CATEGORY
 import com.example.topnews.utils.Constants.ERROR_DATABASE
 import kotlinx.android.synthetic.main.fragment_articles_category.rvArticlesFromCategory
+import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
-class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), BasePagedListAdapter.OnItemClickListener<Article> {
 
 	private val adapter by lazy {
 		ArticlesCategoryAdapter().apply {
@@ -31,16 +35,31 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(), Base
 	override fun getClassTypeVM(): Class<ArticlesCategoryViewModel> = ArticlesCategoryViewModel::class.java
 
 	override fun initView() {
+		actionBarSetup()
 		setupRecyclerView()
 		observeForData()
 	}
 
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		menu.clear()
+		inflater.inflate(R.menu.default_menu, menu)
+		super.onCreateOptionsMenu(menu, inflater)
+	}
+
+	private fun actionBarSetup() {
+		setActionBar(toolbar_top)
+		actionBar?.title = category
+	}
+
 	private fun observeForData() {
 		viewModel.apply {
-			getNetworkResults().observe(this@ArticlesCategoryFragment, Observer {
-				if (it is OnSuccess) adapter.setData(it.item) else handleError(it as OnError)
+			this.category = this@ArticlesCategoryFragment.category
+			articles.observe(this@ArticlesCategoryFragment, Observer {
+				adapter.submitList(it)
 			})
-			getArticlesFromCategory(category.toLowerCase())
+			onError.observe(this@ArticlesCategoryFragment, Observer {
+				handleError(it)
+			})
 		}
 	}
 

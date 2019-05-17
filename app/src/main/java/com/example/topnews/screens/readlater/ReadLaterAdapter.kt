@@ -12,7 +12,7 @@ import com.example.topnews.screens.TagDialog
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 
 class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) :
-	BasePagedListAdapter<Article>(diffCallback) {
+	BasePagedListAdapter<Article>(articleDiffCallback) {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
 		ReadLaterViewHolder(
@@ -51,7 +51,7 @@ class ReadLaterAdapter(private val viewModel: ReadLaterViewModel) :
 
 	companion object {
 
-		val diffCallback = object : DiffUtil.ItemCallback<Article>() {
+		val articleDiffCallback = object : DiffUtil.ItemCallback<Article>() {
 			override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
 				oldItem.url == newItem.url
 

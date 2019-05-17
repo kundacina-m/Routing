@@ -20,7 +20,7 @@ class TopNewsViewModel : BaseViewModel() {
 
 	override fun onCleared() {
 		super.onCleared()
-		dataSourceFactory.articleLiveDataSource.value?.invalidate()
+		dataSourceFactory.dataSource.value?.invalidate()
 	}
 }
 

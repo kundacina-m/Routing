@@ -12,15 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import base.BaseAdapter
 import base.BaseFragment
 import base.BasePagedListAdapter
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.domain.RequestError
 import com.example.topnews.domain.WrappedResponse.OnError
-import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.ERROR_DATABASE
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
@@ -111,7 +108,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 		}
 
 	private fun updateSearchList() =
-		fetchData(searchKeyword)
+		viewModel.queryForString(searchKeyword)
 
 	private fun doOnTextChanged(newText: String) {
 		if (navCtrl.currentDestination!!.id != R.id.searchFragment)
@@ -131,15 +128,15 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 			adapter = this@SearchFragment.adapter
 		}
 
+	private fun setObservers() {
+		viewModel.articles.observe(this, Observer {
+			adapter.submitList(it)
+		})
 
-	private fun setObservers() = viewModel.getNetworkSearchResults().observe(this, Observer {
-		if (it is OnSuccess) {
-//			adapter.submitList(it.item) loading = false
-		} else (handleError(it as OnError))
-
-	})
-
-	private fun fetchData(searchKeyword: String) = viewModel.getArticlesForQuery(searchKeyword)
+		viewModel.onError.observe(this, Observer {
+			handleError(it)
+		})
+	}
 
 	override fun onItemClick(dataItem: Article) =
 		navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
