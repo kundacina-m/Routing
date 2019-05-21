@@ -5,8 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import base.BaseViewModel
 import com.example.topnews.domain.WrappedResponse.OnError
-
-const val pageSize = 6
+import com.example.topnews.utils.Constants.PAGE_SIZE_SEARCH
 
 class SearchViewModel : BaseViewModel() {
 
@@ -17,7 +16,8 @@ class SearchViewModel : BaseViewModel() {
 	private fun configurePagination(): PagedList.Config =
 		PagedList.Config.Builder()
 			.setEnablePlaceholders(false)
-			.setPageSize(1)
+			.setPrefetchDistance(1)
+			.setPageSize(PAGE_SIZE_SEARCH)
 			.build()
 
 	fun queryForString(query: String) {

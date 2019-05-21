@@ -25,6 +25,7 @@ class ArticlesCategoryViewModel : BaseViewModel() {
 	private fun configurePagination(): PagedList.Config =
 		PagedList.Config.Builder()
 			.setEnablePlaceholders(false)
+			.setPrefetchDistance(1)
 			.setPageSize(1)
 			.build()
 

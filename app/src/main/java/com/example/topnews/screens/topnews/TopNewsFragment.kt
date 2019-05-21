@@ -25,6 +25,7 @@ import com.example.topnews.utils.Constants.ERROR_SERVER
 import com.example.topnews.utils.Constants.ERROR_UNKNOWN
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
+import kotlinx.android.synthetic.main.fragment_top_news.pbLoading
 import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
@@ -62,6 +63,11 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 		super.onCreateOptionsMenu(menu, inflater)
 	}
 
+	override fun onResume() {
+		super.onResume()
+		handleLoading(false)
+	}
+
 	private fun actionBarSetup() {
 
 		setActionBar(toolbar_top)
@@ -78,6 +84,11 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 		viewModel.onError.observe(this, Observer { error ->
 			handleError(error)
 		})
+
+		viewModel.loading.observe(this, Observer { loading ->
+			handleLoading(loading)
+		})
+
 	}
 
 	private fun setupRecyclerView() =
@@ -91,7 +102,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			Bundle().apply {
 				putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem)
 				putBoolean(TRANSITION_ENABLED, true)
-				                                             
+
 			}
 			, setTransitionElements(img, title))
 
@@ -113,5 +124,10 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			is RequestError.ServerError -> Log.d(TAG, ERROR_SERVER)
 			is RequestError.DatabaseError -> Log.d(TAG, ERROR_DATABASE)
 		}
+
+	private fun handleLoading(visible: Boolean) {
+		if (visible) pbLoading.show()
+		else pbLoading.hide()
+	}
 
 }

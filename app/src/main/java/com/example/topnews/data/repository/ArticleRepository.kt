@@ -9,7 +9,6 @@ import com.example.topnews.data.db.dao.TagArticleDao
 import com.example.topnews.data.db.dao.TagsDao
 import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse
-import com.example.topnews.screens.search.pageSize
 import com.example.topnews.utils.Constants.API_CATEGORY
 import com.example.topnews.utils.Constants.API_PAGE
 import com.example.topnews.utils.Constants.API_PAGESIZE
@@ -39,7 +38,6 @@ class ArticleRepository(
 
 	fun checkIfArticleExistsInDB(article: Article): Single<WrappedResponse<Article>> =
 		articleDao.getItem(article.url)
-			.subscribeOn(Schedulers.io())
 			.toSealed()
 
 	fun addTag(articleId: String, tag: String) =
@@ -58,15 +56,15 @@ class ArticleRepository(
 
 	// region network calls
 
-	fun getAllRemote(pageNum: Int): Single<WrappedResponse<List<Article>>> =
+	fun getAllRemote(pageNum: Int, pageSize: Int): Single<WrappedResponse<List<Article>>> =
 		remoteStorage.getItemsByQuery(
 			mapOf(
 				API_PAGE to pageNum.toString(),
-				API_PAGESIZE to 5.toString()
+				API_PAGESIZE to pageSize.toString()
 			)
 		)
 
-	fun getByQueryRemote(query: String, pages: Int): Single<WrappedResponse<List<Article>>> =
+	fun getByQueryRemote(query: String, pages: Int, pageSize: Int): Single<WrappedResponse<List<Article>>> =
 		remoteStorage.getItemsByQuery(
 			mapOf(
 				API_QUERY to query,
@@ -75,11 +73,11 @@ class ArticleRepository(
 			)
 		)
 
-	fun getArticlesByCategory(category: String): Single<WrappedResponse<List<Article>>> =
+	fun getArticlesByCategory(category: String, pageNum: Int, pageSize: Int): Single<WrappedResponse<List<Article>>> =
 		remoteStorage.getItemsByQuery(
 			mapOf(
-				API_PAGE to 1.toString(),
-				API_PAGESIZE to 10.toString(),
+				API_PAGE to pageNum.toString(),
+				API_PAGESIZE to pageSize.toString(),
 				API_CATEGORY to category
 			)
 		)

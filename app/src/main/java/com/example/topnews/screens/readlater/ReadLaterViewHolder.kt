@@ -39,14 +39,13 @@ class ReadLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 			.into(itemView.ivImg)
 	}
 
-	private fun getGlideOptions(): RequestOptions {
-		return RequestOptions()
-			.centerCrop()
-			.placeholder(R.drawable.loading)
-			.error(R.drawable.error_img)
-			.diskCacheStrategy(DiskCacheStrategy.ALL)
-			.priority(Priority.HIGH)
-	}
+	private fun getGlideOptions(): RequestOptions =
+		RequestOptions()
+		.centerCrop()
+		.placeholder(R.drawable.loading)
+		.error(R.drawable.ic_error_image)
+		.diskCacheStrategy(DiskCacheStrategy.ALL)
+		.priority(Priority.HIGH)
 
 	private fun setOnImgClickListener(dataItem: Article) {
 		itemView.ivImg.setOnClickListener {

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.domain.WrappedResponse.OnError
+import kotlinx.android.synthetic.main.item_section.view.tvCategory
 
 class CategoriesAdapter : BaseAdapter<String>(), CategoriesViewHolder.InitializedViewHolder {
 
@@ -28,21 +29,21 @@ class CategoriesAdapter : BaseAdapter<String>(), CategoriesViewHolder.Initialize
 		return position
 	}
 
-	fun notifyDataArrived(category: String, response: OnError<Nothing>? = null){
+	fun notifyDataArrived(category: String, response: OnError<Nothing>? = null) {
 		viewHolders[category]?.updateView(response)
 	}
 
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 		super.onBindViewHolder(holder, position)
 
+		holder.itemView.tvCategory.setOnClickListener {
+			clickListener?.invoke(getItemOnPosition(position))
 
-		holder.itemView.setOnClickListener {
-			oneClickListener?.invoke(getItemOnPosition(position))
 		}
 	}
 
 	override fun initializedCallback(adapter: ItemsAdapter, category: String) {
-		handleLiveData?.invoke(category,adapter)
+		handleLiveData?.invoke(category, adapter)
 	}
 
 	interface BindAdapterToLiveData {

@@ -2,9 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_margin="5dp"
->
+	android:layout_margin="5dp">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -12,18 +10,19 @@
 		android:orientation="vertical">
 
 		<TextView
-			android:id="@+id/tvSection"
+			android:id="@+id/tvCategory"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="16dp"
+			android:layout_marginTop="8dp"
 			android:textSize="25sp"/>
 
 		<TextView
 			android:id="@+id/tvError"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textSize="20sp"
 			android:textAlignment="center"
+			android:textSize="20sp"
 			android:visibility="gone"/>
 
 		<com.example.topnews.screens.widget.LoadingView
@@ -36,9 +35,9 @@
 			android:id="@+id/rvInCategories"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal"
 			android:layout_marginLeft="5dp"
-			android:layout_marginRight="5dp"/>
+			android:layout_marginRight="5dp"
+			android:orientation="horizontal"/>
 
 	</LinearLayout>
 </androidx.cardview.widget.CardView>

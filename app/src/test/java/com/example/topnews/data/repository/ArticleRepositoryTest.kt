@@ -1,32 +1,39 @@
 package com.example.topnews.data.repository
 
+import com.example.topnews.data.db.Article
 import com.example.topnews.data.db.dao.ArticleDao
 import com.example.topnews.data.db.dao.TagArticleDao
 import com.example.topnews.data.db.dao.TagsDao
-import com.example.topnews.data.db.Article
 import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse.OnSuccess
-import com.example.topnews.utils.Constants
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Date
 
+// region constants
+
+const val TAG_NAME = "tag name"
+const val PAGE_ONE = 1
+const val PAGE_SIZE = 5
+const val CATEGORY = "category"
+const val QUERY = "query"
+
+// endregion constants
+
 @ExtendWith(MockKExtension::class)
 class ArticleRepositoryTest {
 
-	// region constants
-
-	private var params = mapOf<String,String>("page" to "1","pageSize" to "2")
-
-	// endregion constants
-
 	// region helper fields
+
+	private var params = mapOf("page" to PAGE_ONE.toString(), "pageSize" to PAGE_SIZE.toString())
+	private var paramsWithQuery = mapOf("q" to QUERY, "page" to PAGE_ONE.toString(), "pageSize" to PAGE_SIZE.toString())
+	private var paramsForCategory =
+		mapOf(CATEGORY to "general", "page" to PAGE_ONE.toString(), "pageSize" to PAGE_SIZE.toString())
 
 	private val first = createArticle(1)
 	private val second = createArticle(2)
@@ -41,20 +48,31 @@ class ArticleRepositoryTest {
 
 	@Before
 	fun setup() {
-		SUT = ArticleRepository(tagDao,tagArticleDao,localStorage, remoteStorage)
+		SUT = ArticleRepository(tagDao, tagArticleDao, localStorage, remoteStorage)
 	}
 
 	// region tags tests
 	@Test
 	fun getArticlesFromTag_successfully_assertTwoItems() {
 
-		every { tagArticleDao.getArticlesByTag("1") } returns Single.just(listOf(first,second))
+		every { tagArticleDao.getArticlesByTag(TAG_NAME) } returns Single.just(listOf(first, second))
 
-
-		SUT.getArticlesFromTag("1")
+		SUT.getArticlesFromTag(TAG_NAME)
 			.test()
-			.assertValues(listOf(first,second))
+			.assertValues(listOf(first, second))
+			.dispose()
 
+	}
+
+	@Test
+	fun getArticlesFromTag_successfully_assertZeroItems() {
+
+		every { tagArticleDao.getArticlesByTag(TAG_NAME) } returns Single.just(emptyList())
+
+		SUT.getArticlesFromTag(TAG_NAME)
+			.test()
+			.assertValues(emptyList())
+			.dispose()
 	}
 
 	// endregion tags tests
@@ -64,62 +82,40 @@ class ArticleRepositoryTest {
 	@Test
 	fun getAllRemote_assertEmpty() {
 
-		// TODO
-
 		every { remoteStorage.getItemsByQuery(params) } returns Single.just(OnSuccess(emptyList()))
 
-//		every { remoteStorage.getAll() } returns Single.just(OnSuccess(emptyList()))
-//
-//		SUT.getAllRemote()
-//			.test()
-//			.assertValues(OnSuccess(emptyList()))
-//			.dispose()
-	}
-
-	@Test
-	fun getAllRemote_assertNotEmpty() {
-
-		// TODO
-
-//		every { remoteStorage.getAll() } returns Single.just(OnSuccess(listOf(first, second)))
-//
-//		SUT.getAllRemote()
-//			.test()
-//			.assertValues(OnSuccess(listOf(first, second)))
-//			.dispose()
-	}
-
-	@Test
-	fun getArticlesByPages_assertEmpty() {
-		every {
-			remoteStorage.getItemsByQuery(
-				mapOf(
-					Constants.API_QUERY to "query",
-					Constants.API_PAGE to "1",
-					Constants.API_PAGESIZE to "6"
-				)
-			)
-		} returns Single.just(OnSuccess(emptyList()))
-
-		SUT.getByQueryRemote("query", 1)
+		SUT.getAllRemote(PAGE_ONE, PAGE_SIZE)
 			.test()
 			.assertValues(OnSuccess(emptyList()))
 			.dispose()
 	}
 
 	@Test
-	fun getArticlesByPages_assertNotEmpty() {
-		every {
-			remoteStorage.getItemsByQuery(
-				mapOf(
-					Constants.API_QUERY to "query",
-					Constants.API_PAGE to "1",
-					Constants.API_PAGESIZE to "6"
-				)
-			)
-		} returns Single.just(OnSuccess(listOf(first, second)))
+	fun getAllRemote_assertNotEmpty() {
 
-		SUT.getByQueryRemote("query", 1)
+		every { remoteStorage.getItemsByQuery(params) } returns Single.just(OnSuccess(listOf(first, second)))
+
+		SUT.getAllRemote(PAGE_ONE, PAGE_SIZE)
+			.test()
+			.assertValues(OnSuccess(listOf(first, second)))
+			.dispose()
+	}
+
+	@Test
+	fun getArticlesByQuery_assertEmpty() {
+		every { remoteStorage.getItemsByQuery(paramsWithQuery) } returns Single.just(OnSuccess(emptyList()))
+
+		SUT.getByQueryRemote(QUERY, PAGE_ONE, PAGE_SIZE)
+			.test()
+			.assertValues(OnSuccess(emptyList()))
+			.dispose()
+	}
+
+	@Test
+	fun getArticlesByQuery_assertNotEmpty() {
+		every { remoteStorage.getItemsByQuery(paramsWithQuery) } returns Single.just(OnSuccess(listOf(first, second)))
+
+		SUT.getByQueryRemote(QUERY, PAGE_ONE, PAGE_SIZE)
 			.test()
 			.assertValues(OnSuccess(listOf(first, second)))
 			.dispose()
@@ -127,15 +123,9 @@ class ArticleRepositoryTest {
 
 	@Test
 	fun getArticlesByCategory_assertEmpty() {
-		every {
-			remoteStorage.getItemsByQuery(
-				mapOf(
-					Constants.API_CATEGORY to "pro"
-				)
-			)
-		} returns Single.just(OnSuccess(emptyList()))
+		every { remoteStorage.getItemsByQuery(paramsForCategory) } returns Single.just(OnSuccess(emptyList()))
 
-		SUT.getArticlesByCategory("pro")
+		SUT.getArticlesByCategory(paramsForCategory[CATEGORY]!!, PAGE_ONE, PAGE_SIZE)
 			.test()
 			.assertValues(OnSuccess(emptyList()))
 			.dispose()
@@ -143,15 +133,9 @@ class ArticleRepositoryTest {
 
 	@Test
 	fun getArticlesByCategory_assertNotEmpty() {
-		every {
-			remoteStorage.getItemsByQuery(
-				mapOf(
-					Constants.API_CATEGORY to "pro"
-				)
-			)
-		} returns Single.just(OnSuccess(listOf(first, second)))
+		every { remoteStorage.getItemsByQuery(paramsForCategory) } returns Single.just(OnSuccess(listOf(first, second)))
 
-		SUT.getArticlesByCategory("pro")
+		SUT.getArticlesByCategory(paramsForCategory[CATEGORY]!!, PAGE_ONE, PAGE_SIZE)
 			.test()
 			.assertValues(OnSuccess(listOf(first, second)))
 			.dispose()
@@ -165,12 +149,6 @@ class ArticleRepositoryTest {
 
 		// TODO
 
-//		every { localStorage.getAllItems() } returns Flowable.just(emptyList())
-//
-//		SUT.getAllFromDB()
-//			.test()
-//			.assertValues(OnSuccess(emptyList()))
-//			.dispose()
 	}
 
 	@Test
@@ -178,17 +156,17 @@ class ArticleRepositoryTest {
 
 		// TODO
 
-//		every { localStorage.getAllItems() } returns Flowable.just(listOf(first, second))
-//
-//		SUT.getAllFromDB()
-//			.test()
-//			.assertValues(OnSuccess(listOf(first, second)))
-//			.dispose()
+		//		every { localStorage.getAllItems() } returns Flowable.just(listOf(first, second))
+		//
+		//		SUT.getAllFromDB()
+		//			.test()
+		//			.assertValues(OnSuccess(listOf(first, second)))
+		//			.dispose()
 	}
 
 	@Test
 	fun checkIfInDB_assertArticle() {
-		every { localStorage.getItem("1") } returns Single.just(first)
+		every { localStorage.getItem(first.url) } returns Single.just(first)
 
 		SUT.checkIfArticleExistsInDB(first)
 			.test()
@@ -199,7 +177,7 @@ class ArticleRepositoryTest {
 
 	@Test
 	fun insertItemLocal_assertTrue() {
-		every { localStorage.addItem(first) } returns 1.toLong()
+		every { localStorage.addItem(first) } returns 1
 
 		SUT.addToDB(first)
 			.test()
@@ -226,17 +204,6 @@ class ArticleRepositoryTest {
 			.assertValue(OnSuccess(1))
 			.dispose()
 	}
-
-	//	@Test
-	//	fun checkIfInDB_assertException() {
-	//		every { localStorage.getItem("1") } throws Exception()
-	//
-	//		SUT.checkIfArticleExistsInDB(first)
-	//			.test()
-	//			.assertError(EmptyResultSetException::class.java)
-	//			.dispose()
-	//
-	//	}
 
 	// endregion local tests
 

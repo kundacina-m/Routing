@@ -6,6 +6,7 @@ import androidx.paging.PagedList
 import base.BaseViewModel
 import com.example.topnews.App
 import com.example.topnews.data.db.Article
+import com.example.topnews.utils.Constants.PAGE_SIZE_READ_LATER
 
 class ReadLaterViewModel : BaseViewModel() {
 
@@ -23,8 +24,9 @@ class ReadLaterViewModel : BaseViewModel() {
 	private fun configurePagination(): PagedList.Config =
 		PagedList.Config.Builder()
 			.setEnablePlaceholders(false)
-			.setInitialLoadSizeHint(1)
-			.setPageSize(1)
+			.setPrefetchDistance(1)
+			.setInitialLoadSizeHint(PAGE_SIZE_READ_LATER)
+			.setPageSize(PAGE_SIZE_READ_LATER)
 			.build()
 
 }

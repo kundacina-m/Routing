@@ -3,9 +3,12 @@ package com.example.topnews.screens.search
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
@@ -20,6 +23,8 @@ import com.example.topnews.domain.RequestError
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.ERROR_DATABASE
+import com.example.topnews.utils.Constants.SHOW_NAV_BAR
+import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
@@ -61,6 +66,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 	}
 
 	override fun initView() {
+
+		activity?.bottom_navigation?.visibility = View.GONE
+
 		setupRecyclerView()
 		setupActionBar()
 	}
@@ -68,6 +76,11 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setObservers()
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		activity?.bottom_navigation?.visibility = View.VISIBLE
 	}
 
 	private fun setupActionBar() {
@@ -93,12 +106,10 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 				override fun onQueryTextSubmit(query: String?): Boolean = false
 
 				override fun onQueryTextChange(newText: String?): Boolean {
-					return if (!newText?.isEmpty()!!) {
-						searchKeyword = newText
-						restartCountdownTimer(searchTimer)
-						doOnTextChanged(newText)
-						false
-					} else true
+					searchKeyword = newText!!
+					restartCountdownTimer(searchTimer)
+					return false
+
 				}
 
 			})
@@ -109,13 +120,6 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 
 	private fun updateSearchList() =
 		viewModel.queryForString(searchKeyword)
-
-	private fun doOnTextChanged(newText: String) {
-		if (navCtrl.currentDestination!!.id != R.id.searchFragment)
-			navCtrl.navigate(R.id.searchFragment)
-		if (newText.isEmpty())
-			navCtrl.navigateUp()
-	}
 
 	private fun restartCountdownTimer(cntrForKeyUP: CountDownTimer) = cntrForKeyUP.apply {
 		cancel()
@@ -139,7 +143,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 	}
 
 	override fun onItemClick(dataItem: Article) =
-		navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
+		navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem);
+			putString(SHOW_NAV_BAR, SHOW_NAV_BAR)})
 
 	private fun navigateToArticleDetails(bundle: Bundle) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)

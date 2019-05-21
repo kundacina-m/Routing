@@ -27,7 +27,7 @@ class TopNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 		val options = RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
-			.error(R.drawable.error_img)
+			.error(R.drawable.ic_error_image)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
 

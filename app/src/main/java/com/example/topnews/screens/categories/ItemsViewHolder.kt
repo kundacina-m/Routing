@@ -16,15 +16,18 @@ class ItemsViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 	override fun bind(dataItem: Article) {
 		loadImage(dataItem)
 		itemView.tvTitle.text = dataItem.title
+
+		itemView.setOnClickListener {
+			ArticleClickedEventBus.post(dataItem)
+		}
 	}
 
 	private fun loadImage(dataItem: Article) {
 
-
 		val options = RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
-			.error(R.drawable.error_img)
+			.error(R.drawable.ic_error_image)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
 

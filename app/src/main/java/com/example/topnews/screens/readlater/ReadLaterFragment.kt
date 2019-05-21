@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_read_later.readLaterRecyclerView
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
 class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
-						  BasePagedListAdapter.OnItemClickListener<Article>{
+						  BasePagedListAdapter.OnItemClickListener<Article> {
 
 	private lateinit var menu: Menu
 

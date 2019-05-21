@@ -85,7 +85,11 @@
 	<fragment
 		android:id="@+id/articlesCategoryFragment"
 		android:name="com.example.topnews.screens.articlescategory.ArticlesCategoryFragment"
-		tools:layout="@layout/fragment_articles_category"/>
+		tools:layout="@layout/fragment_articles_category">
+		<action
+			android:id="@+id/action_articlesCategoryFragment_to_articleDetailsFragment"
+			app:destination="@id/articleDetailsFragment"/>
+	</fragment>
 	<action
 		android:id="@+id/action_global_searchFragment"
 		app:destination="@id/searchFragment"/>

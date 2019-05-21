@@ -6,8 +6,8 @@ import base.BaseViewHolder
 import com.example.topnews.domain.WrappedResponse.OnError
 import kotlinx.android.synthetic.main.item_section.view.progressBar
 import kotlinx.android.synthetic.main.item_section.view.rvInCategories
+import kotlinx.android.synthetic.main.item_section.view.tvCategory
 import kotlinx.android.synthetic.main.item_section.view.tvError
-import kotlinx.android.synthetic.main.item_section.view.tvSection
 import kotlin.properties.Delegates
 
 class CategoriesViewHolder(itemView: View) :
@@ -32,11 +32,11 @@ class CategoriesViewHolder(itemView: View) :
 
 	override fun bind(dataItem: String) {
 		category = dataItem
-		itemView.tvSection.text = dataItem
+		itemView.tvCategory.text = dataItem
 
 	}
 
-	fun updateView(error: OnError<Nothing>?= null) {
+	fun updateView(error: OnError<Nothing>? = null) {
 		itemView.progressBar.hide()
 		error?.let {
 			itemView.tvError.apply {

@@ -43,7 +43,7 @@ class ArticlesCategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
 		RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
-			.error(R.drawable.error_img)
+			.error(R.drawable.ic_error_image)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
 

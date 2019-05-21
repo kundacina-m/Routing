@@ -18,8 +18,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.screens.widget.ReadLaterWidget
-import com.example.topnews.utils.Constants.DATE_ONLY
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
+import com.example.topnews.utils.Constants.SHOW_NAV_BAR
 import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import com.example.topnews.utils.asString
 import com.google.android.material.appbar.AppBarLayout
@@ -101,7 +101,8 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 	}
 
 	override fun onDestroyView() {
-		activity?.bottom_navigation?.visibility = View.VISIBLE
+		if (arguments?.getString(SHOW_NAV_BAR).isNullOrEmpty())
+			activity?.bottom_navigation?.visibility = View.VISIBLE
 		super.onDestroyView()
 	}
 
@@ -117,7 +118,7 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 
 		val options = RequestOptions()
 			.centerCrop()
-			.error(R.drawable.error_img)
+			.error(R.drawable.ic_error_image)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
 

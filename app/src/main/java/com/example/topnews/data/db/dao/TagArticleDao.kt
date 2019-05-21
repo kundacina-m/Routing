@@ -29,15 +29,5 @@ interface TagArticleDao {
 		where t.tagName == :tagName"""
 	)
 	fun getArticlesByTag(tagName: String): Single<List<Article>>
-//	@Query(""" SELECT * from tags""")
-//	fun getTagsWithArticles(): Single<List<TagWithArticlesOld>>
-
-
-//	@Query(
-//		"""SELECT * from tags ta
-//			left join TagArticle t on ta.name = t.tagName
-//			left join articles a on a.publishedAt = t.articleId"""
-//	)
-//	fun getTagsWithArticles(): Single<List<TagWithArticles>>
 
 }

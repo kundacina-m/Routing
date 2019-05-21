@@ -21,13 +21,13 @@ class FrameActivity : BaseActivity() {
 	override fun getViewLayout(): Int = R.layout.activity_frame
 
 	override fun initView() {
+
 		setupBottomNavBar()
 		checkIfStartedFromWidget()
-
 	}
 
 	private fun checkIfStartedFromWidget() {
-		val intent = intent
+
 		val article = intent?.extras?.getParcelable<Article>(Constants.PARCEL_FOR_ARTICLE_DETAILS)
 
 		article?.let {
@@ -37,13 +37,13 @@ class FrameActivity : BaseActivity() {
 	}
 
 	private fun setupBottomNavBar() {
+
 		bottom_navigation.setupWithNavController(navCtrl)
 		bottom_navigation.setOnNavigationItemReselectedListener { }
 	}
 
-	override fun onSupportNavigateUp(): Boolean {
-		return navCtrl.navigateUp()
-	}
+	override fun onSupportNavigateUp(): Boolean =
+		navCtrl.navigateUp()
 
 	override fun onBackPressed() {
 		if (navCtrl.currentDestination?.id == R.id.readLaterFragment) {

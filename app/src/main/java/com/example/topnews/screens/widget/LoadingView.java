@@ -42,7 +42,7 @@ public class LoadingView extends FrameLayout {
 	
 	private void initialize() {
 		/* Inflate Layout and set Attributes. */
-		LayoutInflater.from(getContext()).inflate(R.layout.progress_bar, this, true);
+		LayoutInflater.from(getContext()).inflate(R.layout.view_loading, this, true);
 		/* Initialize Views. */
 		setClickable(true);
 		setVisibility(VISIBLE);
