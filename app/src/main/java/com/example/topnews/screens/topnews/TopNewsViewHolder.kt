@@ -3,7 +3,6 @@ package com.example.topnews.screens.topnews
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import base.BasePagedListAdapter
-import base.BaseViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy

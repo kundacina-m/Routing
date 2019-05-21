@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import base.BaseAdapter
 import com.example.topnews.R
 import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.screens.categories.itemsincategory.ItemsAdapter
 import kotlinx.android.synthetic.main.item_section.view.tvCategory
 
 class CategoriesAdapter : BaseAdapter<String>(), CategoriesViewHolder.InitializedViewHolder {

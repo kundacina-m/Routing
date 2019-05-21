@@ -1,4 +1,4 @@
-package com.example.topnews.screens.categories
+package com.example.topnews.screens.categories.itemsincategory
 
 import androidx.lifecycle.MutableLiveData
 import base.BaseViewModel
@@ -19,7 +19,8 @@ class ItemsInCategoryViewModel : BaseViewModel() {
 
 	fun fetchArticles(category: String) =
 		disposables.add(
-			repos.getArticlesByCategory(category, pages, PAGE_SIZE_ITEMS_WITHIN_CATEGORY)
+			repos.getArticlesByCategory(category,
+				pages, PAGE_SIZE_ITEMS_WITHIN_CATEGORY)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribeBy {

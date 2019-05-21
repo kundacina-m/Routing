@@ -9,6 +9,7 @@ import com.example.topnews.utils.Constants.PAGE_SIZE_SEARCH
 
 class SearchViewModel : BaseViewModel() {
 
+	var query = MutableLiveData<String>()
 	var onError = MutableLiveData<OnError<Nothing>>()
 	private val dataSourceFactory = SearchDataSourceFactory(onError)
 	var articles = LivePagedListBuilder(dataSourceFactory, configurePagination()).build()
@@ -21,6 +22,7 @@ class SearchViewModel : BaseViewModel() {
 			.build()
 
 	fun queryForString(query: String) {
+		this.query.postValue(query)
 		dataSourceFactory.query = query
 		invalidateDataSource()
 	}

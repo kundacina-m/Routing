@@ -2,6 +2,7 @@ package com.example.topnews.utils
 
 object Constants {
 
+	// Bundles
 	const val PARCEL_FOR_ARTICLE_DETAILS = "parcel"
 	const val TRANSITION_ENABLED = "transition"
 	const val ARG_CATEGORY = "category"
@@ -12,7 +13,7 @@ object Constants {
 	const val API_QUERY = "q"
 	const val API_CATEGORY = "category"
 	const val API_PAGE = "page"
-	const val API_PAGESIZE = "pageSize"
+	const val API_PAGE_SIZE = "pageSize"
 
 	// Errors
 	const val ERROR_UNKNOWN = "handleError: Unknown"
@@ -28,7 +29,6 @@ object Constants {
 	const val DAY_IN_MS = 86400000
 
 	// Page sizes for different modules
-
 	const val PAGE_SIZE_READ_LATER = 6
 	const val PAGE_SIZE_CATEGORIES = 6
 	const val PAGE_SIZE_TOP_NEWS = 8

@@ -1,10 +1,9 @@
-package com.example.topnews.screens.categories
+package com.example.topnews.screens.categories.seemore
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class ArticleClickedEventBus {
-
+class SeeMoreEventBus {
 	companion object {
 		val publisher: PublishSubject<Any> = PublishSubject.create()
 

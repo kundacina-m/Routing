@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseViewHolder
 import com.example.topnews.domain.WrappedResponse.OnError
+import com.example.topnews.screens.categories.itemsincategory.ItemsAdapter
 import kotlinx.android.synthetic.main.item_section.view.progressBar
 import kotlinx.android.synthetic.main.item_section.view.rvInCategories
 import kotlinx.android.synthetic.main.item_section.view.tvCategory

@@ -27,7 +27,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(),
 
 	private val adapter by lazy {
 		ArticlesCategoryAdapter().apply {
-			oneClickListener = this@ArticlesCategoryFragment::onItemClick
+			clickListener = this@ArticlesCategoryFragment::onItemClick
 		}
 	}
 
@@ -50,6 +50,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(),
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 		menu.clear()
 		inflater.inflate(R.menu.default_menu, menu)
+		handleSearchMenu(menu.findItem(R.id.search))
 		super.onCreateOptionsMenu(menu, inflater)
 	}
 

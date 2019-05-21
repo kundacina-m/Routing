@@ -21,7 +21,7 @@ class SearchAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.articleDiff
 
 	private fun clickListener(holder: ViewHolder) {
 		holder.itemView.setOnClickListener {
-			oneClickListener?.invoke(getItem(holder.adapterPosition)!!)
+			clickListener?.invoke(getItem(holder.adapterPosition)!!)
 		}
 	}
 }

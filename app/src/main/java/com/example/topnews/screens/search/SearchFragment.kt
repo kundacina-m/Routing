@@ -3,12 +3,10 @@ package com.example.topnews.screens.search
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
@@ -45,7 +43,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 
 	private val adapter: SearchAdapter by lazy {
 		SearchAdapter().apply {
-			oneClickListener = this@SearchFragment::onItemClick
+			clickListener = this@SearchFragment::onItemClick
 		}
 	}
 
@@ -97,6 +95,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 		})
 
 		val searchView = searchItem.actionView as SearchView
+
+		searchView.setQuery(viewModel.query.value?.toString() ?: "", false)
 		setSearchViewListener(searchView)
 	}
 
@@ -143,8 +143,10 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 	}
 
 	override fun onItemClick(dataItem: Article) =
-		navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem);
-			putString(SHOW_NAV_BAR, SHOW_NAV_BAR)})
+		navigateToArticleDetails(Bundle().apply {
+			putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem);
+			putString(SHOW_NAV_BAR, SHOW_NAV_BAR)
+		})
 
 	private fun navigateToArticleDetails(bundle: Bundle) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)

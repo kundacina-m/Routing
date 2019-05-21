@@ -2,7 +2,6 @@ package com.example.topnews.screens.articlescategory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BasePagedListAdapter
 import com.example.topnews.R.layout
@@ -26,7 +25,7 @@ class ArticlesCategoryAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.a
 
 	private fun setupListeners(holder: ViewHolder) {
 		holder.itemView.setOnClickListener {
-			oneClickListener?.invoke(getItem(holder.adapterPosition)!!)
+			clickListener?.invoke(getItem(holder.adapterPosition)!!)
 		}
 	}
 }

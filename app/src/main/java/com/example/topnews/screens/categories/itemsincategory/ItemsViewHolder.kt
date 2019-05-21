@@ -1,4 +1,4 @@
-package com.example.topnews.screens.categories
+package com.example.topnews.screens.categories.itemsincategory
 
 import android.view.View
 import base.BaseViewHolder

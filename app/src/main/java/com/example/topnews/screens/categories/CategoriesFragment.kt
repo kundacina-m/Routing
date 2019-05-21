@@ -12,6 +12,10 @@ import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
+import com.example.topnews.screens.categories.itemsincategory.ArticleClickedEventBus
+import com.example.topnews.screens.categories.itemsincategory.ItemsAdapter
+import com.example.topnews.screens.categories.itemsincategory.ItemsInCategoryViewModel
+import com.example.topnews.screens.categories.seemore.SeeMoreEventBus
 import com.example.topnews.utils.Constants
 import com.example.topnews.utils.Constants.ARG_CATEGORY
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +25,8 @@ import kotlinx.android.synthetic.main.fragment_categories.rvCategories
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
 private val categories = listOf("Business", "Entertainment", "General", "Health", "Science", "Sports", "Technology")
-lateinit var disposable: Disposable
+lateinit var disposableArticle: Disposable
+lateinit var disposableCategory: Disposable
 
 class CategoriesFragment : BaseFragment<ItemsInCategoryViewModel>(), BaseAdapter.OnItemClickListener<String>,
 						   CategoriesAdapter.BindAdapterToLiveData {
@@ -51,16 +56,22 @@ class CategoriesFragment : BaseFragment<ItemsInCategoryViewModel>(), BaseAdapter
 
 	override fun onResume() {
 		super.onResume()
-		disposable = ArticleClickedEventBus.subscribe<Article>()
+		disposableArticle = ArticleClickedEventBus.subscribe<Article>()
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribeBy {
 				articleClicked(it)
+			}
+		disposableCategory = SeeMoreEventBus.subscribe<String>()
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribeBy {
+				onItemClick(it)
 			}
 	}
 
 	override fun onPause() {
 		super.onPause()
-		disposable.dispose()
+		disposableArticle.dispose()
+		disposableCategory.dispose()
 	}
 
 	private fun actionBarSetup() {
@@ -82,7 +93,7 @@ class CategoriesFragment : BaseFragment<ItemsInCategoryViewModel>(), BaseAdapter
 	override fun bindAdapterToLiveData(category: String, adapter: ItemsAdapter) {
 		viewModel.initLiveData(category).observe(this@CategoriesFragment, Observer {
 			if (it is OnSuccess) {
-				adapter.setData(it.item)
+				adapter.submitData(it.item,category)
 				adapterCategories.notifyDataArrived(category)
 			} else adapterCategories.notifyDataArrived(category, it as OnError<Nothing>)
 		})

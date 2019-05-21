@@ -11,7 +11,7 @@ import com.example.topnews.domain.ArticleRemoteStorage
 import com.example.topnews.domain.WrappedResponse
 import com.example.topnews.utils.Constants.API_CATEGORY
 import com.example.topnews.utils.Constants.API_PAGE
-import com.example.topnews.utils.Constants.API_PAGESIZE
+import com.example.topnews.utils.Constants.API_PAGE_SIZE
 import com.example.topnews.utils.Constants.API_QUERY
 import com.example.topnews.utils.toSealed
 import io.reactivex.Completable
@@ -60,7 +60,7 @@ class ArticleRepository(
 		remoteStorage.getItemsByQuery(
 			mapOf(
 				API_PAGE to pageNum.toString(),
-				API_PAGESIZE to pageSize.toString()
+				API_PAGE_SIZE to pageSize.toString()
 			)
 		)
 
@@ -69,7 +69,7 @@ class ArticleRepository(
 			mapOf(
 				API_QUERY to query,
 				API_PAGE to pages.toString(),
-				API_PAGESIZE to pageSize.toString()
+				API_PAGE_SIZE to pageSize.toString()
 			)
 		)
 
@@ -77,7 +77,7 @@ class ArticleRepository(
 		remoteStorage.getItemsByQuery(
 			mapOf(
 				API_PAGE to pageNum.toString(),
-				API_PAGESIZE to pageSize.toString(),
+				API_PAGE_SIZE to pageSize.toString(),
 				API_CATEGORY to category
 			)
 		)

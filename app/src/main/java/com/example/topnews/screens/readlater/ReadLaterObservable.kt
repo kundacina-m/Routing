@@ -6,21 +6,18 @@ import java.util.Observable
 import java.util.Observer
 
 class ReadLaterObservable : Observable() {
-	private var lastCheckAllPar: Boolean? = null
 	private var lastShowCheckboxPar: Boolean? = false
 
 	override fun addObserver(o: Observer) {
 		super.addObserver(o)
-		o.update(this, ObservableData(null, lastCheckAllPar, lastShowCheckboxPar))
+		o.update(this, ObservableData(null, lastShowCheckboxPar))
 
 	}
 
-	fun notifyAll(articles: ArrayList<Article>? = null, checkAll: Boolean? = null,
-		showCheckbox: Boolean? = lastShowCheckboxPar) {
-		checkAll.let { lastCheckAllPar = checkAll }
+	fun notifyAll(articles: ArrayList<Article>? = null, showCheckbox: Boolean? = lastShowCheckboxPar) {
 		showCheckbox.let { lastShowCheckboxPar = showCheckbox }
 		setChanged()
-		notifyObservers(ObservableData(articles, checkAll, showCheckbox))
+		notifyObservers(ObservableData(articles, showCheckbox))
 	}
 }
 

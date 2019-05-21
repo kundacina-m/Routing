@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 abstract class BasePagedListAdapter<T>(diff: DiffUtil.ItemCallback<T>) : PagedListAdapter<T, ViewHolder>(diff) {
 
-	var oneClickListener: ((T) -> Unit?)? = null
+	var clickListener: ((T) -> Unit?)? = null
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 		getItem(position)?.let { (holder as ViewHolderAdapterBinder<T>).bind(it) }
