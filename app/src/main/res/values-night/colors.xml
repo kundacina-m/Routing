@@ -3,7 +3,7 @@
 	<color name="colorFrameTextIcons">#FFFFFF</color>
 	<color name="colorBackground">#323333</color>
 
-
+	<color name="colorSecondary">#7C8684</color>
 	<color name="colorPrimary">#6C7775</color>
 	<color name="colorPrimaryDark">#636967</color>
 	<color name="colorAccent">#D81B60</color>

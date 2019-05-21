@@ -13,7 +13,7 @@ import com.example.topnews.screens.readlater.ReadLaterAdapter
 import kotlinx.android.synthetic.main.item_top_news.view.ivArticleImage
 import kotlinx.android.synthetic.main.item_top_news.view.tvArticleTitle
 
-class TopNewsAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.diffCallback) {
+class TopNewsAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.articleDiffCallback) {
 
 	var onClickWithTransition: ((Article, ImageView, TextView) -> Unit?)? = null
 

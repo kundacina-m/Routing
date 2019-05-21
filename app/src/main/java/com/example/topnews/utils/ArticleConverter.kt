@@ -1,11 +1,7 @@
 package com.example.topnews.utils
 
 import com.example.topnews.data.db.Article
-import com.example.topnews.data.db.Source
 import com.example.topnews.data.model.ArticleRaw
-import com.example.topnews.utils.Constants.DATE_ONLY
-import java.time.Instant
-import java.util.Date
 
 object ArticleConverter {
 

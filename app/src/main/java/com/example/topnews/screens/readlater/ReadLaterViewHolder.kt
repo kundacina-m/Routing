@@ -10,23 +10,40 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.screens.ImageDialog
+import com.example.topnews.utils.ObservableData
 import com.example.topnews.utils.asString
+import kotlinx.android.synthetic.main.item_vertical_article.view.cbToSelect
 import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvTitle
+import java.util.Observable
 
 class ReadLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-											BasePagedListAdapter.ViewHolderAdapterBinder<Article> {
+											BasePagedListAdapter.ViewHolderAdapterBinder<Article>,
+											ReadLaterObserver {
 
 	lateinit var article: Article
+	var onChecked: ((Article, Boolean) -> Unit?)? = null
+
+	override fun updateView(o: Observable, observedData: ObservableData) {
+
+		observedData.apply {
+			articles?.let { itemView.cbToSelect.isChecked = it.contains(article) }
+			showCheckbox?.let { itemView.cbToSelect.visibility = if (it) View.VISIBLE else View.GONE }
+		}
+	}
 
 	override fun bind(dataItem: Article) {
 
 		article = dataItem
 		populateViewWithData(dataItem)
 		setOnImgClickListener(dataItem)
+		setCheckListener(dataItem)
 	}
+
+	fun onRecycledView(checked: Boolean) =
+		let { itemView.cbToSelect.isChecked = checked }
 
 	private fun populateViewWithData(dataItem: Article) {
 		itemView.apply {
@@ -39,14 +56,13 @@ class ReadLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 			.into(itemView.ivImg)
 	}
 
-	private fun getGlideOptions(): RequestOptions {
-		return RequestOptions()
+	private fun getGlideOptions(): RequestOptions =
+		RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
-			.error(R.drawable.error_img)
+			.error(R.drawable.ic_error_image)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
-	}
 
 	private fun setOnImgClickListener(dataItem: Article) {
 		itemView.ivImg.setOnClickListener {
@@ -55,6 +71,15 @@ class ReadLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 				themeId = R.style.AppTheme_Dialog_NoClick
 			}.show()
 		}
+	}
+
+	private fun setCheckListener(article: Article) =
+		itemView.cbToSelect.setOnCheckedChangeListener { _, isChecked ->
+			onChecked?.invoke(article, isChecked)
+		}
+
+	interface ArticleCheckbox {
+		fun onChecked(article: Article, check: Boolean)
 	}
 
 }

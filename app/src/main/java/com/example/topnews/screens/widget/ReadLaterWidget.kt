@@ -99,7 +99,7 @@ class ReadLaterWidget : AppWidgetProvider() {
 
 		fun sendRefreshBroadcast(context: Context) {
 			val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-			intent.component = ComponentName(context, ReadLaterWidget::class.java!!)
+			intent.component = ComponentName(context, ReadLaterWidget::class.java)
 			context.sendBroadcast(intent)
 		}
 	}

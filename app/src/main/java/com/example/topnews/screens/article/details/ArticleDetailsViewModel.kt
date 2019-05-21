@@ -45,10 +45,12 @@ class ArticleDetailsViewModel : BaseViewModel() {
 
 	fun checkIfArticleExists(article: Article) =
 		disposables.add(
-			repository.checkIfArticleExistsInDB(article).subscribeBy {
-				if (it is OnSuccess)
-					isInDb.postValue(true)
-				else isInDb.postValue(false)
-			})
+			repository.checkIfArticleExistsInDB(article)
+				.subscribeOn(Schedulers.io())
+				.subscribeBy {
+					if (it is OnSuccess)
+						isInDb.postValue(true)
+					else isInDb.postValue(false)
+				})
 
 }

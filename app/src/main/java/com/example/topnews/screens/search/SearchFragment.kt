@@ -6,25 +6,27 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import base.BaseAdapter
 import base.BaseFragment
+import base.BasePagedListAdapter
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.domain.RequestError
 import com.example.topnews.domain.WrappedResponse.OnError
-import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants
+import com.example.topnews.utils.Constants.ERROR_DATABASE
+import com.example.topnews.utils.Constants.SHOW_NAV_BAR
+import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
 
-class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickListener<Article> {
+class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnItemClickListener<Article> {
 
 	private val navCtrl: NavController by lazy {
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
@@ -39,11 +41,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 		}
 	}
 
-	private var loading = false
-
-	private val adapterSearch: SearchAdapter by lazy {
+	private val adapter: SearchAdapter by lazy {
 		SearchAdapter().apply {
-			oneClickListener = this@SearchFragment::onItemClick
+			clickListener = this@SearchFragment::onItemClick
 		}
 	}
 
@@ -64,6 +64,9 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	}
 
 	override fun initView() {
+
+		activity?.bottom_navigation?.visibility = View.GONE
+
 		setupRecyclerView()
 		setupActionBar()
 	}
@@ -71,6 +74,11 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setObservers()
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		activity?.bottom_navigation?.visibility = View.VISIBLE
 	}
 
 	private fun setupActionBar() {
@@ -87,6 +95,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 		})
 
 		val searchView = searchItem.actionView as SearchView
+
+		searchView.setQuery(viewModel.query.value?.toString() ?: "", false)
 		setSearchViewListener(searchView)
 	}
 
@@ -96,12 +106,10 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 				override fun onQueryTextSubmit(query: String?): Boolean = false
 
 				override fun onQueryTextChange(newText: String?): Boolean {
-					return if (!newText?.isEmpty()!!) {
-						searchKeyword = newText
-						restartCountdownTimer(searchTimer)
-						doOnTextChanged(newText)
-						false
-					} else true
+					searchKeyword = newText!!
+					restartCountdownTimer(searchTimer)
+					return false
+
 				}
 
 			})
@@ -111,14 +119,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 		}
 
 	private fun updateSearchList() =
-		fetchData(searchKeyword)
-
-	private fun doOnTextChanged(newText: String) {
-		if (navCtrl.currentDestination!!.id != R.id.searchFragment)
-			navCtrl.navigate(R.id.searchFragment)
-		if (newText.isEmpty())
-			navCtrl.navigateUp()
-	}
+		viewModel.queryForString(searchKeyword)
 
 	private fun restartCountdownTimer(cntrForKeyUP: CountDownTimer) = cntrForKeyUP.apply {
 		cancel()
@@ -128,38 +129,24 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 	private fun setupRecyclerView() =
 		rvSearchResults.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = adapterSearch
-			addOnScrollListener(object : RecyclerView.OnScrollListener() {
-				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-					super.onScrolled(recyclerView, dx, dy)
-					if (dy > 0) {
-						val totalItemCount = layoutManager?.itemCount
-						val pastVisibleItem = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
-						if (totalItemCount != null && totalItemCount < viewModel.totalResults) {
-							if ((totalItemCount <= pastVisibleItem + 5) && !loading) {
-								loading = true
-								viewModel.getArticlesForQueryOnScroll()
-							}
-						}
-					}
-				}
-			})
+			adapter = this@SearchFragment.adapter
 		}
 
+	private fun setObservers() {
+		viewModel.articles.observe(this, Observer {
+			adapter.submitList(it)
+		})
 
-	private fun setObservers() = viewModel.getNetworkSearchResults().observe(this, Observer {
-		if (it is OnSuccess) {
-			adapterSearch.setData(it.item)
-			loading = false
-		} else (handleError(it as OnError))
-
-	})
-
-	private fun fetchData(searchKeyword: String) = viewModel.getArticlesForQuery(searchKeyword)
+		viewModel.onError.observe(this, Observer {
+			handleError(it)
+		})
+	}
 
 	override fun onItemClick(dataItem: Article) =
-		navigateToArticleDetails(Bundle().apply { putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
+		navigateToArticleDetails(Bundle().apply {
+			putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem);
+			putString(SHOW_NAV_BAR, SHOW_NAV_BAR)
+		})
 
 	private fun navigateToArticleDetails(bundle: Bundle) =
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
@@ -171,7 +158,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BaseAdapter.OnItemClickL
 			is RequestError.HttpError -> Log.d(TAG, Constants.ERROR_HTTP)
 			is RequestError.NoInternetError -> Log.d(TAG, Constants.ERROR_INTERNET)
 			is RequestError.ServerError -> Log.d(TAG, Constants.ERROR_SERVER)
-			is RequestError.DatabaseError -> Log.d(TAG, "handleError: DATABASE")
+			is RequestError.DatabaseError -> Log.d(TAG, ERROR_DATABASE)
 		}
 
 }

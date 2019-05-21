@@ -2,7 +2,7 @@ package com.example.topnews.screens.articlescategory
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import base.BaseAdapter
+import base.BasePagedListAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -17,18 +17,15 @@ import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource
 import kotlinx.android.synthetic.main.item_vertical_article.view.tvTitle
 
 class ArticlesCategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-												   BaseAdapter.ViewHolderAdapterBinder<Article> {
+												   BasePagedListAdapter.ViewHolderAdapterBinder<Article> {
 
 	lateinit var article: Article
 
 	override fun bind(dataItem: Article) {
 
 		article = dataItem
-
 		populateViewWithData(dataItem)
-
 		setOnImgClickListener(dataItem)
-
 	}
 
 	private fun populateViewWithData(dataItem: Article) {
@@ -42,14 +39,13 @@ class ArticlesCategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
 			.into(itemView.ivImg)
 	}
 
-	private fun getGlideOptions(): RequestOptions {
-		return RequestOptions()
+	private fun getGlideOptions() =
+		RequestOptions()
 			.centerCrop()
 			.placeholder(R.drawable.loading)
-			.error(R.drawable.error_img)
+			.error(R.drawable.ic_error_image)
 			.diskCacheStrategy(DiskCacheStrategy.ALL)
 			.priority(Priority.HIGH)
-	}
 
 	private fun setOnImgClickListener(dataItem: Article) {
 		itemView.ivImg.setOnClickListener {

@@ -16,6 +16,7 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context) :
 
 	override fun onCreate() {
 		// TODO
+
 		//		App.injectArticleDao().getAllItems().subscribeBy {
 		//			articles.clear()
 		//			articles.addAll(it)

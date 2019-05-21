@@ -3,7 +3,7 @@ package com.example.topnews.data.db
 import androidx.room.EmptyResultSetException
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.topnews.data.model.Tag
+import com.example.topnews.data.db.dao.TagsDao
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
