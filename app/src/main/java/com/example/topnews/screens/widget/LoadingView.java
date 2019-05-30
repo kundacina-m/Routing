@@ -21,7 +21,7 @@ public class LoadingView extends FrameLayout {
 	
 	private static final int MIN_SHOW_TIME = 500; // ms
 	private static final int MIN_DELAY = 500; // ms
-
+	
 	long mStartTime = -1;
 	
 	boolean mPostedHide = false;
@@ -46,27 +46,6 @@ public class LoadingView extends FrameLayout {
 		/* Initialize Views. */
 		setClickable(true);
 		setVisibility(VISIBLE);
-	}
-	
-	private void hideRun() {
-		mPostedHide = false;
-		mStartTime = -1;
-		setVisibility(View.GONE);
-		if (listener != null) {
-			listener.onHide();
-		}
-	}
-	
-	private void showRun() {
-		mPostedShow = false;
-		Log.d(LOG_TAG, "delay show: ");
-		if (!mDismissed) {
-			mStartTime = System.currentTimeMillis();
-			setVisibility(View.VISIBLE);
-			if (listener != null) {
-				listener.onShow();
-			}
-		}
 	}
 	
 	public void setListener(Listener listener) {
@@ -119,6 +98,15 @@ public class LoadingView extends FrameLayout {
 		}
 	}
 	
+	private void hideRun() {
+		mPostedHide = false;
+		mStartTime = -1;
+		setVisibility(View.GONE);
+		if (listener != null) {
+			listener.onHide();
+		}
+	}
+	
 	/**
 	 * Show the progress view after waiting for a minimum delay. If
 	 * during that time, hide() is called, the view is never made visible.
@@ -132,6 +120,18 @@ public class LoadingView extends FrameLayout {
 		if (!mPostedShow) {
 			postDelayed(this::showRun, MIN_DELAY);
 			mPostedShow = true;
+		}
+	}
+	
+	private void showRun() {
+		mPostedShow = false;
+		Log.d(LOG_TAG, "delay show: ");
+		if (!mDismissed) {
+			mStartTime = System.currentTimeMillis();
+			setVisibility(View.VISIBLE);
+			if (listener != null) {
+				listener.onShow();
+			}
 		}
 	}
 	

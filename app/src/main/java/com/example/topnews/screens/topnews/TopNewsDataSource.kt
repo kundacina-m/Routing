@@ -2,8 +2,8 @@ package com.example.topnews.screens.topnews
 
 import androidx.lifecycle.MutableLiveData
 import base.BaseDataSource
-import com.example.topnews.App
 import com.example.topnews.data.db.Article
+import com.example.topnews.data.repository.ArticleRepository
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.domain.WrappedResponse.OnSuccess
 import com.example.topnews.utils.Constants.PAGE_SIZE_TOP_NEWS
@@ -12,12 +12,14 @@ import java.util.concurrent.TimeUnit.SECONDS
 
 class TopNewsDataSource(
 	private val onError: MutableLiveData<OnError<Nothing>>,
-	private val loading: MutableLiveData<Boolean>
+	private val loading: MutableLiveData<Boolean>,
+	val repository: ArticleRepository
+
 ) : BaseDataSource<Article>() {
 
 	override fun initialLoad(callback: LoadInitialCallback<Int, Article>) {
 		showLoading(true)
-		disposables.add(App.injectRepository().getAllRemote(currentPage, PAGE_SIZE_TOP_NEWS)
+		disposables.add(repository.getAllRemote(currentPage, PAGE_SIZE_TOP_NEWS)
 			.delay(1, SECONDS)
 			.subscribeBy {
 				if (it is OnSuccess)
@@ -29,7 +31,7 @@ class TopNewsDataSource(
 
 	override fun onScrollLoad(callback: LoadCallback<Int, Article>) {
 		showLoading(true)
-		disposables.add(App.injectRepository().getAllRemote(currentPage, PAGE_SIZE_TOP_NEWS)
+		disposables.add(repository.getAllRemote(currentPage, PAGE_SIZE_TOP_NEWS)
 			.delay(1, SECONDS)
 			.subscribeBy {
 				if (it is OnSuccess)

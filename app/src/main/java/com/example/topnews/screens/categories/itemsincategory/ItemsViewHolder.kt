@@ -8,17 +8,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
+import com.example.topnews.screens.categories.seemore.CategoryModule
 import kotlinx.android.synthetic.main.item_horizontal_article.view.ivImg
 import kotlinx.android.synthetic.main.item_horizontal_article.view.tvTitle
 
 class ItemsViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 
 	override fun bind(dataItem: Article) {
+
 		loadImage(dataItem)
 		itemView.tvTitle.text = dataItem.title
 
 		itemView.setOnClickListener {
-			ArticleClickedEventBus.post(dataItem)
+			CategoryModule.articleClick.post(dataItem)
 		}
 	}
 

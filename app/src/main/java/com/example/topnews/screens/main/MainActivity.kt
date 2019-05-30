@@ -1,4 +1,4 @@
-package com.example.topnews.screens.home
+package com.example.topnews.screens.main
 
 import android.os.Bundle
 import androidx.navigation.NavController
@@ -10,7 +10,7 @@ import com.example.topnews.data.db.Article
 import com.example.topnews.utils.Constants
 import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 
-class FrameActivity : BaseActivity() {
+class MainActivity : BaseActivity() {
 
 	private val navCtrl: NavController by lazy {
 		Navigation.findNavController(this, R.id.nav_host_fragment)

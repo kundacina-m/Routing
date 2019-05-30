@@ -14,14 +14,16 @@ import kotlinx.android.synthetic.main.dialog_tag.etName
 class TagDialog
 private constructor(private val builder: Builder) : Dialog(builder.context, builder.themeId) {
 
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(layout.dialog_tag)
 
 
 		btConfirm.setOnClickListener {
-			builder.confirmedTag.invoke(builder.article.publishedAt.toString(),etName.text.toString())
+			if (etName.text.isNotEmpty()) {
+				builder.confirmedTag.invoke(builder.article.url, etName.text.toString())
+				this.dismiss()
+			}
 		}
 
 		btCancel.setOnClickListener {
@@ -49,9 +51,5 @@ private constructor(private val builder: Builder) : Dialog(builder.context, buil
 
 		fun build() = TagDialog(this)
 
-	}
-
-	interface OnConfirmedTag {
-		fun onTagConfirmed(dataItem: Article, tag: String)
 	}
 }

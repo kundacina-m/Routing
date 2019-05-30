@@ -7,26 +7,19 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseFragment
-import base.BasePagedListAdapter
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
-import com.example.topnews.screens.home.FrameActivity
+import com.example.topnews.screens.main.MainActivity
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import kotlinx.android.synthetic.main.fragment_read_later.readLaterRecyclerView
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
+import javax.inject.Inject
 
-class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
-						  BasePagedListAdapter.OnItemClickListener<Article>,
-						  ReadLaterAdapter.PopUpMenu {
+class ReadLaterFragment : BaseFragment<ReadLaterViewModel>() {
+
+	@Inject lateinit var adapter: ReadLaterAdapter
 
 	private lateinit var menu: Menu
-
-	private val adapter by lazy {
-		ReadLaterAdapter(viewModel).apply {
-			clickListener = this@ReadLaterFragment::onItemClick
-			handleMenu = this@ReadLaterFragment::showMenu
-		}
-	}
 
 	override fun getLayoutId(): Int = R.layout.fragment_read_later
 	override fun getClassTypeVM(): Class<ReadLaterViewModel> = ReadLaterViewModel::class.java
@@ -37,7 +30,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
 		setObservers()
 		setHasOptionsMenu(true)
 
-		(activity!! as FrameActivity).voidSelection = { this@ReadLaterFragment.inSelectionMode() }
+		(activity!! as MainActivity).voidSelection = { this@ReadLaterFragment.inSelectionMode() }
 	}
 
 	override fun initView() {
@@ -72,7 +65,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
 		}
 	}
 
-	override fun showMenu(visibilityRemove: Boolean) {
+	fun showMenu(visibilityRemove: Boolean) {
 		menu.findItem(R.id.removeSelected).isVisible = visibilityRemove
 		menu.findItem(R.id.search).isVisible = !visibilityRemove
 	}
@@ -100,7 +93,7 @@ class ReadLaterFragment : BaseFragment<ReadLaterViewModel>(),
 		}
 	}
 
-	override fun onItemClick(dataItem: Article) =
+	fun onItemClick(dataItem: Article) =
 		navigateToArticleDetails(Bundle().apply { putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem) })
 
 	private fun navigateToArticleDetails(bundle: Bundle) =

@@ -9,11 +9,11 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import com.example.topnews.R
-import com.example.topnews.screens.home.FrameActivity
+import com.example.topnews.screens.main.MainActivity
 
 /**
- * Implementation of App Widget functionality.
- * App Widget Configuration implemented in [ReadLaterWidgetConfigureActivity]
+ * Implementation of AppComponent Widget functionality.
+ * AppComponent Widget Configuration implemented in [ReadLaterWidgetConfigureActivity]
  */
 class ReadLaterWidget : AppWidgetProvider() {
 
@@ -27,13 +27,13 @@ class ReadLaterWidget : AppWidgetProvider() {
 				R.layout.read_later_widget
 			)
 
-			// Start factory
+			// Start viewModelFactory
 			val intent = Intent(context, WidgetRemoteViewService::class.java)
 			views.setRemoteAdapter(R.id.listViewWidget, intent)
 
 			// Take fillInIntents and GO
 			val builder = TaskStackBuilder.create(context)
-				.addNextIntent(Intent(context, FrameActivity::class.java))
+				.addNextIntent(Intent(context, MainActivity::class.java))
 			views.setPendingIntentTemplate(
 				R.id.listViewWidget,
 				builder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)

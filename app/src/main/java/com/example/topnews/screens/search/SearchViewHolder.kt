@@ -10,7 +10,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
 import com.example.topnews.utils.asString
-import kotlinx.android.synthetic.main.item_vertical_article.view.*
+import kotlinx.android.synthetic.main.item_vertical_article.view.ivImg
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvPublishTime
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvSource
+import kotlinx.android.synthetic.main.item_vertical_article.view.tvTitle
 
 class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 										 BasePagedListAdapter.ViewHolderAdapterBinder<Article> {
@@ -20,7 +23,7 @@ class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source
-			tvPublishTime.text = dataItem.publishedAt?.asString()
+			tvPublishTime.text = dataItem.publishedAt?.asString(context!!)
 		}
 		Glide.with(itemView.context).load(dataItem.urlToImage).apply(getGlideOptions())
 			.into(itemView.ivImg)

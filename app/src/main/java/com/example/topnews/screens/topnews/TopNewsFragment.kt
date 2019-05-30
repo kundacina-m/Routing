@@ -28,14 +28,11 @@ import com.example.topnews.utils.Constants.TRANSITION_ENABLED
 import kotlinx.android.synthetic.main.fragment_top_news.pbLoading
 import kotlinx.android.synthetic.main.fragment_top_news.rwTopNews
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
+import javax.inject.Inject
 
-class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClickTransition {
+class TopNewsFragment : BaseFragment<TopNewsViewModel>() {
 
-	private val adapter: TopNewsAdapter by lazy {
-		TopNewsAdapter().apply {
-			onClickWithTransition = this@TopNewsFragment::onItemClickWithImgTransition
-		}
-	}
+	@Inject lateinit var adapter: TopNewsAdapter
 
 	override fun getLayoutId(): Int = R.layout.fragment_top_news
 	override fun getClassTypeVM(): Class<TopNewsViewModel> = TopNewsViewModel::class.java
@@ -43,7 +40,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 	override fun onCreate(savedInstanceState: Bundle?) {
 
 		super.onCreate(savedInstanceState)
-		setObservers()
+
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
@@ -52,6 +49,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 
 	override fun initView() {
 
+		setObservers()
 		actionBarSetup()
 		setupRecyclerView()
 	}
@@ -76,19 +74,17 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 
 	private fun setObservers() {
 
-		viewModel.articles
-			.observe(this, Observer {
+		viewModel.apply {
+			articles.observe(this@TopNewsFragment, Observer {
 				adapter.submitList(it)
 			})
-
-		viewModel.onError.observe(this, Observer { error ->
-			handleError(error)
-		})
-
-		viewModel.loading.observe(this, Observer { loading ->
-			handleLoading(loading)
-		})
-
+			onError.observe(this@TopNewsFragment, Observer { error ->
+				handleError(error)
+			})
+			loading.observe(this@TopNewsFragment, Observer { loading ->
+				handleLoading(loading)
+			})
+		}
 	}
 
 	private fun setupRecyclerView() =
@@ -97,7 +93,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			adapter = this@TopNewsFragment.adapter
 		}
 
-	override fun onItemClickWithImgTransition(dataItem: Article, img: ImageView, title: TextView) =
+	fun onItemClickWithImgTransition(dataItem: Article, img: ImageView, title: TextView) =
 		navigateToArticleDetails(
 			Bundle().apply {
 				putParcelable(PARCEL_FOR_ARTICLE_DETAILS, dataItem)
@@ -125,9 +121,7 @@ class TopNewsFragment : BaseFragment<TopNewsViewModel>(), TopNewsAdapter.OnClick
 			is RequestError.DatabaseError -> Log.d(TAG, ERROR_DATABASE)
 		}
 
-	private fun handleLoading(visible: Boolean) {
-		if (visible) pbLoading.show()
-		else pbLoading.hide()
-	}
+	private fun handleLoading(visible: Boolean) =
+		if (visible) pbLoading.show() else pbLoading.hide()
 
 }

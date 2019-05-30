@@ -19,6 +19,7 @@ class TopNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 
 		itemView.tvArticleTitle.text = dataItem.title
 		loadImage(dataItem)
+
 	}
 
 	private fun loadImage(dataItem: Article) {

@@ -9,28 +9,30 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.example.topnews.R
+import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 
-abstract class BaseFragment<VM : ViewModel> : Fragment() {
+abstract class BaseFragment<VM : ViewModel> : DaggerFragment() {
 
 	protected open var TAG: String = "BaseFragment"
 
+	@Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
 	protected var actionBar: ActionBar? = null
 
-	private val subscriptions = CompositeDisposable()
-
 	protected val viewModel: VM by lazy {
-		ViewModelProviders.of(this).get(getClassTypeVM())
+		ViewModelProviders.of(this, viewModelFactory).get(getClassTypeVM())
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		 val inflated = inflater.inflate(getLayoutId(), container, false)
+		val inflated = inflater.inflate(getLayoutId(), container, false)
 		setHasOptionsMenu(true)
 		return inflated
 	}
@@ -59,17 +61,6 @@ abstract class BaseFragment<VM : ViewModel> : Fragment() {
 			Navigation.findNavController(activity!!, R.id.nav_host_fragment).navigate(R.id.action_global_searchFragment)
 			true
 		}
-	}
-
-
-	fun subscribe(disposable: Disposable): Disposable {
-		subscriptions.add(disposable)
-		return disposable
-	}
-
-	override fun onStop() {
-		super.onStop()
-		subscriptions.clear()
 	}
 
 }

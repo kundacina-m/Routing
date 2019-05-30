@@ -4,14 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import base.BaseViewModel
+import com.example.topnews.data.repository.ArticleRepository
 import com.example.topnews.domain.WrappedResponse.OnError
 import com.example.topnews.utils.Constants.PAGE_SIZE_SEARCH
+import javax.inject.Inject
 
-class SearchViewModel : BaseViewModel() {
+class SearchViewModel @Inject constructor(val repository: ArticleRepository) : BaseViewModel() {
 
 	var query = MutableLiveData<String>()
 	var onError = MutableLiveData<OnError<Nothing>>()
-	private val dataSourceFactory = SearchDataSourceFactory(onError)
+	private val dataSourceFactory = SearchDataSourceFactory(onError, repository)
 	var articles = LivePagedListBuilder(dataSourceFactory, configurePagination()).build()
 
 	private fun configurePagination(): PagedList.Config =

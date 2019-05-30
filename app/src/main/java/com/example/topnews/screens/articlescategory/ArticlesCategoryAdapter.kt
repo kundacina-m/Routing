@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BasePagedListAdapter
 import com.example.topnews.R.layout
 import com.example.topnews.data.db.Article
-import com.example.topnews.screens.readlater.ReadLaterAdapter
+import com.example.topnews.utils.Constants.articleDiffCallback
 
-class ArticlesCategoryAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.articleDiffCallback) {
+class ArticlesCategoryAdapter : BasePagedListAdapter<Article>(articleDiffCallback) {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
 		ArticlesCategoryViewHolder(
 			LayoutInflater.from(parent.context).inflate(
