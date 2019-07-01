@@ -40,6 +40,7 @@ class MainActivity : BaseActivity() {
 
 		bottom_navigation.setupWithNavController(navCtrl)
 		bottom_navigation.setOnNavigationItemReselectedListener { }
+
 	}
 
 	override fun onSupportNavigateUp(): Boolean =
