@@ -21,15 +21,11 @@ import com.example.topnews.utils.Constants.SHOW_NAV_BAR
 import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 import kotlinx.android.synthetic.main.fragment_articles_category.rvArticlesFromCategory
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
+import javax.inject.Inject
 
-class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(),
-								 BasePagedListAdapter.OnItemClickListener<Article> {
+class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>() {
 
-	private val adapter by lazy {
-		ArticlesCategoryAdapter().apply {
-			clickListener = this@ArticlesCategoryFragment::onItemClick
-		}
-	}
+	@Inject lateinit var adapter: ArticlesCategoryAdapter
 
 	private val category by lazy {
 		arguments?.get(ARG_CATEGORY) as String
@@ -82,7 +78,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel>(),
 			adapter = this@ArticlesCategoryFragment.adapter
 		}
 
-	override fun onItemClick(dataItem: Article) =
+	fun onItemClick(dataItem: Article) =
 		navigateToArticleDetails(Bundle().apply {
 			putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem);
 			putString(SHOW_NAV_BAR, SHOW_NAV_BAR)

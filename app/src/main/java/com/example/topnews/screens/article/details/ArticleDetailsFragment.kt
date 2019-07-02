@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
+import com.example.topnews.screens.TagDialog
 import com.example.topnews.screens.widget.ReadLaterWidget
 import com.example.topnews.utils.Constants.PARCEL_FOR_ARTICLE_DETAILS
 import com.example.topnews.utils.Constants.SHOW_NAV_BAR
@@ -58,22 +59,14 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 
 		setObservers()
 
-		viewModel.checkIfArticleExists(dataItem)
-
 		activity?.bottom_navigation?.visibility = View.GONE
 		actionBarSetup()
 		setTransitionElements()
-
 
 		if (arguments?.getBoolean(TRANSITION_ENABLED)!!) setOnTransitionEnterEndListener()
 		else fillViewWithData()
 
 		setCollapsedImgListener()
-
-		fab.setOnClickListener {
-			if (fab.isActivated) removeArticleFromFavourites(dataItem)
-			else addArticleToFavourites(dataItem)
-		}
 
 	}
 
@@ -82,14 +75,13 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 			fab.isActivated = it
 			ReadLaterWidget.WidgetRefresher.sendRefreshBroadcast(context!!)
 
-			if (it) {
-				fab.setOnClickListener {
-					removeArticleFromFavourites(dataItem)
-				}
-			} else fab.setOnClickListener {
-				addArticleToFavourites(dataItem)
+			when (it) {
+				true -> fab.setOnClickListener { removeArticleFromFavourites(dataItem) }
+				else -> fab.setOnClickListener { addArticleToFavourites(dataItem) }
 			}
 		})
+
+		viewModel.checkIfArticleExists(dataItem)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -126,13 +118,12 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 			.into(ivArticleImage)
 	}
 
-	private fun setCollapsedImgListener() {
+	private fun setCollapsedImgListener() =
 		appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
 			menu?.findItem(R.id.shareArticle)?.isVisible = Math.abs(verticalOffset) - appBarLayout.totalScrollRange == 0
 		})
-	}
 
-	private fun setOnMenuItemClickListener() {
+	private fun setOnMenuItemClickListener() =
 		menu?.findItem(R.id.shareArticle)?.setOnMenuItemClickListener {
 			val shareIntent = Intent().apply {
 				action = Intent.ACTION_SEND
@@ -142,26 +133,30 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 			startActivity(Intent.createChooser(shareIntent, "choose one"))
 			true
 		}
-	}
 
 	private fun fillViewWithData() {
 		tvSource.text = dataItem.source
 		tvDescription.text = dataItem.description
 		tvContent.text = dataItem.content
-		tvPublishedAt.text = dataItem.publishedAt?.asString()
+		tvPublishedAt.text = dataItem.publishedAt?.asString(context!!)
 		tvAuthor.text = dataItem.author
 		linkToWeb.text = dataItem.url
 	}
 
 	private fun addArticleToFavourites(article: Article) {
 		viewModel.insertArticle(article)
+		TagDialog.build(context!!) {
+			confirmedTag = viewModel::addTagToArticle
+			this.article = article
+		}.show()
 	}
 
 	private fun removeArticleFromFavourites(article: Article) {
 		viewModel.removeArticle(article)
+		viewModel.removeTagArticle(article.url)
 	}
 
-	private fun setOnTransitionEnterEndListener() {
+	private fun setOnTransitionEnterEndListener() =
 		setEnterSharedElementCallback(object : SharedElementCallback() {
 
 			override fun onSharedElementEnd(
@@ -173,6 +168,5 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>() {
 				super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
 			}
 		})
-	}
 
 }

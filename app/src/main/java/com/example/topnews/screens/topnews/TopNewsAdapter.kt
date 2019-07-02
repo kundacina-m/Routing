@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import base.BasePagedListAdapter
 import com.example.topnews.R
 import com.example.topnews.data.db.Article
-import com.example.topnews.screens.readlater.ReadLaterAdapter
+import com.example.topnews.utils.Constants.articleDiffCallback
 import kotlinx.android.synthetic.main.item_top_news.view.ivArticleImage
 import kotlinx.android.synthetic.main.item_top_news.view.tvArticleTitle
 
-class TopNewsAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.articleDiffCallback) {
+class TopNewsAdapter : BasePagedListAdapter<Article>(articleDiffCallback) {
 
 	var onClickWithTransition: ((Article, ImageView, TextView) -> Unit?)? = null
 
@@ -29,13 +29,15 @@ class TopNewsAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.articleDif
 
 	}
 
-	private fun clickListener(holder: ViewHolder){
+	private fun clickListener(holder: ViewHolder) {
 
 		holder.itemView.setOnClickListener {
+
 			onClickWithTransition?.invoke(
 				getItem(holder.adapterPosition)!!, it.ivArticleImage,
 				it.tvArticleTitle
 			)
+
 		}
 	}
 
@@ -43,14 +45,13 @@ class TopNewsAdapter : BasePagedListAdapter<Article>(ReadLaterAdapter.articleDif
 
 		ViewCompat.setTransitionName(
 			holder.itemView.ivArticleImage,
-			getItem(holder.adapterPosition)?.publishedAt.toString())
+			getItem(holder.adapterPosition)?.publishedAt.toString()
+		)
 
 		ViewCompat.setTransitionName(
 			holder.itemView.tvArticleTitle,
-			(getItem(holder.adapterPosition)?.publishedAt.toString() + "title"))
+			(getItem(holder.adapterPosition)?.publishedAt.toString() + "title")
+		)
 	}
 
-	interface OnClickTransition {
-		fun onItemClickWithImgTransition(dataItem: Article, img: ImageView, title: TextView)
-	}
 }

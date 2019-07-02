@@ -16,7 +16,4 @@ abstract class BasePagedListAdapter<T>(diff: DiffUtil.ItemCallback<T>) : PagedLi
 		fun bind(dataItem: T)
 	}
 
-	interface OnItemClickListener<in T> {
-		fun onItemClick(dataItem: T)
-	}
 }

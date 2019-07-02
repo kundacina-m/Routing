@@ -17,8 +17,9 @@ import com.example.topnews.utils.toSealed
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class ArticleRepository(
+class ArticleRepository @Inject constructor(
 	private val tagsDao: TagsDao,
 	private val tagArticleDao: TagArticleDao,
 	private val articleDao: ArticleDao,
@@ -36,6 +37,9 @@ class ArticleRepository(
 	fun getArticlesPagination(): DataSource.Factory<Int, Article> =
 		articleDao.getArticlesPagination()
 
+	fun getAll(): Single<List<Article>> =
+		articleDao.getAll()
+
 	fun checkIfArticleExistsInDB(article: Article): Single<WrappedResponse<Article>> =
 		articleDao.getItem(article.url)
 			.toSealed()
@@ -44,6 +48,14 @@ class ArticleRepository(
 		Completable.create {
 			tagsDao.addTag(Tag(tag))
 			tagArticleDao.addTagArticleRow(TagArticle(tag, articleId))
+			it.onComplete()
+		}
+			.subscribeOn(Schedulers.io())
+			.subscribe()
+
+	fun removeTagArticle(articleId: String) =
+		Completable.create {
+			tagArticleDao.removeTagArticle(articleId)
 			it.onComplete()
 		}
 			.subscribeOn(Schedulers.io())

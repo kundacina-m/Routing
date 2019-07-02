@@ -1,5 +1,8 @@
 package com.example.topnews.utils
 
+import androidx.recyclerview.widget.DiffUtil
+import com.example.topnews.data.db.Article
+
 object Constants {
 
 	// Bundles
@@ -34,4 +37,12 @@ object Constants {
 	const val PAGE_SIZE_TOP_NEWS = 8
 	const val PAGE_SIZE_SEARCH = 6
 	const val PAGE_SIZE_ITEMS_WITHIN_CATEGORY = 10
+
+	val articleDiffCallback = object : DiffUtil.ItemCallback<Article>() {
+		override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
+			oldItem.url == newItem.url
+
+		override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
+			oldItem == newItem
+	}
 }

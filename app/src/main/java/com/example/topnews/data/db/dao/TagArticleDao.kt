@@ -2,6 +2,7 @@ package com.example.topnews.data.db.dao
 
 import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -21,6 +22,9 @@ interface TagArticleDao {
 
 	@Query("SELECT articleId from TagArticle where tagName == :tagName")
 	fun getArticleIdsByTag(tagName: String): Single<List<String>>
+
+	@Query("DELETE from TagArticle where articleId = :articleID")
+	fun removeTagArticle(articleID: String) : Int
 
 	@Query(
 		""" SELECT * from

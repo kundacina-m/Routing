@@ -27,4 +27,8 @@ interface ArticleDao {
 	@Query("SELECT * FROM articles order by url ASC")
 	fun getArticlesPagination(): DataSource.Factory<Int, Article>
 
+	@Query("SELECT * FROM articles")
+	fun getAll() : Single<List<Article>>
+
+
 }

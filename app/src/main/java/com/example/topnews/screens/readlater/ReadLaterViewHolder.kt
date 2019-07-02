@@ -49,7 +49,7 @@ class ReadLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
 		itemView.apply {
 			tvTitle.text = dataItem.title
 			tvSource.text = dataItem.source
-			tvPublishTime.text = dataItem.publishedAt?.asString()
+			tvPublishTime.text = dataItem.publishedAt?.asString(context!!)
 		}
 
 		Glide.with(itemView.context).load(dataItem.urlToImage).apply(getGlideOptions())

@@ -11,10 +11,10 @@ import io.reactivex.Single
 
 @Dao
 interface TagsDao {
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	@Insert(onConflict = OnConflictStrategy.ABORT)
 	fun addTag(tag: Tag): Long
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	@Insert(onConflict = OnConflictStrategy.ABORT)
 	fun addTags(tags: List<Tag>)
 
 	@Delete

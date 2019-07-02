@@ -13,7 +13,7 @@ class CategoriesAdapter : BaseAdapter<String>(), CategoriesViewHolder.Initialize
 
 	var handleLiveData: ((String, ItemsAdapter) -> Unit)? = null
 
-	var viewHolders = hashMapOf<String, CategoriesViewHolder>()
+	private var viewHolders = hashMapOf<String, CategoriesViewHolder>()
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
 		CategoriesViewHolder(
@@ -45,9 +45,5 @@ class CategoriesAdapter : BaseAdapter<String>(), CategoriesViewHolder.Initialize
 
 	override fun initializedCallback(adapter: ItemsAdapter, category: String) {
 		handleLiveData?.invoke(category, adapter)
-	}
-
-	interface BindAdapterToLiveData {
-		fun bindAdapterToLiveData(category: String, adapter: ItemsAdapter)
 	}
 }

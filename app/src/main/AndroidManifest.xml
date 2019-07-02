@@ -8,7 +8,7 @@
 
 
 	<application
-		android:name=".App"
+		android:name=".NewsApplication"
 		android:allowBackup="false"
 		android:hardwareAccelerated="true"
 		android:icon="@mipmap/ic_launcher"
@@ -17,6 +17,12 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme"
 		tools:ignore="GoogleAppIndexingWarning">
+
+
+		<meta-data
+			android:name="io.fabric.ApiKey"
+			android:value="25ac9a7c07b50d81b807599c2340f12da5653a4b"/>
+
 
 		<service
 			android:name="com.example.topnews.screens.widget.WidgetRemoteViewService"
@@ -39,7 +45,7 @@
 				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
 			</intent-filter>
 		</activity>
-		<activity android:name=".screens.home.FrameActivity">
+		<activity android:name=".screens.main.MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 

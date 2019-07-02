@@ -15,13 +15,14 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context) :
 	private var articles = arrayListOf<Article>()
 
 	override fun onCreate() {
-		// TODO
 
-		//		App.injectArticleDao().getAllItems().subscribeBy {
-		//			articles.clear()
-		//			articles.addAll(it)
-		//		}
-
+		//		AppComponent.injectRepository().getAll()
+		//			.subscribeOn(Schedulers.io())
+		//			.observeOn(AndroidSchedulers.mainThread())
+		//			.subscribeBy {
+		//				articles.clear()
+		//				articles.addAll(it)
+		//			}
 	}
 
 	override fun onDataSetChanged() {
@@ -56,14 +57,11 @@ class MyWidgetRemoteViewsFactory(private val mContext: Context) :
 	}
 
 	override fun getItemId(position: Int): Long {
-		return if (articles.isNotEmpty()) {
-			articles[position].publishedAt?.time!!
-		} else
-			return position.toLong()
+		return position.toLong()
 	}
 
 	override fun hasStableIds(): Boolean {
-		return false
+		return true
 	}
 
 	private fun setUpView(article: Article): RemoteViews {

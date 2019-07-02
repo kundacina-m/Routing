@@ -9,7 +9,7 @@ class SeeMoreViewHolder(itemView: View) : BaseViewHolder<Article>(itemView) {
 	override fun bind(dataItem: Article) {
 
 		itemView.setOnClickListener {
-			SeeMoreEventBus.post(dataItem.url)
+			CategoryModule.categoryClick.post(dataItem.url)
 		}
 	}
 }

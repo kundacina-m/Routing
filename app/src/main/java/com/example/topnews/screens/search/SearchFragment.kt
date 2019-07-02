@@ -25,8 +25,9 @@ import com.example.topnews.utils.Constants.SHOW_NAV_BAR
 import kotlinx.android.synthetic.main.activity_frame.bottom_navigation
 import kotlinx.android.synthetic.main.fragment_search.rvSearchResults
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
+import javax.inject.Inject
 
-class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnItemClickListener<Article> {
+class SearchFragment : BaseFragment<SearchViewModel>() {
 
 	private val navCtrl: NavController by lazy {
 		Navigation.findNavController(activity!!, R.id.nav_host_fragment)
@@ -41,11 +42,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 		}
 	}
 
-	private val adapter: SearchAdapter by lazy {
-		SearchAdapter().apply {
-			clickListener = this@SearchFragment::onItemClick
-		}
-	}
+	@Inject lateinit var adapter: SearchAdapter
 
 	override fun getLayoutId() = R.layout.fragment_search
 	override fun getClassTypeVM(): Class<SearchViewModel> = SearchViewModel::class.java
@@ -142,7 +139,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), BasePagedListAdapter.OnI
 		})
 	}
 
-	override fun onItemClick(dataItem: Article) =
+	fun onItemClick(dataItem: Article) =
 		navigateToArticleDetails(Bundle().apply {
 			putParcelable(Constants.PARCEL_FOR_ARTICLE_DETAILS, dataItem);
 			putString(SHOW_NAV_BAR, SHOW_NAV_BAR)

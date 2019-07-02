@@ -16,4 +16,5 @@
 	<string name="today">Danas</string>
 	<string name="yesterday">Juce</string>
 	<string name="click_to_see_more">Klikni da vidis vise</string>
+	<string name="enter_tag">Unesi oznaku</string>
 </resources>

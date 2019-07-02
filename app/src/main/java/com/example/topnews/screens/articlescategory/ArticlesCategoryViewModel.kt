@@ -6,19 +6,21 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import base.BaseViewModel
 import com.example.topnews.data.db.Article
+import com.example.topnews.data.repository.ArticleRepository
 import com.example.topnews.domain.WrappedResponse.OnError
-import kotlin.properties.Delegates
+import com.example.topnews.utils.Constants.PAGE_SIZE_CATEGORIES
+import javax.inject.Inject
 
-class ArticlesCategoryViewModel : BaseViewModel() {
+class ArticlesCategoryViewModel @Inject constructor(val repository: ArticleRepository) : BaseViewModel() {
 
 	var onError = MutableLiveData<OnError<Nothing>>()
 	lateinit var category: String
 
 	private val dataSourceFactory: ArticleCategoryDataSourceFactory by lazy {
-		ArticleCategoryDataSourceFactory(category,onError)
+		ArticleCategoryDataSourceFactory(category, onError, repository)
 	}
 
-	val articles : LiveData<PagedList<Article>> by lazy {
+	val articles: LiveData<PagedList<Article>> by lazy {
 		LivePagedListBuilder(dataSourceFactory, configurePagination()).build()
 	}
 
@@ -26,7 +28,7 @@ class ArticlesCategoryViewModel : BaseViewModel() {
 		PagedList.Config.Builder()
 			.setEnablePlaceholders(false)
 			.setPrefetchDistance(1)
-			.setPageSize(1)
+			.setPageSize(PAGE_SIZE_CATEGORIES)
 			.build()
 
 	override fun onCleared() {
