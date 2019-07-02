@@ -1,10 +1,12 @@
 package com.example.topnews
 
 import androidx.appcompat.app.AppCompatDelegate
+import com.crashlytics.android.Crashlytics
 import com.example.topnews.di.components.DaggerAppComponent
 import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
+import io.fabric.sdk.android.Fabric
 
 class NewsApplication : DaggerApplication() {
 
@@ -14,6 +16,7 @@ class NewsApplication : DaggerApplication() {
 	override fun onCreate() {
 		super.onCreate()
 
+		Fabric.with(this,Crashlytics())
 		handleTheme()
 		setupStetho()
 	}

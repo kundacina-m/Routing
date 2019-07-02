@@ -40,6 +40,7 @@ class CategoriesFragment : BaseFragment<ItemsInCategoryViewModel>() {
 		actionBarSetup()
 		setupRecyclerView()
 		subscribeClickListeners()
+
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
