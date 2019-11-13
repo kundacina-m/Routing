@@ -2,54 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	app:startDestination="@id/topNewsFragment">
-
-	<fragment
-		android:id="@+id/topNewsFragment"
-		android:name="com.example.topnews.screens.topnews.TopNewsFragment"
-		android:label="Top news"
-		tools:layout="@layout/fragment_top_news">
-		<action
-			android:id="@+id/action_topNewsFragment_to_articleDetailsFragment"
-			app:destination="@id/articleDetailsFragment"
-			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-			app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-	</fragment>
-
-	<fragment
-		android:id="@+id/categoriesFragment"
-		android:name="com.example.topnews.screens.categories.CategoriesFragment"
-		android:label="Categories"
-		tools:layout="@layout/fragment_categories">
-		<action
-			android:id="@+id/action_categoriesFragment_to_articleDetailsFragment"
-			app:destination="@id/articleDetailsFragment"
-			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-			app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-	</fragment>
-
-	<fragment
-		android:id="@+id/readLaterFragment"
-		android:name="com.example.topnews.screens.readlater.ReadLaterFragment"
-		android:label="Favourites"
-		tools:layout="@layout/fragment_read_later">
-		<action
-			android:id="@+id/action_readLaterFragment_to_articleDetailsFragment"
-			app:destination="@id/articleDetailsFragment"
-			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-			app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-	</fragment>
-
-	<fragment
-		android:id="@+id/searchFragment"
-		android:name="com.example.topnews.screens.search.SearchFragment"
-		tools:layout="@layout/fragment_search">
-		<action
-			android:id="@+id/action_searchFragment_to_articleDetailsFragment"
-			app:destination="@id/articleDetailsFragment"
-			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-			app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-	</fragment>
+	app:startDestination="@id/articlesCategoryFragment">
 
 	<fragment
 		android:id="@+id/articleDetailsFragment"
@@ -57,29 +10,17 @@
 		tools:layout="@layout/fragment_article_details">
 
 		<argument
-			android:name="urlImg"
-			app:argType="string"/>
+			android:name="article"
+			app:argType="com.example.topnews.data.Article" />
 		<argument
-			android:name="sourceRaw"
-			app:argType="string"/>
+			android:name="firstString"
+			app:argType="string" />
 		<argument
-			android:name="title"
-			app:argType="string"/>
+			android:name="secondString"
+			app:argType="string" />
 		<argument
-			android:name="description"
-			app:argType="string"/>
-		<argument
-			android:name="content"
-			app:argType="string"/>
-		<argument
-			android:name="publishedAt"
-			app:argType="string"/>
-		<argument
-			android:name="author"
-			app:argType="string"/>
-		<argument
-			android:name="urlWeb"
-			app:argType="string"/>
+			android:name="list"
+			app:argType="integer[]" />
 	</fragment>
 
 	<fragment
@@ -90,8 +31,5 @@
 			android:id="@+id/action_articlesCategoryFragment_to_articleDetailsFragment"
 			app:destination="@id/articleDetailsFragment"/>
 	</fragment>
-	<action
-		android:id="@+id/action_global_searchFragment"
-		app:destination="@id/searchFragment"/>
 
 </navigation>

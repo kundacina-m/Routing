@@ -1,10 +1,8 @@
 package com.example.topnews.di.components
 
 import com.example.topnews.NewsApplication
-import com.example.topnews.di.ViewModelFactory
-import com.example.topnews.di.modules.BindingActivityModule
+import com.example.topnews.di.modules.ActivitiesInjector
 import com.example.topnews.di.modules.AppModule
-import com.example.topnews.di.modules.BindingFragmentModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -15,8 +13,7 @@ import javax.inject.Singleton
 	modules = [
 		AppModule::class,
 		AndroidSupportInjectionModule::class,
-		BindingActivityModule::class,
-		BindingFragmentModule::class
+		ActivitiesInjector::class
 	]
 )
 interface AppComponent : AndroidInjector<NewsApplication> {

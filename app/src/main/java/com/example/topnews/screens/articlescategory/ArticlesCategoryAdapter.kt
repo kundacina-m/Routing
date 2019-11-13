@@ -3,12 +3,11 @@ package com.example.topnews.screens.articlescategory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import base.BasePagedListAdapter
+import base.BaseAdapter
 import com.example.topnews.R.layout
-import com.example.topnews.data.db.Article
-import com.example.topnews.utils.Constants.articleDiffCallback
+import com.example.topnews.data.Article
 
-class ArticlesCategoryAdapter : BasePagedListAdapter<Article>(articleDiffCallback) {
+class ArticlesCategoryAdapter : BaseAdapter<Article>() {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
 		ArticlesCategoryViewHolder(
 			LayoutInflater.from(parent.context).inflate(
@@ -25,7 +24,7 @@ class ArticlesCategoryAdapter : BasePagedListAdapter<Article>(articleDiffCallbac
 
 	private fun setupListeners(holder: ViewHolder) {
 		holder.itemView.setOnClickListener {
-			clickListener?.invoke(getItem(holder.adapterPosition)!!)
+			clickListener?.invoke(getItemOnPosition(holder.adapterPosition))
 		}
 	}
 }

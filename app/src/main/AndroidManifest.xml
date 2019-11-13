@@ -23,28 +23,6 @@
 			android:name="io.fabric.ApiKey"
 			android:value="25ac9a7c07b50d81b807599c2340f12da5653a4b"/>
 
-
-		<service
-			android:name="com.example.topnews.screens.widget.WidgetRemoteViewService"
-			android:permission="android.permission.BIND_REMOTEVIEWS"/>
-
-		<receiver android:name="com.example.topnews.screens.widget.ReadLaterWidget">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-				<action android:name="com.example.topnews.app.ACTION_DATA_UPDATED"/>
-			</intent-filter>
-
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/read_later_widget_info"/>
-		</receiver>
-
-
-		<activity android:name="com.example.topnews.screens.widget.ReadLaterWidgetConfigureActivity">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-			</intent-filter>
-		</activity>
 		<activity android:name=".screens.main.MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

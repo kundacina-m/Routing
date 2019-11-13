@@ -2,14 +2,10 @@ package com.example.topnews.di.modules
 
 import android.content.Context
 import com.example.topnews.NewsApplication
-import com.example.topnews.data.db.AppDatabase
-import com.example.topnews.data.db.dao.ArticleDao
-import com.example.topnews.data.db.dao.TagArticleDao
-import com.example.topnews.data.db.dao.TagsDao
 import com.example.topnews.data.networking.ArticleApi
 import com.example.topnews.data.repository.ArticleRemoteStorageImpl
 import com.example.topnews.data.repository.ArticleRepository
-import com.example.topnews.domain.ArticleRemoteStorage
+import com.example.topnews.di.viewmodel.ViewModelModule
 import com.example.topnews.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -22,9 +18,9 @@ import javax.inject.Singleton
 class AppModule {
 
 	@Provides
-	fun provideContext(application: NewsApplication): Context {
-		return application.applicationContext
-	}
+	fun provideContext(application: NewsApplication): Context =
+		application.applicationContext
+
 
 	@Singleton
 	@Provides
@@ -38,35 +34,12 @@ class AppModule {
 
 	@Singleton
 	@Provides
-	fun provideDb(appContext: Context): AppDatabase =
-		AppDatabase.getInstance(appContext)
-
-	@Singleton
-	@Provides
-	fun provideArticlesDao(db: AppDatabase) =
-		db.articlesDao()
-
-	@Singleton
-	@Provides
-	fun provideTagsDao(db: AppDatabase) =
-		db.tagsDao()
-
-	@Singleton
-	@Provides
-	fun provideTagArticlesDao(db: AppDatabase) =
-		db.tagArticleDao()
-
-	@Singleton
-	@Provides
-	fun providesRemoteStorage(api: ArticleApi): ArticleRemoteStorage =
+	fun providesRemoteStorage(api: ArticleApi): ArticleRemoteStorageImpl =
 		ArticleRemoteStorageImpl(api)
 
 	@Singleton
 	@Provides
-	fun provideRepository(
-		tagsDao: TagsDao, articlesDao: ArticleDao,
-		tagArticleDao: TagArticleDao, remoteStorage: ArticleRemoteStorage
-	) =
-		ArticleRepository(tagsDao, tagArticleDao, articlesDao, remoteStorage)
+	fun provideRepository(remoteStorage: ArticleRemoteStorageImpl): ArticleRepository =
+		ArticleRepository(remoteStorage)
 
 }
