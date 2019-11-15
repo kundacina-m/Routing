@@ -3,12 +3,13 @@ package com.example.topnews.di.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import base.BaseFragment
+import com.example.topnews.di.scopes.ActivityScope
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.reflect.KClass
 
-@Singleton
+@ActivityScope
 class ViewModelFactory @Inject
 constructor(private val viewModels: Map<ViewModelKey, @JvmSuppressWildcards Provider<ViewModel>>) :
 	IViewModelFactory {

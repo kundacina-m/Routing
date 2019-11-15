@@ -1,5 +1,6 @@
 package com.example.topnews.screens.article.details
 
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.navigation.fragment.navArgs
@@ -9,6 +10,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.topnews.R
+import com.example.topnews.screens.newactivity.TestObj
 import com.example.topnews.utils.asString
 import kotlinx.android.synthetic.main.fragment_article_details.article_app_bar
 import kotlinx.android.synthetic.main.fragment_article_details.ivArticleImage
@@ -19,8 +21,13 @@ import kotlinx.android.synthetic.main.fragment_article_details.tvDescription
 import kotlinx.android.synthetic.main.fragment_article_details.tvPublishedAt
 import kotlinx.android.synthetic.main.fragment_article_details.tvSource
 import kotlinx.android.synthetic.main.fragment_article_details.tvTitle
+import javax.inject.Inject
 
 class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel, ArticleDetailsRoutes>() {
+
+
+	@Inject
+	lateinit var testObj: TestObj
 
 	private val args: ArticleDetailsFragmentArgs by navArgs()
 
@@ -41,6 +48,12 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel, ArticleDeta
 	}
 
 	private fun fillViewWithData() {
+
+		Log.d("ArticleDetailsFragment", testObj.toString())
+
+
+
+		viewModel
 		tvTitle.text = args.article.title
 		tvSource.text = args.article.source
 		tvDescription.text = args.article.description

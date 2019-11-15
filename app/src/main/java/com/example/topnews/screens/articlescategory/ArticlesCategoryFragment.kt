@@ -1,5 +1,6 @@
 package com.example.topnews.screens.articlescategory
 
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.lifecycle.Observer
@@ -7,11 +8,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import base.BaseFragment
 import com.example.topnews.R
 import com.example.topnews.data.Article
+import com.example.topnews.screens.newactivity.TestObj
 import kotlinx.android.synthetic.main.fragment_articles_category.rvArticlesFromCategory
 import kotlinx.android.synthetic.main.toolbar_default.toolbar_top
+import javax.inject.Inject
 
 class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel, ArticlesCategoryRoute>() {
 
+	@Inject
+	lateinit var testObj: TestObj
 
 	private val adapter by lazy {
 		ArticlesCategoryAdapter().apply {
@@ -22,6 +27,7 @@ class ArticlesCategoryFragment : BaseFragment<ArticlesCategoryViewModel, Article
 	override fun getLayoutId(): Int = R.layout.fragment_articles_category
 
 	override fun initView() {
+		Log.d("CategoryFragment", testObj.toString())
 
 		actionBarSetup()
 		setupRecyclerView()
